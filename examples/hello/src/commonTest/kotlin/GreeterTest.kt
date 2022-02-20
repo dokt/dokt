@@ -4,7 +4,7 @@ class GreeterTest : GreeterSpec({ // GreeterSpec is generated in previous step.
         test("World") { // "World" test case
             greeter // Greeter is arranged with a random UUID.
                 .act { greet("World") } // The command act
-                .emits(Greeted("Hello, World!")) // Asserts that the root emits the generated Greeted event DTO.
+                .emits(Greeted("Hello, World!")) // Asserts the emitted DTO.
         }
     }
 })
