@@ -21,6 +21,7 @@ The Dokt plugin generates *application layer*, which follows *Command and Query 
 
 ## The "Hello, World!" tutorial:
 1. Apply Dokt plugin in the [build.gradle.kts](examples/hello/build.gradle.kts) file:
+
 ```kotlin
 plugins {
     id("app.dokt") version "0.2.0"
@@ -28,6 +29,7 @@ plugins {
 ```
 
 2. Write domain logic in [src/commonMain/kotlin/Hello.kt](examples/hello/src/commonMain/kotlin/Hello.kt) file:
+
 ```kotlin
 import app.dokt.Root
 import kotlinx.serialization.Serializable
@@ -54,8 +56,10 @@ class Greeter : Root<Events>(), Events {
     }
 }
 ```
+
 3. Run `generateCode` task.
 4. Write unit test in [src/commonTest/kotlin/GreeterTest.kt](examples/hello/src/commonTest/kotlin/GreeterTest.kt) file:
+
 ```kotlin
 /** Greeter unit tests */
 class GreeterTest : GreeterSpec({ // GreeterSpec is generated in previous step.
@@ -68,6 +72,7 @@ class GreeterTest : GreeterSpec({ // GreeterSpec is generated in previous step.
     }
 })
 ```
+
 5. Run `allTests` and you should pass your test.
 
 Check more [examples](examples/README.md).
