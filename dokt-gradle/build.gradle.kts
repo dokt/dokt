@@ -13,14 +13,15 @@ plugins {
         Let Gradle define the 'kotlin-dsl' version!
      */
     `kotlin-dsl`
-
-    `maven-publish`
+    id("com.gradle.plugin-publish") version "0.20.0"
 }
 
 val vGradle: String by project
 val vKotest: String by project
 val vKotlin: String by project
 val vSerialization: String by project
+
+description = "Domain-driven design using Kotlin"
 
 dependencies {
     // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.multiplatform
@@ -32,30 +33,36 @@ dependencies {
     implementation(project(":dokt-generator"))
 }
 
+tasks.processResources {
+    val props = file("$buildDir/generated/dokt.properties")
+
+    doFirst {
+        props.parentFile.mkdirs()
+        props.writeText("""
+            vDokt=$version
+            vGradle=$vGradle
+            vKotest=$vKotest
+            vKotlin=$vKotlin
+            vSerialization=$vSerialization
+            """.trimIndent())
+    }
+
+    from(props)
+}
+
+pluginBundle {
+    website = "https://dokt.app/"
+    vcsUrl = "https://github.com/dokt/dokt"
+    tags = listOf("code-generation", "codegen", "cqrs", "ddd", "es", "kotlin", "kotlin-mpp", "mpp")
+}
+
 gradlePlugin {
     plugins {
         create("dokt") {
             id = "app.dokt"
+            displayName = "Dokt Plugin"
+            description = project.description
             implementationClass = "app.dokt.gradle.DoktPlugin"
         }
-    }
-}
-
-tasks {
-    processResources {
-        val props = file("$buildDir/generated/dokt.properties")
-
-        doFirst {
-            props.parentFile.mkdirs()
-            props.writeText("""
-                vDokt=$version
-                vGradle=$vGradle
-                vKotest=$vKotest
-                vKotlin=$vKotlin
-                vSerialization=$vSerialization
-                """.trimIndent())
-        }
-
-        from(props)
     }
 }
