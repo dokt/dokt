@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Created organization for the [repository](https://github.com/dokt/dokt).
 - Bought [dokt.app](https://dokt.app) domain
-- Publishing first versions to Gradle plugin portal and Maven central.
+- Publishing first versions to Maven central and Gradle plugin portal.
 
 ### Changed
 - Renamed project to "Domain-driven design with Kotlin" and created organization for the [repository](https://github.com/dokt/dokt).

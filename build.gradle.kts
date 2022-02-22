@@ -1,4 +1,5 @@
 @file:Suppress("unused_variable")
+//import org.jetbrains.dokka.gradle.*
 val kotlinGroup = "org.jetbrains.kotlin"
 val kotlinx = "${kotlinGroup}x:kotlinx"
 plugins {
@@ -6,8 +7,10 @@ plugins {
     signing
     id("com.github.ben-manes.versions") version "0.42.0"
     id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
-    kotlin("multiplatform") version "1.6.10"
-    kotlin("plugin.serialization") version "1.6.10"
+    val vKotlin = "1.6.10"
+    //id("org.jetbrains.dokka") version vKotlin
+    kotlin("multiplatform") version vKotlin
+    kotlin("plugin.serialization") version vKotlin
 }
 val vGradle: String by project
 val vKotest: String by project
@@ -17,11 +20,12 @@ fun org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler.kotestApi() =
     setOf("assertions-core", "framework-api").forEach { api(it.kotest) }
 
 allprojects {
+    //apply<DokkaPlugin>()
     apply<MavenPublishPlugin>()
     apply<SigningPlugin>()
 
     group = "app.dokt"
-    version = "0.2.0-SNAPSHOT"
+    version = "0.2.0"
     description = "Domain-driven design using Kotlin"
 
     repositories {
@@ -76,8 +80,17 @@ allprojects {
         }
     }
 
+    //val dokkaHtml by tasks.getting(DokkaTask::class)
+
+    val javadocJar by tasks.registering(Jar::class) {
+        //dependsOn(dokkaHtml)
+        archiveClassifier.set("javadoc")
+        //from(dokkaHtml.outputDirectory)
+    }
+
     publishing {
         publications.withType<MavenPublication> {
+            artifact(javadocJar.get())
             pom {
                 name.set(project.name.split('-')
                     .joinToString(" ") { it[0].toUpperCase() + it.substring(1) })

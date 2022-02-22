@@ -50,6 +50,10 @@ tasks.processResources {
     from(props)
 }
 
+java {
+    withSourcesJar()
+}
+
 pluginBundle {
     website = "https://dokt.app/"
     vcsUrl = "https://github.com/dokt/dokt"
