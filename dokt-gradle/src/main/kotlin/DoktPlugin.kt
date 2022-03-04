@@ -28,7 +28,8 @@ class DoktPlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
         application = GradleApplication(project)
-        project.applyDokt()
+        if (project.multiplatform) project.applyDokt()
+        project.childProjects.values.forEach { it.pluginManager.apply(DoktPlugin::class.java) }
     }
 
     private fun Project.applyDokt() {
@@ -67,21 +68,15 @@ class DoktPlugin : Plugin<Project> {
         }
 
         task("cleanGenerated") {
-            doLast {
-                application.generatedFile.deleteRecursively()
-            }
+            doLast { application.cleanGenerated() }
         }.description = "Delete generated files."
 
         task("generateCode") {
-            doLast {
-                coder.code()
-            }
+            doLast { coder.code() }
         }.description = "Generate application classes."
 
         task("generateDocumentation") {
-            doLast {
-                documentWriter.document()
-            }
+            doLast { documentWriter.document() }
         }.description = "Generate Markdown documentation of the application."
 
         tasks.findByName("wrapper")?.let { (it as Wrapper).gradleVersion = vGradle }

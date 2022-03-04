@@ -25,10 +25,10 @@ description = "Domain-driven design using Kotlin"
 
 dependencies {
     // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.multiplatform
-    api(kotlin("gradle-plugin", vKotlin))
+    implementation(kotlin("gradle-plugin", vKotlin))
 
     // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.plugin.serialization
-    api(kotlin("serialization", vKotlin))
+    implementation(kotlin("serialization", vKotlin))
 
     implementation(project(":dokt-generator"))
 }

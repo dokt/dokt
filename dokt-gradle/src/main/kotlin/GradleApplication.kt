@@ -42,4 +42,6 @@ class GradleApplication(private val project: Project) : Application {
     override val name: String get() = project.name
 
     private val sources by lazy { KotlinSources(domainSourcesPath) }
+
+    fun cleanGenerated() { project.delete(generatedPath) }
 }
