@@ -27,20 +27,23 @@ class DoktPlugin : Plugin<Project> {
     private val vKotest: String by properties
     private val vSerialization: String by properties
 
-    override fun apply(project: Project) {
-        application = GradleApplication(project)
-        if (project.multiplatform) project.applyDokt()
-        project.childProjects.values.forEach { it.pluginManager.apply(DoktPlugin::class.java) }
+    private val snapshot = vDokt.contains("SNAPSHOT")
+
+    override fun apply(project: Project) = with (project) {
+        application = GradleApplication(this)
+
+        if (isRootProject) applyRoot()
+
+        if (multiplatform) applyDokt()
+
+        subprojects {
+            pluginManager.apply(DoktPlugin::class.java)
+        }
     }
 
     private fun Project.applyDokt() {
         pluginManager.apply(KotlinMultiplatformPluginWrapper::class.java)
         pluginManager.apply(SerializationGradleSubplugin::class.java)
-
-        repositories {
-            mavenCentral()
-            if (vDokt.contains("SNAPSHOT")) mavenLocal()
-        }
 
         configure<KotlinMultiplatformExtension> {
             jvm {
@@ -80,10 +83,19 @@ class DoktPlugin : Plugin<Project> {
             doLast { documentWriter.document() }
         }.description = "Generate Markdown documentation of the application."
 
-        tasks {
-            filter { it.name.startsWith("compileKotlin") }.forEach { it.dependsOn(GENERATE_CODE) }
+        tasks.filter { it.name.startsWith("compileKotlin") }.forEach { it.dependsOn(GENERATE_CODE) }
+    }
 
-            findByName("wrapper")?.let { (it as Wrapper).gradleVersion = vGradle }
+    private fun Project.applyRoot() {
+        allprojects {
+            repositories {
+                mavenCentral()
+                if (snapshot) mavenLocal()
+            }
+        }
+
+        tasks.named<Wrapper>("wrapper") {
+            gradleVersion = vGradle
         }
     }
 }
