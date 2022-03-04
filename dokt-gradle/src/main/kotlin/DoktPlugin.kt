@@ -13,6 +13,7 @@ import java.util.*
 class DoktPlugin : Plugin<Project> {
     companion object {
         const val DOKT = "app.dokt:dokt"
+        const val GENERATE_CODE = "generateCode"
     }
 
     private lateinit var application: GradleApplication
@@ -71,7 +72,7 @@ class DoktPlugin : Plugin<Project> {
             doLast { application.cleanGenerated() }
         }.description = "Delete generated files."
 
-        task("generateCode") {
+        task(GENERATE_CODE) {
             doLast { coder.code() }
         }.description = "Generate application classes."
 
@@ -79,6 +80,10 @@ class DoktPlugin : Plugin<Project> {
             doLast { documentWriter.document() }
         }.description = "Generate Markdown documentation of the application."
 
-        tasks.findByName("wrapper")?.let { (it as Wrapper).gradleVersion = vGradle }
+        tasks {
+            filter { it.name.startsWith("compileKotlin") }.forEach { it.dependsOn(GENERATE_CODE) }
+
+            findByName("wrapper")?.let { (it as Wrapper).gradleVersion = vGradle }
+        }
     }
 }
