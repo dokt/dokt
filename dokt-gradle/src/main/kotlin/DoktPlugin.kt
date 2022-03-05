@@ -43,7 +43,6 @@ class DoktPlugin : Plugin<Project> {
 
     private fun Project.applyDokt() {
         pluginManager.apply(KotlinMultiplatformPluginWrapper::class.java)
-        pluginManager.apply(SerializationGradleSubplugin::class.java)
 
         configure<KotlinMultiplatformExtension> {
             jvm {
@@ -88,6 +87,8 @@ class DoktPlugin : Plugin<Project> {
 
     private fun Project.applyRoot() {
         allprojects {
+            pluginManager.apply(SerializationGradleSubplugin::class.java)
+
             repositories {
                 mavenCentral()
                 if (snapshot) mavenLocal()
