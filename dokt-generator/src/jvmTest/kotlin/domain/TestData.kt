@@ -11,7 +11,6 @@ val byteType = "Byte".kotlinRef
 val booleanType = "Boolean".kotlinRef
 val uShortType = "UShort".kotlinRef
 val floatType = "Float".kotlinRef
-val stringType = "String".kotlinRef
 
 val gear = AggregateCommandData("gear", PLANE_APP)
 val pilot = AggregateCommandData("pilot", PLANE_APP, Var("horizontal", byteType), Var("vertical", byteType))
@@ -26,5 +25,5 @@ val plane = AggregateRootData(
     listOf(gear, pilot),
     events,
     listOf(landed, takenOff, turned),
-    Var("tailNo", stringType)
+    Var("tailNo", stringRef)
 )

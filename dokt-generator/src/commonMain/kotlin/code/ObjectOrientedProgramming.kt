@@ -139,7 +139,7 @@ value class Ref(override val qualifiedName: String) : TypeRef {
 interface Variable : Packaged {
     val type: TypeRef
 
-    fun isString() = type == stringRef
+    fun isString() = type.name == "String" // Package may be java.lang or kotlin.
 }
 
 @Serializable
