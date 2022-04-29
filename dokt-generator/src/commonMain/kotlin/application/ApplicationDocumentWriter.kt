@@ -6,8 +6,8 @@ import app.dokt.generator.pluralize
 
 class ApplicationDocumentWriter(documentation: Documentation) : Documentation by documentation {
     fun documentApplication(application: Application) = with(application) {
-        heading(application.name)
-        application.description?.let { paragraph(it) }
+        heading(application.appName)
+        application.appDescription?.let { paragraph(it) }
         with(boundedContexts) {
             definition("Bounded contexts", "$size (${joinToString()})")
             horizontalRule()

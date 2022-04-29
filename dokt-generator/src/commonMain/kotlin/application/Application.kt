@@ -3,11 +3,16 @@ package app.dokt.generator.application
 import app.dokt.generator.domain.BoundedContext
 
 interface Application {
+    /** Conflicts org.gradle.api.Project.description */
+    val appDescription: String?
+
+    /** Conflicts org.gradle.api.Project.displayName */
+    val appDisplayName: String?
+
+    /** Conflicts org.gradle.api.Project.name */
+    val appName: String
+
     val boundedContexts: List<BoundedContext>
-
-    val description: String?
-
-    val displayName: String?
 
     val domainSources: String
 
@@ -18,6 +23,4 @@ interface Application {
     val generatedTestSources: String
 
     val group: String?
-
-    val name: String
 }

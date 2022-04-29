@@ -13,41 +13,25 @@ plugins {
         Let Gradle define the 'kotlin-dsl' version!
      */
     `kotlin-dsl`
-    id("com.gradle.plugin-publish") version "0.20.0"
+    id("com.gradle.plugin-publish")
 }
-
-val vGradle: String by project
-val vKotest: String by project
-val vKotlin: String by project
-val vSerialization: String by project
 
 description = "Domain-driven design using Kotlin"
 
-dependencies {
-    // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.multiplatform
-    implementation(kotlin("gradle-plugin", vKotlin))
-
-    // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.plugin.serialization
-    implementation(kotlin("serialization", vKotlin))
-
-    implementation(project(":dokt-generator"))
+repositories {
+    gradlePluginPortal()
 }
 
-tasks.processResources {
-    val props = file("$buildDir/generated/dokt.properties")
+dependencies {
+    implementation("de.fayard.refreshVersions:refreshVersions:_")
 
-    doFirst {
-        props.parentFile.mkdirs()
-        props.writeText("""
-            vDokt=$version
-            vGradle=$vGradle
-            vKotest=$vKotest
-            vKotlin=$vKotlin
-            vSerialization=$vSerialization
-            """.trimIndent())
-    }
+    // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.multiplatform
+    implementation(kotlin("gradle-plugin"))
 
-    from(props)
+    // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.plugin.serialization
+    implementation(kotlin("serialization"))
+
+    implementation(project(":dokt-generator"))
 }
 
 java {

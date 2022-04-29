@@ -11,7 +11,7 @@ abstract class ApplicationCoder<F, T>(application: Application): AbstractCoder<F
 ) {
     protected abstract val boundedContextCoders: List<BoundedContextCoder<*, *>>
 
-    protected val name = application.name.upperFirst()
+    protected val name = application.appName.upperFirst()
 
     override fun code() {
         boundedContextCoders.forEach {

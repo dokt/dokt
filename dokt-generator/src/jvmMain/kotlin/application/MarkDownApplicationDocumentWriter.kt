@@ -7,8 +7,9 @@ import kotlin.io.path.*
 class MarkDownApplicationDocumentWriter(private val application: Application) {
     fun document() = Path(application.generated).run {
         createDirectories()
-        resolve("${application.name}.md").toFile()
+        resolve("${application.appName}.md").toFile()
     }.bufferedWriter().use { document(MarkDownDocumentation(it)) }
 
-    private fun document(documentation: Documentation) = ApplicationDocumentWriter(documentation).documentApplication(application)
+    private fun document(documentation: Documentation) =
+        ApplicationDocumentWriter(documentation).documentApplication(application)
 }

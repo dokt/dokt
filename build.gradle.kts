@@ -1,23 +1,15 @@
 @file:Suppress("unused_variable")
+
 //import org.jetbrains.dokka.gradle.*
-val kotlinGroup = "org.jetbrains.kotlin"
-val kotlinx = "${kotlinGroup}x:kotlinx"
+
 plugins {
     `maven-publish`
     signing
-    id("com.github.ben-manes.versions") version "0.42.0"
-    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
-    val vKotlin = "1.6.10"
-    //id("org.jetbrains.dokka") version vKotlin
-    kotlin("multiplatform") version vKotlin
-    kotlin("plugin.serialization") version vKotlin
+    id("io.github.gradle-nexus.publish-plugin")
+    //id("org.jetbrains.dokka")
+    kotlin("multiplatform")
+    kotlin("plugin.serialization")
 }
-val vGradle: String by project
-val vKotest: String by project
-val vSerialization: String by project
-val String.kotest get() = "io.kotest:kotest-$this:$vKotest"
-fun org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler.kotestApi() =
-    setOf("assertions-core", "framework-api").forEach { api(it.kotest) }
 
 allprojects {
     //apply<DokkaPlugin>()
@@ -33,10 +25,12 @@ allprojects {
     }
 
     if (name != "dokt-gradle") {
-        setOf("multiplatform", "plugin.serialization").forEach { apply(plugin = "$kotlinGroup.$it") }
+        apply(plugin = "org.jetbrains.kotlin.multiplatform")
+        apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
 
         kotlin {
             jvm {
+                // TODO
                 testRuns["test"].executionTask.configure { useJUnitPlatform() }
             }
 
@@ -45,34 +39,38 @@ allprojects {
                     dependencies {
                         when (project.name) {
                             "dokt" -> {
-                                api("com.benasher44:uuid:0.4.0")
-                                setOf("coroutines-core:1.6.0", "datetime:0.3.2", "serialization-core:$vSerialization")
-                                    .forEach { api("$kotlinx-$it") }
+                                api("com.benasher44:uuid:_")
+                                api(KotlinX.coroutines.core)
+                                api(KotlinX.datetime)
+                                api(KotlinX.serialization.core)
                             }
                             "dokt-test" -> {
+                                implementation(project(":"))
                                 api(project(":"))
-                                kotestApi()
-                                implementation("$kotlinx-serialization-json:1.3.2")
+                                api(Testing.kotest.assertions.core)
+                                api(Testing.kotest.framework.api)
+                                implementation(KotlinX.serialization.json)
                             }
                             "dokt-generator" -> {
                                 implementation(project(":dokt-test"))
-                                implementation("io.github.microutils:kotlin-logging:2.1.21")
+                                implementation("io.github.microutils:kotlin-logging:_")
                             }
                         }
                     }
                 }
                 val commonTest by getting {
                     dependencies {
-                        kotestApi()
-                        runtimeOnly("runner-junit5".kotest)
+                        api(Testing.kotest.assertions.core)
+                        api(Testing.kotest.framework.api)
+                        runtimeOnly(Testing.kotest.runner.junit5)
                     }
                 }
                 if (project.name == "dokt-generator") {
                     val jvmMain by getting {
                         dependencies {
-                            implementation("com.squareup:kotlinpoet:1.10.2")
+                            implementation(Square.kotlinPoet)
                             implementation(kotlin("compiler-embeddable"))
-                            runtimeOnly("ch.qos.logback:logback-classic:1.2.10")
+                            runtimeOnly("ch.qos.logback:logback-classic:_")
                         }
                     }
                 }
@@ -137,5 +135,4 @@ nexusPublishing {
 
 tasks.wrapper {
     distributionType = Wrapper.DistributionType.ALL
-    gradleVersion = vGradle
 }
