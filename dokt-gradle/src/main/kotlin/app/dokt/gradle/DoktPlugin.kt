@@ -1,205 +1,116 @@
 package app.dokt.gradle
 
-import KotlinPlatform.*
-import KotlinX
-import app.dokt.generator.application.*
 import de.fayard.refreshVersions.RefreshVersionsPlugin
+import isRoot
 import org.gradle.api.*
-import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.initialization.Settings
-import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
-import org.gradle.api.tasks.testing.Test
+import org.gradle.api.logging.Logger
 import org.gradle.api.tasks.wrapper.Wrapper
 import org.gradle.kotlin.dsl.*
-import org.gradle.kotlin.dsl.dependencies
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.plugin.*
-import org.jetbrains.kotlinx.serialization.gradle.SerializationGradleSubplugin
+import org.slf4j.LoggerFactory
 
 /**
  * Dokt settings and project plugin.
  * See https://tomgregory.com/gradle-evaluation-order-for-multi-project-builds/
  */
-@Suppress("unused", "unused_variable")
 class DoktPlugin : Plugin<Any> {
-    private lateinit var project: DoktProject
-    private val coder by lazy { KotlinPoetApplicationCoder(project) }
-    private val documentWriter by lazy { MarkDownApplicationDocumentWriter(project) }
+    private val logger = LoggerFactory.getLogger(javaClass) as Logger
 
     override fun apply(target: Any) {
-        if (target is Project) {
-            project = DoktProject(target)
-            project.configure()
-        } else if (target is Settings) {
-            target.initialize()
+        if (target is Project) target.configure()
+        else if (target is Settings) target.initialize()
+    }
+
+    private val Project.js get() = name.endsWith("-js")
+    private val Project.jvm get() = name.endsWith("-jvm")
+
+    private fun Project.configure() {
+        // TODO add projects to registry if needed
+        (if (name.endsWith("-dom")) DomainProject(this)
+        else if (name.endsWith("-app")) ApplicationProject(this)
+        else if (name.contains("-inf")) {
+            if (jvm) InfrastructureJvmProject(this)
+            else if (js) InfrastructureJsProject(this)
+            else InfrastructureMultiplatformProject(this)
+        } else if (name.contains("-itf")) {
+            if (jvm) InterfaceJvmProject(this)
+            else if (js) InterfaceJsProject(this)
+            else InterfaceMultiplatformProject(this)
+        } else {
+            if (isRoot) info("Ignoring root project")
+            else warn("Unable to detect architecture layer")
+            null
+        })?.configureLayer()
+
+        if (isRoot) {
+            task("updateProperties") {
+                dependsOn("refreshVersions")
+
+                doFirst {
+                    val propertiesFile = file("gradle.properties")
+                    val properties = if (propertiesFile.exists()) {
+                        val existing = propertiesFile.readLines()
+                            .filterNot { it.isBlank() || it.startsWith('#') }
+                            .associate { line -> line.split("=").let { it[0].trim() to it[1].trim() } }
+                            .toMutableMap()
+                        existing += defaultProperties
+                        existing.toSortedMap()
+                    } else defaultProperties
+                    propertiesFile.writeText(properties.toSortedMap()
+                        .map { "${it.key}=${it.value}" }
+                        .joinToString("\n")
+                    )
+
+                    // Configuring Gradle Wrapper
+                    if (buildFile.exists() && !buildFile.readText().contains("wrapper")) buildFile.appendText(
+                            "\ntasks.wrapper { distributionType = Wrapper.DistributionType.ALL }\n"
+                    )
+                }
+            }
         }
     }
 
-    private fun DoktProject.configure() {
-        allprojects {
+    private fun Settings.initialize() {
+        quiet("Initializing on Gradle ${gradle.gradleVersion}")
+
+        /*pluginManagement {
+            repositories {
+                gradlePluginPortal()
+                mavenLocal()
+            }
+        }*/
+
+        // Applying https://jmfayard.github.io/refreshVersions
+        debug("Applying Refresh Versions plugin")
+        apply<RefreshVersionsPlugin>()
+
+        // Define repositories for all projects
+        // https://docs.gradle.org/current/userguide/declaring_repositories.html#sub:centralized-repository-declaration
+        debug("Using Maven Central and local repositories in all projects")
+        dependencyResolutionManagement {
             repositories {
                 mavenCentral()
                 mavenLocal()
             }
         }
 
-        when (platform) {
-            JS -> configureJs()
-            JVM -> configureJvm()
-            MULTI -> configureMultiplatform()
-        }
-
-        if (isRoot) {
-            tasks.named<Wrapper>("wrapper") {
-                distributionType = Wrapper.DistributionType.ALL
-            }
-        }
-
-        subprojects {
+        // Initialize Dokt on all projects
+        debug("Initializing all projects")
+        gradle.allprojects {
+            quiet("Applying Dokt plugin")
             apply<DoktPlugin>()
         }
     }
 
-    private fun DoktProject.configureJs() {
-        apply<KotlinJsPluginWrapper>()
-        applyCommonPlugins()
-    }
+    private fun debug(message: String) = logger.debug(formatDebug(message))
 
-    private fun DoktProject.configureJvm() {
-        apply<KotlinPluginWrapper>()
-        applyCommonPlugins()
-
-        if (hasTests) {
-            configureTests()
-
-            dependencies {
-                implementation(KOTLIN_LOGGING)
-                implementation(JUL_TO_SLF4J)
-                runtimeOnly(LOGBACK)
-                runtimeOnly(JCL_OVER_SLF4J)
-                runtimeOnly(LOG4J_OVER_SLF4J)
-                testImplementation(Testing.kotest.assertions.core)
-                testImplementation(Testing.kotest.framework.api)
-                testRuntimeOnly(LOGBACK)
-                testRuntimeOnly(Testing.kotest.runner.junit5)
-                testRuntimeOnly(JCL_OVER_SLF4J)
-                testRuntimeOnly(LOG4J_OVER_SLF4J)
-            }
-        }
-    }
-
-    private fun DoktProject.configureMultiplatform() {
-        apply<KotlinMultiplatformPluginWrapper>()
-        applyCommonPlugins()
-
-        configure<KotlinMultiplatformExtension> {
-            jvm {
-                if (hasTests) configureTests()
-            }
-
-            sourceSets {
-                val commonMain by getting {
-                    dependencies {
-                        implementation(KOTLIN_LOGGING)
-                        if (isDomainLayer) implementation("$DOKT:_")
-                    }
-                    if (isDomainLayer) kotlin.srcDir(generatedSources)
-                }
-
-                if (hasTests) {
-                    val commonTest by getting {
-                        dependencies {
-                            if (isDomainLayer) {
-                                implementation("$DOKT-test:_")
-                                implementation(KotlinX.serialization.json)
-                            }
-                            implementation(Testing.kotest.assertions.core)
-                            implementation(Testing.kotest.framework.api)
-                            runtimeOnly(LOGBACK)
-                            runtimeOnly(Testing.kotest.runner.junit5)
-                            runtimeOnly(JCL_OVER_SLF4J)
-                            runtimeOnly(LOG4J_OVER_SLF4J)
-                        }
-                        if (isDomainLayer) kotlin.srcDir(generatedTestSources)
-                    }
-                }
-
-                if (jvmMain.exists()) {
-                    val jvmMain by getting {
-                        dependencies {
-                            implementation(JUL_TO_SLF4J)
-                            runtimeOnly(LOGBACK)
-                        }
-                    }
-                }
-
-                if (jvmTest.exists()) {
-                    val jvmMain by getting {
-                        dependencies {
-                            runtimeOnly(LOGBACK)
-                        }
-                    }
-                }
-            }
-        }
-
-        if (isDomainLayer) {
-            task("cleanGenerated") {
-                doLast { cleanGenerated() }
-            }.description = "Delete generated files."
-
-            task(GENERATE_CODE) {
-                doLast { coder.code() }
-            }.description = "Generate application classes."
-
-            task("generateDocumentation") {
-                doLast { documentWriter.document() }
-            }.description = "Generate Markdown documentation of the application."
-
-            tasks.filter { it.name.startsWith("compileKotlin") }.forEach { it.dependsOn(GENERATE_CODE) }
-        }
-    }
-
-    private fun Settings.initialize() {
-        println("Initializing dokt.app on Gradle ${gradle.gradleVersion}.")
-        pluginManagement {
-            repositories {
-                gradlePluginPortal()
-                mavenLocal()
-            }
-        }
-        apply<RefreshVersionsPlugin>()
-    }
+    private fun quiet(message: String) = logger.quiet(formatQuiet(message))
 
     companion object {
-        private const val DOKT = "app.dokt:dokt"
-        private const val GENERATE_CODE = "generateCode"
-        private const val JUL_TO_SLF4J = "org.slf4j:jul-to-slf4j:_"
-        private const val JCL_OVER_SLF4J = "org.slf4j:jcl-over-slf4j:_"
-        private const val LOGBACK = "ch.qos.logback:logback-classic:_"
-        private const val LOG4J_OVER_SLF4J = "org.slf4j:log4j-over-slf4j:_"
-        private const val KOTLIN_LOGGING = "io.github.microutils:kotlin-logging:_"
-
-        private fun DependencyHandler.implementation(dependencyNotation: Any) =
-            add("implementation", dependencyNotation)
-
-        private fun DependencyHandler.runtimeOnly(dependencyNotation: Any) =
-            add("runtimeOnly", dependencyNotation)
-
-        private fun DependencyHandler.testImplementation(dependencyNotation: Any) =
-            add("testImplementation", dependencyNotation)
-
-        private fun DependencyHandler.testRuntimeOnly(dependencyNotation: Any) =
-            add("testRuntimeOnly", dependencyNotation)
-
-        private fun Project.applyCommonPlugins() {
-            apply<SerializationGradleSubplugin>()
-            apply<MavenPublishPlugin>()
-        }
-
-        /** Was previously: testRuns["test"].executionTask.configure { useJUnitPlatform() } */
-        private fun Project.configureTests() = tasks.withType<Test>().configureEach {
-            useJUnitPlatform()
-        }
+        private val defaultProperties = mapOf(
+            "kotlin.code.style" to "official",
+            "kotlin.mpp.stability.nowarn" to "true",
+            "org.gradle.warning.mode" to "all"
+        )
     }
 }

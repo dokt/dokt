@@ -1,62 +1,14 @@
-import org.gradle.api.provider.Property
+@file:Suppress("unused")
 
-/**
- * Optional Dokt configuration
- */
-interface DoktExtension {
-    val layer: Property<Layer>
-    val platform: Property<KotlinPlatform>
-    val mavenPublish: Property<Boolean>
-}
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.*
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsSetupTask
 
-/** Kotlin platform */
-enum class KotlinPlatform {
-    JS,
-    JVM,
-    MULTI
-}
+val Project.isRoot get() = path == ":"
 
-/**
- * (Onion) architecture layer.
- *
- * Logging can be done in any layer. See:
- * https://exchangetuts.com/where-logging-should-go-in-onion-architecture-with-ddd-1640078703507858
- */
-enum class Layer(
-    /** Project name suffixes to identify layer if it isn't defined. */
-    vararg suffixes: String
-) {
-    /** Application layer */
-    APPLICATION("app"),
+// https://stackoverflow.com/questions/68830854/how-to-execute-a-node-command-in-a-kotlin-js-project
+private val Project.nodeDir get() = (rootProject.tasks["kotlinNodeJsSetup"] as NodeJsSetupTask).destination
 
-    /**
-     * Domain model layer which contain bounded contexts.
-     *
-     *
-     **/
-    DOMAIN("bc", "ctx", "cxt", "dom"),
+val Project.npm get() = nodeDir.resolve("npm.cmd")
 
-    /**
-     * Infrastructure layer
-     *
-     * Abbreviations https://www.abbreviations.com/abbreviation/infrastructure:
-     * - INFRA
-     * - ISX
-     **/
-    INFRASTRUCTURE("inf", "isx"),
-
-    /**
-     * Presentation or interface layer
-     *
-     * Abbreviations https://www.allacronyms.com/interface/abbreviated:
-     * - I/F
-     * - IF
-     * - intf
-     * - ITF
-     * - INTFC
-     **/
-    INTERFACE("api", "if", "int", "itf", "swing", "swt");
-
-    val abbreviations = suffixes.toList()
-    val suffixes = suffixes.map { "-$it" }
-}
+val Project.npx get() = nodeDir.resolve("npx.cmd")

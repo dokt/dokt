@@ -1,6 +1,6 @@
 # Dokt example projects
 
-- [ERP](erp) is (going to be) complex example containing modules:
+- [ERP](erp-dom) is (going to be) complex example containing modules:
   - *shared* - Shared kernel
   - *so* - Sales order
-- [Hello](hello) is simple "Hello, World!" application.
+- [Hello](hello-dom) is simple "Hello, World!" application.

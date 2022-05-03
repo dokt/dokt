@@ -133,6 +133,4 @@ nexusPublishing {
     }
 }
 
-tasks.wrapper {
-    distributionType = Wrapper.DistributionType.ALL
-}
+tasks.wrapper { distributionType = Wrapper.DistributionType.ALL }
