@@ -4,6 +4,22 @@
 
 ### Dokt Gradle plugin features
 
+#### Project detection
+
+Dokt detects architecture layer and platform from project using following logic:
+
+If the project:
+- name ends with `-dom`, it's a domain logic project for Multiplatform.
+- name ends with `-app`, it's an application services project for Multiplatform.
+- name contains `-if`, it's application interface project:
+  - if path contains `jvm`, it's for JVM platform.
+  - if path contains `js`, it's for JS platform.
+  - otherwise it's for Multiplatform.
+- otherwise it's an infrastructure project:
+  - if path contains `jvm`, it's for JVM platform.
+  - if path contains `js`, it's for JS platform.
+  - otherwise it's for Multiplatform.
+
 #### For the root project
 
 - Defines Gradle Wrapper version
@@ -22,3 +38,7 @@
 - Adds generated sources to Common Main
 - Adds generated sources to Common Test
 - Triggers code generation before compiling Kotlin 
+
+# TODO
+
+- Migrate to latest [Publish plugin](https://plugins.gradle.org/plugin/com.gradle.plugin-publish)

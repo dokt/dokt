@@ -1,6 +1,6 @@
 package biz.bank.account
 
-import app.dokt.Root
+import app.dokt.domain.Root
 import kotlinx.serialization.Serializable
 
 @Serializable

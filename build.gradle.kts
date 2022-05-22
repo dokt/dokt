@@ -1,5 +1,6 @@
 @file:Suppress("unused_variable")
 
+import org.jetbrains.kotlin.gradle.plugin.*
 //import org.jetbrains.dokka.gradle.*
 
 plugins {
@@ -11,72 +12,38 @@ plugins {
     kotlin("plugin.serialization")
 }
 
-allprojects {
-    //apply<DokkaPlugin>()
-    apply<MavenPublishPlugin>()
-    apply<SigningPlugin>()
+//#region Functions
+fun kmp(path: String, desc: String, dep: Action<NamedDomainObjectContainer<KotlinSourceSet>>) = project(path) {
+    description = "$desc for Domain-driven design using Kotlin."
 
+    //apply<DokkaPlugin>()
+    apply<KotlinMultiplatformPluginWrapper>()
+    apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
+
+    kotlin {
+        jvm { testRuns["test"].executionTask.configure { useJUnitPlatform() } }
+        sourceSets(dep)
+    }
+}
+fun NamedDomainObjectContainer<KotlinSourceSet>.commonDoktTest() =
+    commonTest { implementation(project(":dokt-test")) }
+fun NamedDomainObjectContainer<KotlinSourceSet>.commonMain(configure: KotlinDependencyHandler.() -> Unit) {
+    val commonMain by getting { dependencies { configure() } }
+}
+fun NamedDomainObjectContainer<KotlinSourceSet>.commonTest(configure: KotlinDependencyHandler.() -> Unit) {
+    val commonTest by getting { dependencies { configure() } }
+}
+fun NamedDomainObjectContainer<KotlinSourceSet>.jvmMain(configure: KotlinDependencyHandler.() -> Unit) {
+    val jvmMain by getting { dependencies { configure() } }
+}
+//#endregion
+
+allprojects {
     group = "app.dokt"
     version = "0.3.0-SNAPSHOT"
-    description = "Domain-driven design using Kotlin"
 
-    repositories {
-        mavenCentral()
-    }
-
-    if (name != "dokt-gradle") {
-        apply(plugin = "org.jetbrains.kotlin.multiplatform")
-        apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
-
-        kotlin {
-            jvm {
-                // TODO
-                testRuns["test"].executionTask.configure { useJUnitPlatform() }
-            }
-
-            sourceSets {
-                val commonMain by getting {
-                    dependencies {
-                        when (project.name) {
-                            "dokt" -> {
-                                api("com.benasher44:uuid:_")
-                                api(KotlinX.coroutines.core)
-                                api(KotlinX.datetime)
-                                api(KotlinX.serialization.core)
-                            }
-                            "dokt-test" -> {
-                                implementation(project(":"))
-                                api(project(":"))
-                                api(Testing.kotest.assertions.core)
-                                api(Testing.kotest.framework.api)
-                                implementation(KotlinX.serialization.json)
-                            }
-                            "dokt-generator" -> {
-                                implementation(project(":dokt-test"))
-                                implementation("io.github.microutils:kotlin-logging:_")
-                            }
-                        }
-                    }
-                }
-                val commonTest by getting {
-                    dependencies {
-                        api(Testing.kotest.assertions.core)
-                        api(Testing.kotest.framework.api)
-                        runtimeOnly(Testing.kotest.runner.junit5)
-                    }
-                }
-                if (project.name == "dokt-generator") {
-                    val jvmMain by getting {
-                        dependencies {
-                            implementation(Square.kotlinPoet)
-                            implementation(kotlin("compiler-embeddable"))
-                            runtimeOnly("ch.qos.logback:logback-classic:_")
-                        }
-                    }
-                }
-            }
-        }
-    }
+    apply<MavenPublishPlugin>()
+    apply<SigningPlugin>()
 
     //val dokkaHtml by tasks.getting(DokkaTask::class)
 
@@ -121,6 +88,76 @@ allprojects {
         val signingPassword: String? by project
         useInMemoryPgpKeys(signingKey, signingPassword)
         sign(publishing.publications)
+    }
+}
+
+kmp(":", "Common (logging free) language utilities") {
+    commonMain {
+        api("com.benasher44:uuid:_")
+        api(KotlinX.coroutines.core)
+        api(KotlinX.datetime)
+        api(KotlinX.serialization.core)
+    }
+    commonDoktTest()
+    jvmMain {
+        api(kotlin("stdlib-jdk8"))
+    }
+}
+
+kmp("dokt-test", "Common (logging free) test utilities") {
+    commonMain {
+        api(Testing.kotest.assertions.core)
+        api(Testing.kotest.framework.datatest)
+        api(Testing.kotest.runner.junit5)
+        api(KotlinX.serialization.json)
+    }
+}
+
+kmp("dokt-domain", "Domain (logging free) support classes") {
+    commonMain { api(project(":")) }
+    commonDoktTest()
+}
+
+kmp("dokt-domain-test", "Domain (logging free) test classes") {
+    commonMain {
+        api(project(":dokt-domain"))
+        api(project(":dokt-test"))
+    }
+}
+
+kmp("dokt-application", "Application support classes") {
+    commonMain {
+        api(project(":"))
+        api("io.github.microutils:kotlin-logging:_")
+    }
+    commonDoktTest()
+    jvmMain {
+        api("net.java.dev.jna:jna-platform:_")
+    }
+}
+
+kmp("dokt-interface", "Interface support classes") {
+    commonMain { api(project(":dokt-application")) }
+    commonDoktTest()
+    jvmMain {
+        // Exclude these if not creating Swing app.
+        api("com.github.jiconfont:jiconfont-google_material_design_icons:_")
+        api("com.github.jiconfont:jiconfont-font_awesome:_")
+        api("org.jfree:jfreechart:_")
+        api(KotlinX.coroutines.swing)
+        implementation("com.github.jiconfont:jiconfont-swing:_")
+    }
+}
+
+kmp("dokt-generator", "Code and documentation generator") {
+    commonMain {
+        implementation(project(":dokt-domain-test"))
+        implementation("io.github.microutils:kotlin-logging:_")
+    }
+    commonDoktTest()
+    jvmMain {
+        implementation(Square.kotlinPoet)
+        implementation(kotlin("compiler-embeddable"))// TODO `1.5.31` that might work differently than in the requested version `1.6.21`
     }
 }
 

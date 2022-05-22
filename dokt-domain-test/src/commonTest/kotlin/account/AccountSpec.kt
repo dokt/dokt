@@ -1,6 +1,6 @@
 package biz.bank.account
 
-import app.dokt.test.Arranger
+import app.dokt.domain.test.Arranger
 import biz.bank.account.app.*
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.core.spec.style.scopes.FunSpecContainerScope

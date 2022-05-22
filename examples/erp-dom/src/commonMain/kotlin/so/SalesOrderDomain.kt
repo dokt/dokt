@@ -1,6 +1,6 @@
 package com.corex.erp.so
 
-import app.dokt.Root
+import app.dokt.domain.Root
 import com.corex.erp.shared.VatNo
 import kotlinx.serialization.Serializable
 

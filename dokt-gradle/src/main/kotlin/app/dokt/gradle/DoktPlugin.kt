@@ -4,15 +4,19 @@ import de.fayard.refreshVersions.RefreshVersionsPlugin
 import isRoot
 import org.gradle.api.*
 import org.gradle.api.initialization.Settings
+import org.gradle.api.initialization.resolve.RepositoriesMode
 import org.gradle.api.logging.Logger
-import org.gradle.api.tasks.wrapper.Wrapper
 import org.gradle.kotlin.dsl.*
+import org.jetbrains.kotlin.gradle.plugin.KotlinJsPluginWrapper
+import org.jetbrains.kotlin.gradle.plugin.KotlinMultiplatformPluginWrapper
+import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.slf4j.LoggerFactory
 
 /**
  * Dokt settings and project plugin.
  * See https://tomgregory.com/gradle-evaluation-order-for-multi-project-builds/
  */
+@Suppress("unused")
 class DoktPlugin : Plugin<Any> {
     private val logger = LoggerFactory.getLogger(javaClass) as Logger
 
@@ -21,33 +25,37 @@ class DoktPlugin : Plugin<Any> {
         else if (target is Settings) target.initialize()
     }
 
-    private val Project.js get() = name.endsWith("-js")
-    private val Project.jvm get() = name.endsWith("-jvm")
+    private val Project.js get() = path.contains("js")
+    private val Project.jvm get() = path.contains("jvm")
 
     private fun Project.configure() {
-        // TODO add projects to registry if needed
-        (if (name.endsWith("-dom")) DomainProject(this)
-        else if (name.endsWith("-app")) ApplicationProject(this)
-        else if (name.contains("-inf")) {
-            if (jvm) InfrastructureJvmProject(this)
-            else if (js) InfrastructureJsProject(this)
-            else InfrastructureMultiplatformProject(this)
-        } else if (name.contains("-itf")) {
-            if (jvm) InterfaceJvmProject(this)
-            else if (js) InterfaceJsProject(this)
-            else InterfaceMultiplatformProject(this)
-        } else {
-            if (isRoot) info("Ignoring root project")
-            else warn("Unable to detect architecture layer")
-            null
-        })?.configureLayer()
+        val srcDir = projectDir.resolve("src")
+        if (srcDir.exists()) {
+            // TODO add projects to registry if needed
+            (if (name.endsWith(DomainProject.SUFFIX)) DomainProject(this, srcDir)
+            else if (name.endsWith(ApplicationProject.SUFFIX)) ApplicationProject(this, srcDir)
+            else if (name.contains(InterfaceProject.TAG)) {
+                if (jvm) InterfaceJvmProject(this, srcDir)
+                else if (js) InterfaceJsProject(this, srcDir)
+                else InterfaceMultiplatformProject(this, srcDir)
+            } else {
+                if (jvm) InfrastructureJvmProject(this, srcDir)
+                else if (js) InfrastructureJsProject(this, srcDir)
+                else InfrastructureMultiplatformProject(this, srcDir)
+            }).configureLayer()
+        } else if (buildFile.exists()) {
+            // Enable Kotlin plugins for build script.
+            if (jvm) apply<KotlinPluginWrapper>()
+            else if (js) apply<KotlinJsPluginWrapper>()
+            else apply<KotlinMultiplatformPluginWrapper>()
+        }
 
         if (isRoot) {
             task("updateProperties") {
                 dependsOn("refreshVersions")
 
                 doFirst {
-                    val propertiesFile = file("gradle.properties")
+                    val propertiesFile = file(Project.GRADLE_PROPERTIES)
                     val properties = if (propertiesFile.exists()) {
                         val existing = propertiesFile.readLines()
                             .filterNot { it.isBlank() || it.startsWith('#') }
@@ -71,7 +79,7 @@ class DoktPlugin : Plugin<Any> {
     }
 
     private fun Settings.initialize() {
-        quiet("Initializing on Gradle ${gradle.gradleVersion}")
+        quiet("Initializing Dokt $VER on Gradle ${gradle.gradleVersion}")
 
         /*pluginManagement {
             repositories {
@@ -86,18 +94,20 @@ class DoktPlugin : Plugin<Any> {
 
         // Define repositories for all projects
         // https://docs.gradle.org/current/userguide/declaring_repositories.html#sub:centralized-repository-declaration
-        debug("Using Maven Central and local repositories in all projects")
+        // TODO Doesn't work in all projects
+        /** debug("Using Maven Central and local repositories in all projects")
         dependencyResolutionManagement {
+            repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
             repositories {
                 mavenCentral()
                 mavenLocal()
             }
-        }
+        }*/
 
         // Initialize Dokt on all projects
         debug("Initializing all projects")
         gradle.allprojects {
-            quiet("Applying Dokt plugin")
+            debug("Applying Dokt plugin")
             apply<DoktPlugin>()
         }
     }
@@ -107,6 +117,10 @@ class DoktPlugin : Plugin<Any> {
     private fun quiet(message: String) = logger.quiet(formatQuiet(message))
 
     companion object {
+        /** Kotlin plugin ID prefix */
+        const val KOTLIN = "org.jetbrains.kotlin"
+        const val VER = "0.3.0-SNAPSHOT+8"
+
         private val defaultProperties = mapOf(
             "kotlin.code.style" to "official",
             "kotlin.mpp.stability.nowarn" to "true",

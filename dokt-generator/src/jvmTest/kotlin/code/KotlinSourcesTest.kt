@@ -13,13 +13,13 @@ class KotlinSourcesTest : FunSpec({
         test("test") { test.commonRootPackage shouldBe "biz.bank" }
     }
     context("files") {
-        test("dokt") { dokt.files shouldHaveSize 6 }
+        test("dokt") { dokt.files shouldHaveSize 10 }
         test("erp") { erp.files shouldHaveSize 3 }
         test("hello") { hello.files shouldHaveSize 1 }
         test("test") { test.files shouldHaveSize 9 }
     }
     context("types") {
-        test("dokt") { dokt.types shouldHaveSize 22 }
+        test("dokt") { dokt.types shouldHaveSize 3 }
         test("erp") { erp.types shouldHaveSize 6 }
         test("hello") { hello.types shouldHaveSize 2 }
         test("test") { test.types shouldHaveSize 18 }
@@ -28,8 +28,8 @@ class KotlinSourcesTest : FunSpec({
     companion object {
         private const val MAIN = "src/commonMain/kotlin"
         val dokt by lazy { KotlinSources(Path("../$MAIN")) }
-        val erp by lazy { KotlinSources(Path("../examples/erp/$MAIN")) }
-        val hello by lazy { KotlinSources(Path("../examples/hello/$MAIN")) }
-        val test by lazy { KotlinSources(Path("../dokt-test/src/commonTest/kotlin")) }
+        val erp by lazy { KotlinSources(Path("../examples/erp-dom/$MAIN")) }
+        val hello by lazy { KotlinSources(Path("../examples/hello-dom/$MAIN")) }
+        val test by lazy { KotlinSources(Path("../dokt-domain-test/src/commonTest/kotlin")) }
     }
 }

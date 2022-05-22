@@ -1,7 +1,7 @@
 /**
  * Dokt domain API package
  */
-package app.dokt
+package app.dokt.domain
 
 import kotlinx.serialization.*
 

@@ -1,9 +1,9 @@
 package app.dokt.generator.domain
 
 import app.dokt.app.*
+import app.dokt.domain.test.*
 import app.dokt.generator.alsoIf
 import app.dokt.generator.code.*
-import app.dokt.test.*
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import io.kotest.core.spec.style.scopes.FunSpecContainerScope

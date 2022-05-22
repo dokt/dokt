@@ -1,6 +1,6 @@
 package app.dokt.generator.domain
 
-import app.dokt.Root
+import app.dokt.domain.*
 import app.dokt.generator.code.*
 import app.dokt.generator.pluralize
 import kotlin.jvm.JvmStatic
@@ -9,7 +9,7 @@ abstract class BoundedContextReader {
     protected val log = mu.KotlinLogging.logger {}
 
     companion object {
-        private val AggregateRootName = app.dokt.AggregateRoot::class.qualifiedName
+        private val AggregateRootName = AggregateRoot::class.qualifiedName
         private val RootName = Root::class.qualifiedName
 
         protected val TypeDef.extendsRoot get() = extends?.qualifiedName == RootName

@@ -1,7 +1,7 @@
 package biz.bank.account.app
 
+import app.dokt.domain.test.TestAggregate
 import biz.bank.account.*
-import app.dokt.test.*
 
 private val serializer = Account.serializer()
 

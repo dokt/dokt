@@ -7,7 +7,7 @@ class KotlinPoetAggregateEventCoderTest : FunSpec({
         landed.code() shouldBeSerializableInPlane """
                 data class Landed(
                   val successful: Boolean,
-                  val length: UShort
+                  val length: UShort,
                 ) : PlaneEvent
                 """
     }
@@ -22,7 +22,7 @@ class KotlinPoetAggregateEventCoderTest : FunSpec({
                 @JvmInline
                 @Serializable
                 value class Turned(
-                  val degrees: Float
+                  val degrees: Float,
                 ) : PlaneEvent
                 """
     }

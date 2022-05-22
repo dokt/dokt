@@ -1,6 +1,7 @@
-package app.dokt.test
+@file:Suppress("unused")
+package app.dokt.domain.test
 
-import app.dokt.AggregateRoot
+import app.dokt.domain.AggregateRoot
 import app.dokt.app.*
 import io.kotest.assertions.withClue
 import io.kotest.matchers.*

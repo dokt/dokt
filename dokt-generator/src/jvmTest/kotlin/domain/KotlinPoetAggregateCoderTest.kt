@@ -14,7 +14,7 @@ class KotlinPoetAggregateCoderTest : FunSpec({
             import com.airline.plane.PlaneEvent
 
             class PlaneAggregate(
-              tailNo: String
+              tailNo: String,
             ) : Aggregate<Plane, String, PlaneEvent>(tailNo), Events {
               override fun PlaneEvent.apply() = when(this) {
                 is Landed -> root.landed(successful, length)
@@ -54,7 +54,7 @@ class KotlinPoetAggregateCoderTest : FunSpec({
             import com.airline.plane.PlaneEvent
             
             class PlaneAggregate(
-              tailNo: String
+              tailNo: String,
             ) : Aggregate<Plane, String, PlaneEvent>(tailNo), Events {
               override fun PlaneEvent.apply() = when(this) {
                 is Landed -> root.landed(successful, length)
@@ -86,7 +86,7 @@ class KotlinPoetAggregateCoderTest : FunSpec({
               suspend fun pilot(
                 to: To<String>,
                 horizontal: Byte,
-                vertical: Byte
+                vertical: Byte,
               ) = tx(to) { pilot(horizontal, vertical) }
             }
             """
@@ -96,7 +96,7 @@ class KotlinPoetAggregateCoderTest : FunSpec({
         coder.codeApplicationTest() shouldCode """
             package com.airline.plane.app
             
-            import app.dokt.test.TestAggregate
+            import app.dokt.domain.test.TestAggregate
             import com.airline.plane.Events
             import com.airline.plane.Plane
             import com.airline.plane.PlaneEvent
@@ -111,7 +111,7 @@ class KotlinPoetAggregateCoderTest : FunSpec({
             }
             
             class PlaneTestAggregate(
-              root: Plane
+              root: Plane,
             ) : TestAggregate<Plane, Events, PlaneEvent>(root, serializer), PlaneCommands, Events {
               override fun gear() = command.gear()
             
@@ -150,7 +150,7 @@ class KotlinPoetAggregateCoderTest : FunSpec({
             @Serializable
             data class Landed(
               val successful: Boolean,
-              val length: UShort
+              val length: UShort,
             ) : PlaneEvent
             
             @Serializable
@@ -159,7 +159,7 @@ class KotlinPoetAggregateCoderTest : FunSpec({
             @JvmInline
             @Serializable
             value class Turned(
-              val degrees: Float
+              val degrees: Float,
             ) : PlaneEvent
             """
     }
@@ -168,8 +168,8 @@ class KotlinPoetAggregateCoderTest : FunSpec({
         coder.codeDomainTest() shouldCode """
             package com.airline.plane
             
-            import app.dokt.test.Actor
-            import app.dokt.test.Arranger
+            import app.dokt.domain.test.Actor
+            import app.dokt.domain.test.Arranger
             import com.airline.plane.app.PlaneCommands
             import com.airline.plane.app.PlaneTestAggregate
             import io.kotest.core.spec.style.FunSpec
@@ -177,7 +177,7 @@ class KotlinPoetAggregateCoderTest : FunSpec({
             
             abstract class PlaneSpec(
               body: PlaneSpec.() -> Unit,
-              private val testTailNo: String = "testTailNo"
+              private val testTailNo: String = "testTailNo",
             ) : FunSpec() {
               init {
                 body()}
@@ -225,7 +225,7 @@ class KotlinPoetAggregateCoderTest : FunSpec({
               suspend fun pilot(
                 to: To<String>,
                 horizontal: Byte,
-                vertical: Byte
+                vertical: Byte,
               ) = tx(to) { pilot(horizontal, vertical) }
             }
             """
@@ -233,8 +233,8 @@ class KotlinPoetAggregateCoderTest : FunSpec({
 
     test("codeSpec") {
         coder.codeSpec() shouldCodeInPlane """
-            import app.dokt.test.Actor
-            import app.dokt.test.Arranger
+            import app.dokt.domain.test.Actor
+            import app.dokt.domain.test.Arranger
             import com.airline.plane.app.PlaneCommands
             import com.airline.plane.app.PlaneTestAggregate
             import io.kotest.core.spec.style.FunSpec
@@ -242,7 +242,7 @@ class KotlinPoetAggregateCoderTest : FunSpec({
             
             abstract class PlaneSpec(
               body: PlaneSpec.() -> Unit,
-              private val testTailNo: String = "testTailNo"
+              private val testTailNo: String = "testTailNo",
             ) : FunSpec() {
               init {
                 body()}
@@ -262,13 +262,13 @@ class KotlinPoetAggregateCoderTest : FunSpec({
 
     test("codeTestAggregate") {
         coder.codeTestAggregate() shouldCodeInPlaneApp """
-            import app.dokt.test.TestAggregate
+            import app.dokt.domain.test.TestAggregate
             import com.airline.plane.Events
             import com.airline.plane.Plane
             import com.airline.plane.PlaneEvent
             
             class PlaneTestAggregate(
-              root: Plane
+              root: Plane,
             ) : TestAggregate<Plane, Events, PlaneEvent>(root, serializer), PlaneCommands, Events {
               override fun gear() = command.gear()
             

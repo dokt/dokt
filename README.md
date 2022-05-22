@@ -31,7 +31,7 @@ plugins {
 2. Write domain logic in [src/commonMain/kotlin/Hello.kt](examples/hello-dom/src/commonMain/kotlin/Hello.kt) file:
 
 ```kotlin
-import app.dokt.Root
+import app.dokt.domain.Root
 import kotlinx.serialization.Serializable
 
 /** Events that Greeter emits  */
