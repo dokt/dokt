@@ -1,5 +1,6 @@
 .gradle
 .idea
+examples/**/build.gradle.kts
 examples/*.properties
 kotlin-js-store
 **/build
