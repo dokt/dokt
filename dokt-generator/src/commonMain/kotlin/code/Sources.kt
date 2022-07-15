@@ -18,7 +18,7 @@ interface Sources {
 
 class GeneratedSources(override val basePath: String) : Sources {
     companion object {
-        private const val DEFAULT_GENERATED = "build/generated"
+        private const val DEFAULT_GENERATED = "building/generated"
         private const val DEFAULT_MAIN = "$DEFAULT_GENERATED/commonMain"
         private const val DEFAULT_TEST = "$DEFAULT_GENERATED/commonTest"
     }

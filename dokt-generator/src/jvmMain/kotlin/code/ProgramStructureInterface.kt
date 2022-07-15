@@ -14,17 +14,18 @@ import org.jetbrains.kotlin.psi.psiUtil.getChildrenOfType
 import java.io.*
 import java.nio.file.Path
 
-class KotlinClass(private val file: KotlinFile, element: KtClass) : PackagedElement<KtClass>(element), TypeDef {
+class KotlinClass(private val file: KotlinFile, element: KtClassOrObject)
+    : PackagedElement<KtClassOrObject>(element), TypeDef {
 
     override val implements by lazy {
         element.superTypeListEntries.map { KotlinType(file, it.typeReference!!) }
     }
 
-    override val isData get() = element.isData()
+    override val isData get() = element is KtClass && element.isData()
 
-    override val isEnumeration get() = element.isEnum()
+    override val isEnumeration get() = element is KtClass && element.isEnum()
 
-    override val isInterface get() = element.isInterface()
+    override val isInterface get() = element is KtClass && element.isInterface()
 
     override val methods by lazy { element.body?.functions?.map { KotlinFunction(it, file) } ?: emptyList() }
 
@@ -33,7 +34,7 @@ class KotlinClass(private val file: KotlinFile, element: KtClass) : PackagedElem
     override val primaryConstructor by lazy { element.primaryConstructorParameters.map { KotlinVariable(file, it) } }
 
     override val properties by lazy {
-        if (element.isData()) primaryConstructor
+        if (element is KtClass && element.isData()) primaryConstructor
         else TODO()
     }
 }
@@ -42,20 +43,7 @@ class KotlinClass(private val file: KotlinFile, element: KtClass) : PackagedElem
  * [Parsing Kotlin code using Kotlin](https://jitinsharma.in/posts/parsing-kotlin-using-code-kotlin/)
  */
 class KotlinFile(val file: File, element: KtFile) : PackagedElement<KtFile>(element), CodeFile {
-    companion object {
-        private val manager = PsiManager.getInstance(KotlinCoreEnvironment.createForProduction(
-            Disposer.newDisposable(),
-            CompilerConfiguration(),
-            EnvironmentConfigFiles.METADATA_CONFIG_FILES
-        ).project)
-
-        private fun read(file: File) =
-            manager.findFile(LightVirtualFile(file.name, KotlinFileType.INSTANCE, file.readText())) as KtFile
-    }
-
-    constructor(file: File) : this(file, read(file))
-
-    constructor(path: Path) : this(path.toFile())
+    val hasMain get() = element.getChildrenOfType<KtNamedFunction>().any { it.name == "main" }
 
     /**
      * Qualified import names by alias name
@@ -68,6 +56,10 @@ class KotlinFile(val file: File, element: KtFile) : PackagedElement<KtFile>(elem
         } }
     }
 
+    val javaClassName get() = "$packageName.$javaFileName"
+
+    val javaFileName get() = name.substringBefore('.') + "Kt"
+
     private val log by lazy { mu.KotlinLogging.logger {  } }
 
     override val path: String get() = file.path
@@ -79,7 +71,11 @@ class KotlinFile(val file: File, element: KtFile) : PackagedElement<KtFile>(elem
         }
     }
 
-    override val types by lazy { element.getChildrenOfType<KtClass>().map { KotlinClass(this, it) } }
+    override val types by lazy { element.getChildrenOfType<KtClassOrObject>().map { KotlinClass(this, it) } }
+
+    constructor(file: File) : this(file, read(file))
+
+    constructor(path: Path) : this(path.toFile())
 
     /**
      * Try to find package name.
@@ -87,6 +83,19 @@ class KotlinFile(val file: File, element: KtFile) : PackagedElement<KtFile>(elem
      * TODO handle [default imports](https://kotlinlang.org/docs/packages.html#default-imports)
      */
     fun getPackageNameFor(name: String) = imports.getOrDefault(name, "kotlin.$name")
+
+    fun imports(packagePrefix: String) = imports.values.any { it.startsWith(packagePrefix) }
+
+    companion object {
+        private val manager = PsiManager.getInstance(KotlinCoreEnvironment.createForProduction(
+            Disposer.newDisposable(),
+            CompilerConfiguration(),
+            EnvironmentConfigFiles.METADATA_CONFIG_FILES
+        ).project)
+
+        private fun read(file: File) =
+            manager.findFile(LightVirtualFile(file.name, KotlinFileType.INSTANCE, file.readText())) as KtFile
+    }
 }
 
 class KotlinFunction(element: KtNamedFunction, private val file: KotlinFile)
@@ -133,7 +142,7 @@ class KotlinVariable(private val file: KotlinFile, element: KtNamedDeclaration, 
     override fun toString() = "$name: $type"
 }
 
-abstract class PackagedElement<E : PsiNamedElement>(protected val element: E) : Packaged {
+abstract class PackagedElement<E : PsiNamedElement>(val element: E) : Packaged {
     override val name get() = element.name ?: ""
 
     override fun toString() = qualifiedName

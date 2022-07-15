@@ -1,6 +1,7 @@
 package app.dokt.generator.domain
 
 import app.dokt.app.*
+import app.dokt.domain.event.RootEvent
 import app.dokt.domain.test.*
 import app.dokt.generator.alsoIf
 import app.dokt.generator.code.*

@@ -11,13 +11,28 @@ import kotlin.io.path.Path
 import kotlin.io.path.createDirectories
 import kotlin.io.path.writer
 
+fun codeBlock(code: CodeBlock.Builder.() -> Unit) = CodeBlock.builder().apply { code() }.build()
+
+fun controlFlow(controlFlow: String, code: CodeBlock.Builder.() -> Unit) = codeBlock {
+    controlFlow(controlFlow) { code() }
+}
+
+fun script(fileName: String, code: FileSpec.Builder.() -> Unit) = FileSpec
+    .scriptBuilder(fileName).apply { code() }.build()
+
 val Array<out ClassName>.asParameters get() = map { ParameterSpec(it.simpleName.lowerFirst(), it) }
 
 val Array<out Pair<String, TypeName>>.asParameters get() = map { ParameterSpec(it.first, it.second) }
 
+fun CodeBlock.Builder.controlFlow(controlFlow: String, code: CodeBlock.Builder.() -> Unit): CodeBlock.Builder {
+    beginControlFlow(controlFlow)
+    code()
+    return endControlFlow()
+}
+
 fun FileSpec.print() {
     println()
-    println("Printing file $name.kt:")
+    println("Printing $name file:")
     println("-----")
     writeTo(System.out)
 }

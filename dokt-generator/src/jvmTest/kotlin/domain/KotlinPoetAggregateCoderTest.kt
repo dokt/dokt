@@ -141,7 +141,7 @@ class KotlinPoetAggregateCoderTest : FunSpec({
         coder.codeDomain() shouldCode """
             package com.airline.plane
             
-            import app.dokt.app.RootEvent
+            import app.dokt.domain.event.RootEvent
             import kotlin.jvm.JvmInline
             import kotlinx.serialization.Serializable
             
@@ -197,7 +197,7 @@ class KotlinPoetAggregateCoderTest : FunSpec({
 
     test("codeEvent") {
         coder.codeEvent() shouldCodeInPlaneApp """
-            import app.dokt.app.RootEvent
+            import app.dokt.domain.event.RootEvent
             
             sealed interface PlaneEvent : RootEvent
             """

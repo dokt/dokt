@@ -1,4 +1,4 @@
-package app.dokt.iface
+package app.dokt.ui
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe

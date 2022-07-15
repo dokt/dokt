@@ -1,31 +1,23 @@
 pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        mavenLocal() // Needed only for testing unreleased Dokt plugin versions
-    }
+  repositories {
+    gradlePluginPortal()
+    mavenLocal()
+  }
 }
 plugins {
-    id("app.dokt") version "0.3.0-SNAPSHOT"
-}
-dependencyResolutionManagement {
-    repositories {
-        mavenCentral()
-        mavenLocal()
-    }
+  id("de.fayard.refreshVersions") version "0.40.2"
 }
 rootProject.name = "examples"
-include(
-    //#region Domains
-    "erp-dom",
-    "hello-dom",
-    //#endregion
 
-    //#region Applications
-    "window-simulator-app",
-    //#endregion
+// Dokt libraries
+include("dokt-application", "dokt-common", "dokt-domain", "dokt-domain-test", "dokt-interface",
+    "dokt-test")
 
-    //#region Interfaces
-    "jvm",
-    "jvm:window-simulator-if",
-    //#endregion
-)
+// Domain architecture layer projects
+include("erp-dom", "file-dom", "hash-dom", "hello-dom")
+
+// Application architecture layer projects
+include("window-simulator-app")
+
+// Interface architecture layer projects
+include("window-simulator-swing")

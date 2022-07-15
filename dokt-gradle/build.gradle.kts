@@ -1,19 +1,18 @@
 plugins {
     `java-gradle-plugin`
     `maven-publish`
-    `kotlin-dsl`
     id("com.gradle.plugin-publish")
+    kotlin("jvm")
 }
 
 description = "Domain-driven design using Kotlin"
 
 repositories {
     gradlePluginPortal()
+    mavenCentral()
 }
 
 dependencies {
-    implementation("de.fayard.refreshVersions:refreshVersions:_")
-
     // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.multiplatform
     implementation(kotlin("gradle-plugin", "_"))
 
@@ -37,9 +36,15 @@ gradlePlugin {
     plugins {
         create("dokt") {
             id = "app.dokt"
-            displayName = "Dokt Plugin"
+            displayName = "Dokt plugin for the root project"
             description = project.description
-            implementationClass = "app.dokt.gradle.DoktPlugin"
+            implementationClass = "app.dokt.gradle.RootProjectPlugin"
+        }
+        create("dokt-domain") {
+            id = "app.dokt.domain"
+            displayName = "Dokt plugin for domain projects"
+            description = project.description
+            implementationClass = "app.dokt.gradle.DomainProjectPlugin"
         }
     }
 }
