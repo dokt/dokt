@@ -12,6 +12,8 @@ class GradleBuildWriterTest : FunSpec({
                 plugins { id("app.dokt") }
                 tasks.wrapper { distributionType = Wrapper.DistributionType.ALL }
                 tasks.create("copyDokt") {
+                  group = "dokt"
+                  description = "Copy Dokt libraries to root project as a workaround for KTIJ-22057."
                   doLast {
                     copy {
                       from("..")

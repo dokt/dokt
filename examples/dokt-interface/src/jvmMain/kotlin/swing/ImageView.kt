@@ -6,8 +6,10 @@ import app.dokt.*
 import java.awt.*
 import java.awt.image.BufferedImage
 import javax.swing.JComponent
+import javax.swing.JTable
+import javax.swing.table.TableCellRenderer
 
-class ImageView(image: BufferedImage = DOT) : JComponent() {
+class ImageView(image: BufferedImage = DOT) : JComponent(), TableCellRenderer {
     var image = image
         set(value) {
             field = value
@@ -21,6 +23,15 @@ class ImageView(image: BufferedImage = DOT) : JComponent() {
             else size = it
         }
     }
+
+    override fun getTableCellRendererComponent(
+        table: JTable,
+        value: Any?,
+        isSelected: Boolean,
+        hasFocus: Boolean,
+        row: Int,
+        column: Int
+    ) = apply { image = value?.let { it as BufferedImage } ?: DOT }
 
     override fun paintComponent(g: Graphics) {
         super.paintComponent(g)

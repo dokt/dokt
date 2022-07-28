@@ -16,3 +16,17 @@ val Long.bytesText : String get() {
     size /= B
     return "$size TB"
 }
+
+/** Non-blank text */
+@JvmInline
+value class Text
+    @Deprecated(level = DeprecationLevel.ERROR, message = "use companion methods")
+    constructor(private val value: String) {
+    override fun toString() = value
+
+    @Suppress("DEPRECATION_ERROR")
+    companion object {
+        val String?.asText get() = if (isNullOrBlank()) null else Text(this)
+        val String.toText get() = if (isBlank()) throwIllegalState() else Text(this)
+    }
+}

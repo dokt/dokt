@@ -10,6 +10,10 @@ open class Dir(parent: Path, name: String) {
     val exists by lazy { path.exists() }
 }
 
+interface Importer {
+    fun imports(packagePrefix: String): Boolean
+}
+
 /** Multiplatform source directory */
 class MultiSourceDir(parent: Path) : SourceDir(parent) {
     override val hasSources by lazy { exists && (common.hasSources || jvm.hasSources || js.hasSources) }
@@ -33,19 +37,17 @@ class SingleSourceDir(parent: Path, platformId: String? = null) : SourceDir(pare
             || (hasTests && test.imports(packagePrefix))
 }
 
-abstract class SourceDir(parent: Path) : Dir(parent, "src") {
+abstract class SourceDir(parent: Path) : Dir(parent, "src"), Importer {
     abstract val hasSources: Boolean
     abstract val hasTests: Boolean
-
-    abstract fun imports(packagePrefix: String): Boolean
 }
 
-class SourceSetDir(parent: SingleSourceDir, name: String) : Dir(parent.path, name) {
+class SourceSetDir(parent: SingleSourceDir, name: String) : Dir(parent.path, name), Importer {
     val exports by lazy { kotlin.exportPackages }
     val hasKotlin by lazy { exists && kotlin.exists }
     val imports by lazy { kotlin.importTypes }
     val mainClass get() = kotlin.mainFile?.javaClassName
     val kotlin by lazy { KotlinSources(path) }
 
-    fun imports(packagePrefix: String) = hasKotlin && kotlin.imports(packagePrefix)
+    override fun imports(packagePrefix: String) = hasKotlin && kotlin.imports(packagePrefix)
 }

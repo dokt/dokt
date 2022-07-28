@@ -1,6 +1,6 @@
 package app.dokt.app
 
-abstract class Application {
+open class Application {
     protected open val eventBus: EventBus by lazy { LocalEventBus(eventStore) }
 
     protected open val eventStore: EventStore by lazy { InMemEventStore }

@@ -15,27 +15,25 @@ class DomainProjectPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         project = target
         with(target) {
-            task("cleanGenerated") {
-                it.actions.add {
-                    delete(commonMainDir)
-                    delete(commonTestDir)
-                }
-            }.description = "Delete generated files."
+            task("cleanGenerated", "Delete generated files.") {
+                delete(commonMainDir)
+                delete(commonTestDir)
+            }
 
-            task(GENERATE_DOMAIN) {
-                it.actions.add {
-                    coder.code()
-                }
-            }.description = "Generate application classes."
+            task(GENERATE_DOMAIN, "Generate application classes.") { coder.code() }
 
-            task("generateDocumentation") {
-                it.actions.add {
-                    documentWriter.document()
-                }
-            }.description = "Generate Markdown documentation of the application."
+            task("generateDocumentation", "Generate Markdown documentation of the application.") {
+                documentWriter.document()
+            }
 
             tasks.filter { it.name.startsWith("compileKotlin") }.forEach { it.dependsOn(GENERATE_DOMAIN) }
         }
+    }
+
+    private fun Project.task(name: String, description: String, action: (Task) -> Unit): Task = task(name) {
+        it.group = "dokt"
+        it.description = description
+        it.actions.add(action)
     }
 
     companion object {

@@ -27,15 +27,17 @@ subprojects {
 
     //val dokkaHtml by tasks.getting(DokkaTask::class)
 
-    val javadocJar by tasks.registering(Jar::class) {
-        //dependsOn(dokkaHtml)
-        archiveClassifier.set("javadoc")
-        //from(dokkaHtml.outputDirectory)
-    }
+    /*if (name != "dokt-gradle") { TODO
+        val javadocJar by tasks.registering(Jar::class) {
+            //dependsOn(dokkaHtml)
+            archiveClassifier.set("javadoc")
+            //from(dokkaHtml.outputDirectory)
+        }
+    }*/
 
     publishing {
         publications.withType<MavenPublication> {
-            artifact(javadocJar.get())
+            //artifact(javadocJar.get()) TODO
             pom {
                 // TODO Handle root name
                 name.set(project.name.split('-')

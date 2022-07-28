@@ -31,6 +31,8 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptWriter() {
         if (project.isRoot) {
             addStatement("tasks.wrapper { distributionType = Wrapper.DistributionType.ALL }")
             addCode(controlFlow("tasks.create(\"copyDokt\")") {
+                addStatement("group = %S", "dokt")
+                addStatement("description = %S", "Copy Dokt libraries to root project as a workaround for KTIJ-22057.")
                 controlFlow("doLast") {
                     controlFlow("copy") {
                         addStatement(
@@ -92,24 +94,23 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptWriter() {
                     generated("Main")
                 }
 
-                if (hasTests) {
+                if (src.common.hasTests) {
                     sourceSet("commonTest") {
                         dependencies {
                             implementation(Dokt.DOMAIN_TEST)
                             implementation(JSON)
                             //implementation(KOTEST) TODO KTIJ-22057
                             implementation("io.kotest:kotest-runner-junit5-jvm")
+                            commonTestLibraries.used(src.common.test) { forEach { implementation(it) } }
                         }
                         generated("Test")
                     }
                 }
 
                 if (src.jvm.hasSources) {
-                    val dependencies = jvmMainLibraries.keys.filter { src.jvm.imports(it) }
-                        .map { jvmMainLibraries.getValue(it) }.sorted()
-                    if (dependencies.any()) sourceSet("jvmMain") {
-                        dependencies {
-                            dependencies.forEach { implementation(it) }
+                    jvmMainLibraries.used(src.jvm) {
+                        sourceSetDependencies("jvmMain") {
+                            forEach { implementation(it) }
                         }
                     }
                 }
@@ -119,24 +120,34 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptWriter() {
                 when (layer) {
                     Layer.APPLICATION -> implementation(Dokt.APPLICATION)
                     Layer.INFRASTRUCTURE -> implementation(Dokt.COMMON)
-                    Layer.INTERFACE -> implementation(Dokt.INTERFACE)
+                    Layer.INTERFACE -> implementation(Dokt.INTERFACE) // TODO multiplatform interface?
                     else -> throw IllegalStateException()
                 }
             }
 
-            if (hasTests) {
+            if (src.common.hasTests) {
                 sourceSetDependencies("commonTest") {
                     implementation(Dokt.TEST)
                     implementation(JSON)
                     implementation(KOTEST)
+                    commonTestLibraries.used(src.common.test) { forEach { implementation(it) } }
                 }
             }
 
             if (src.jvm.hasSources) {
-                val dependencies = jvmMainLibraries.keys.filter { src.jvm.imports(it) }
-                    .map { jvmMainLibraries.getValue(it) }.sorted()
-                if (dependencies.any()) sourceSetDependencies("jvmMain") {
-                    dependencies.forEach { implementation(it) }
+                jvmMainLibraries.used(src.jvm) {
+                    sourceSetDependencies("jvmMain") {
+                        forEach { implementation(it) }
+                    }
+                }
+            }
+
+            if (src.jvm.hasTests) {
+                sourceSetDependencies("jvmTest") {
+                    implementation(Dokt.TEST)
+                    implementation(JSON)
+                    implementation(KOTEST)
+                    jvmTestLibraries.used(src.jvm.test) { forEach { implementation(it) } }
                 }
             }
         }
@@ -171,6 +182,7 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptWriter() {
                     if (imports(packagePrefix)) implementation(dependency)
                 }
             }
+            if (isInterface && isJvm) runtime("ch.qos.logback:logback-classic")
             if (hasTests) testImplementation(Dokt.TEST)
         }
 
@@ -205,10 +217,16 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptWriter() {
             "kotlin.time" to "KotlinX.datetime", // TODO Move from core to app
             "kotlinx.serialization" to "KotlinX.serialization.core" // TODO api(KotlinX.serialization.core) in dokt-domain doesn't work.
         )
+        private val commonTestLibraries = mapOf(
+            "io.mockk" to "Testing.mockK"
+        )
         private val jvmMainLibraries = mapOf(
             "com.sun.jna.platform" to "net.java.dev.jna:jna-platform",
             "kotlin.time" to "KotlinX.datetime", // TODO Move from core to app
             "org.jfree.chart" to "org.jfree:jfreechart"
+        )
+        private val jvmTestLibraries = mapOf(
+            "io.mockk" to "Testing.mockK"
         )
 
         private fun repositories() = controlFlow("repositories") {
@@ -237,6 +255,13 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptWriter() {
 
         private fun CodeBlock.Builder.implementationProject(dep: String) = depProject(IMPL, dep)
 
+        private fun CodeBlock.Builder.runtime(dep: String) = dep("runtimeOnly", dep)
+
         private fun CodeBlock.Builder.testImplementation(dokt: Dokt) = dep("testImplementation", dokt)
+
+        private fun Map<String, String>.used(importer: Importer, action: List<String>.() -> Unit) {
+            val dependencies = keys.filter { importer.imports(it) }.map { getValue(it) }.sorted()
+            if (dependencies.any()) dependencies.action()
+        }
     }
 }
