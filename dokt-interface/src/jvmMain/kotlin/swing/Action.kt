@@ -2,7 +2,7 @@
 
 package app.dokt.ui.swing
 
-import app.dokt.*
+import app.dokt.common.*
 import app.dokt.ui.*
 import jiconfont.IconCode
 import jiconfont.icons.google_material_design_icons.GoogleMaterialDesignIcons

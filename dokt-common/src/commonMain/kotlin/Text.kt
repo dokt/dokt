@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package app.dokt
+package app.dokt.common
 
 private const val B = 1024L
 

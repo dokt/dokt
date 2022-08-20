@@ -2,7 +2,7 @@
 
 package app.dokt.ui.swing
 
-import app.dokt.*
+import app.dokt.common.*
 import app.dokt.ui.*
 import java.util.*
 import javax.swing.*

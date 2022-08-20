@@ -2,7 +2,7 @@
 
 package app.dokt.ui.swing
 
-import app.dokt.*
+import app.dokt.common.*
 import java.awt.*
 import java.awt.image.BufferedImage
 import javax.swing.JComponent

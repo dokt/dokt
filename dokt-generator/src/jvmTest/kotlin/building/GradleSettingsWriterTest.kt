@@ -18,12 +18,8 @@ class GradleSettingsWriterTest : FunSpec({
             }
             rootProject.name = "examples"
             
-            // Dokt libraries
-            include("dokt-application", "dokt-common", "dokt-domain", "dokt-domain-test", "dokt-interface",
-                "dokt-test")
-            
             // Domain architecture layer projects
-            include("erp-dom", "file-dom", "hash-dom", "hello-dom")
+            include("erp-dom", "file-dom", "hash-dom", "hello-dom", "window-dom")
             
             // Application architecture layer projects
             include("window-simulator-app")

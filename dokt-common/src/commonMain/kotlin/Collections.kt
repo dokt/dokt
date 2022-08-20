@@ -1,4 +1,4 @@
-package app.dokt
+package app.dokt.common
 
 val <T> List<T>.first get() = first()
 val <T> List<T>.fourth get() = get(3)

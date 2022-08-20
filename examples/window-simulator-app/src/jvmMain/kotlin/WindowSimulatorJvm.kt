@@ -2,7 +2,7 @@ package fi.papinkivi.simulator
 
 import com.sun.jna.platform.WindowUtils
 import com.sun.jna.platform.win32.WinDef
-import java.awt.image.BufferedImage
+import javax.swing.ImageIcon
 
 actual object Windows {
     actual val all get() = WindowUtils.getAllWindows(true)
@@ -13,6 +13,7 @@ actual object Windows {
             }
         }
         .filter { it.visible && !it.path.contains("explorer") }
+        .sortedBy { it.id }
 }
 
-val WindowInfo.icon: BufferedImage? get() = WindowUtils.getWindowIcon(handle as WinDef.HWND)
+val WindowInfo.icon get() = WindowUtils.getWindowIcon(handle as WinDef.HWND)?.let { ImageIcon(it) }

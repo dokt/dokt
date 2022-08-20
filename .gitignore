@@ -1,6 +1,6 @@
 .gradle
 .idea
-examples/**/build.gradle.kts
+examples/*/build.gradle.kts
 examples/*.properties
 examples/dokt
 kotlin-js-store

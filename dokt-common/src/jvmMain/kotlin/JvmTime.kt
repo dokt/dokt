@@ -1,7 +1,7 @@
 // TODO replace with multiplatform
 @file:Suppress("unused")
 
-package app.dokt
+package app.dokt.common
 
 import java.time.*
 

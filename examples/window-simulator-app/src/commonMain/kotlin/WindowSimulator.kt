@@ -2,6 +2,8 @@ package fi.papinkivi.simulator
 
 import app.dokt.app.Application
 
+
+
 class WindowInfo(
     val id: Int,
     val title: String,

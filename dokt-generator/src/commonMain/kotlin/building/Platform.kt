@@ -1,6 +1,6 @@
 package app.dokt.generator.building
 
-import app.dokt.firstValueByKey
+import app.dokt.common.firstValueByKey
 
 /**
  * Kotlin target platform

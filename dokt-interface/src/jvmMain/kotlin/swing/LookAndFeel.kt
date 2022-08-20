@@ -2,7 +2,7 @@
 
 package app.dokt.ui.swing
 
-import app.dokt.*
+import app.dokt.common.*
 import jiconfont.IconCode
 import java.awt.*
 import javax.swing.*

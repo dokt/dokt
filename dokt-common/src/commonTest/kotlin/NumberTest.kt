@@ -1,4 +1,4 @@
-package app.dokt
+package app.dokt.common
 
 import app.dokt.test.c
 import app.dokt.test.tests

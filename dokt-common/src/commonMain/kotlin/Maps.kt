@@ -1,4 +1,4 @@
-package app.dokt
+package app.dokt.common
 
 typealias PairMap<F, S, V> = Map<F, Map<S, V>>
 

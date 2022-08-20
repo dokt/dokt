@@ -1,4 +1,4 @@
-package app.dokt
+package app.dokt.common
 
 @Suppress("unused")
 data class Probability(val value: Double, private val event: String = "A") : Comparable<Probability> {

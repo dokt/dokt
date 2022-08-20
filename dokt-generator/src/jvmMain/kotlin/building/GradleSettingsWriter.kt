@@ -16,13 +16,13 @@ class GradleSettingsWriter(private val root: GradleProject) : KotlinScriptWriter
     override fun FileSpec.Builder.generateScript() {
         addCode(generatePluginManagement())
         addCode(generatePlugins())
-        //addCode(generateDependencyResolutionManagement()) // TODO It might not work
+        if (CENTRALIZED_REPOSITORY_DECLARATION) addCode(generateDependencyResolutionManagement())
         addStatement("rootProject.name = %S", root.name)
-
-        addCode("\n")
-        addBodyComment("Dokt libraries")
-        addStatement("include(%L)", Dokt.values().joinToString { "\"${it.artifact}\"" })
-
+        if (Dokt.LOCAL) {
+            addCode("\n")
+            addBodyComment("Dokt libraries")
+            addStatement("include(%L)", Dokt.values().joinToString { "\"${it.artifact}\"" })
+        }
         generateInclude(Layer.DOMAIN)
         generateInclude(Layer.APPLICATION)
         generateInclude(Layer.INFRASTRUCTURE)
@@ -38,6 +38,13 @@ class GradleSettingsWriter(private val root: GradleProject) : KotlinScriptWriter
     }
 
     companion object {
+        /**
+         * https://docs.gradle.org/current/userguide/dependency_management.html#sub:centralized-repository-declaration
+         *
+         * TODO might not work
+         */
+        const val CENTRALIZED_REPOSITORY_DECLARATION = true
+
         private const val REFRESH_VERSION = "0.40.2"
 
         private fun generateDependencyResolutionManagement() = controlFlow("dependencyResolutionManagement") {

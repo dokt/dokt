@@ -2,8 +2,8 @@
 
 package app.dokt.ui.swing
 
+import app.dokt.common.uppercaseFirst
 import app.dokt.ui.*
-import app.dokt.uppercaseFirst
 import jiconfont.icons.google_material_design_icons.GoogleMaterialDesignIcons
 import java.awt.event.ActionEvent
 import java.util.*

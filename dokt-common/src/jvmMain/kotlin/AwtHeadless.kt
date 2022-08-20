@@ -1,10 +1,10 @@
 // https://stackoverflow.com/questions/41067235/what-is-the-benefit-of-setting-java-awt-headless-true
 // https://www.oracle.com/technical-resources/articles/javase/headless.html
-@file:Suppress("unused")
+@file:Suppress("unused", "OVERRIDE_DEPRECATION")
 
-package app.dokt
+package app.dokt.common
 
-import kotlinx.serialization.Serializable
+import kotlinx.serialization.*
 import java.awt.*
 import java.awt.geom.*
 import java.awt.image.*
@@ -100,11 +100,14 @@ val Raster.lastPixel: IntArray get() = getPixel(width - 1, height - 1, IntArray(
 
 //#region Shape
 @Serializable
-data class Dim(private val width: Int = 0, val height: Int = 0) : Dimension(width, height), Comparable<Dimension> {
-    val h get() = height
-    val w get() = width
+actual data class Dim actual constructor(
+    @SerialName("w")
+    override val width: Int,
 
-    override operator fun compareTo(other: Dimension) = width.compareTo(other.width) + height.compareTo(other.height)
+    @SerialName("h")
+    override val height: Int
+) : Dimension(width, height), Comparable<Dim>, Dimensioned {
+    override operator fun compareTo(other: Dim) = width.compareTo(other.width) + height.compareTo(other.height)
 
     //#region Disabled setters
     override fun setSize(width: Double, height: Double) = throw IllegalStateException()
@@ -113,24 +116,24 @@ data class Dim(private val width: Int = 0, val height: Int = 0) : Dimension(widt
     override fun setSize(d: Dimension2D?) = throw IllegalStateException()
     //#endregion
 
-    companion object {
-        val ONE = Dim(1, 1)
+    override fun toString() = text
+
+    actual companion object {
+        actual val ONE = Dim(1, 1)
     }
 }
 
 val Dimension.dim get() = Dim(width, height)
 val Dimension.dot get() = width == 1 && height == 1
-val Dimension.resolution get() = "$width x $height"
-fun Dimension.scale(max: Int): Dimension {
-    if (width <= max && height <= max) return this
+val Dimension.text get() = "$width x $height"
+fun Dimension.scale(max: Int): Dim {
+    if (width <= max && height <= max) return dim
     val ratio = max.toDouble() / width.coerceAtLeast(height)
-    return Dimension((width * ratio).roundToInt(), (height * ratio).roundToInt())
+    return Dim((width * ratio).roundToInt(), (height * ratio).roundToInt())
 }
-val HD = Dim(1920, 1080)
-val UHD = Dim(3840, 2160)
 
 @Serializable
-data class Pt(val x: Int = 0, val y: Int = 0) : Point(x, y) {
+actual data class Pt actual constructor(override val x: Int, override val y: Int) : Point(x, y), Pointed {
     //#region Disabled setters
     override fun setLocation(p: Point?) = throw IllegalStateException()
     override fun setLocation(x: Int, y: Int) = throw IllegalStateException()
@@ -139,20 +142,45 @@ data class Pt(val x: Int = 0, val y: Int = 0) : Point(x, y) {
     override fun move(x: Int, y: Int) = throw IllegalStateException()
     override fun translate(dx: Int, dy: Int) = throw IllegalStateException()
     //#endregion
-    companion object {
-        val ZERO = Pt()
+
+    actual operator fun plus(dim: Dim) = Rect(this, dim)
+
+    operator fun plus(dim: Dimension) = Rect(this, dim)
+
+    actual operator fun plus(rect: Rect) = Rect(this, rect)
+
+    operator fun plus(rect: Rectangle) = Rect(this, rect)
+
+    override fun toString() = text
+
+    actual companion object {
+        actual val ZERO: Pt = Pt()
     }
-
-    operator fun plus(dim: Dim) = Rect(this, dim)
-
-    operator fun plus(rect: Rect) = Rect(this, rect)
 }
 
 val Point.pt get() = Pt(x, y)
-val Point.text get() = "$x;$y"
+val Point.text get() = "($x, $y)"
 
 @Serializable
-data class Rect(val x: Int = 0, val y: Int = 0, val width: Int = 0, val height: Int = 0) : Rectangle(x, y, width, height) {
+actual data class Rect actual constructor(
+    override val x: Int,
+
+    override val y: Int,
+
+    @SerialName("w")
+    override val width: Int,
+
+    @SerialName("h")
+    override val height: Int
+) : Rectangle(x, y, width, height), Dimensioned, Pointed {
+    actual constructor(point: Pt, width: Int, height: Int) : this (point.x, point.y, width, height)
+
+    actual constructor(point: Pt, dimension: Dim) : this (point.x, point.y, dimension.width, dimension.height)
+
+    actual constructor(x: Int, y: Int, dimension: Dim) : this (x, y, dimension.width, dimension.height)
+
+    actual constructor(point: Pt, rectangle: Rect) : this (point.x + rectangle.x, point.y + rectangle.y, rectangle.size)
+
     constructor(point: Point, width: Int = 0, height: Int = 0) : this (point.x, point.y, width, height)
 
     constructor(point: Point, dimension: Dimension) : this (point.x, point.y, dimension.width, dimension.height)
@@ -160,6 +188,19 @@ data class Rect(val x: Int = 0, val y: Int = 0, val width: Int = 0, val height: 
     constructor(x: Int, y: Int, dimension: Dimension) : this (x, y, dimension.width, dimension.height)
 
     constructor(point: Point, rectangle: Rectangle) : this (point.x + rectangle.x, point.y + rectangle.y, rectangle.size)
+
+    actual val location get() = Pt(x, y)
+    actual val size get() = Dim(width, height)
+
+    actual operator fun minus(point: Pt): Rect = Rect(x - point.x, y - point.y, width, height)
+
+    operator fun minus(point: Point) = Rect(x - point.x, y - point.y, width, height)
+
+    actual operator fun plus(point: Pt): Rect = Rect(x + point.x, y + point.y, width, height)
+
+    operator fun plus(point: Point) = Rect(x + point.x, y + point.y, width, height)
+
+    override fun toString() = text
 
     //#region Disabled setters
     override fun setFrame(x: kotlin.Double, y: kotlin.Double, w: kotlin.Double, h: kotlin.Double) = throw IllegalStateException()
@@ -179,29 +220,25 @@ data class Rect(val x: Int = 0, val y: Int = 0, val width: Int = 0, val height: 
     override fun add(r: Rectangle2D?) = throw IllegalStateException()
     override fun setBounds(r: Rectangle) = throw IllegalStateException()
     override fun setBounds(x: Int, y: Int, width: Int, height: Int) = throw IllegalStateException()
-    @Deprecated("Deprecated in Java", ReplaceWith("setBounds(int, int, int, int)"))
     override fun reshape(x: Int, y: Int, width: Int, height: Int) = throw IllegalStateException()
     override fun setLocation(p: Point) = throw IllegalStateException()
     override fun setLocation(x: Int, y: Int) = throw IllegalStateException()
-    @Deprecated("Deprecated in Java", ReplaceWith("setLocation(int, int)"))
     override fun move(x: Int, y: Int) = throw IllegalStateException()
     override fun translate(dx: Int, dy: Int) = throw IllegalStateException()
     override fun setSize(d: Dimension) = throw IllegalStateException()
     override fun setSize(width: Int, height: Int) = throw IllegalStateException()
-    @Deprecated("Deprecated in Java", ReplaceWith("setSize(int, int)"))
     override fun resize(width: Int, height: Int) = throw IllegalStateException()
     override fun grow(h: Int, v: Int) = throw IllegalStateException()
     //#endregion
 
-    companion object {
-        val DOT = Rect(Pt.ZERO, Dim.ONE)
+    actual companion object {
+        actual val DOT: Rect = Rect(Pt.ZERO, Dim.ONE)
     }
 }
 
-val Rectangle.pixels get() = width * height
+val Rectangle.area get() = width * height
 val Rectangle.rect get() = Rect(x, y, width, height)
-val Rectangle.text get() = "$x;$y ${width}x$height"
-
-operator fun Rectangle.minus(point: Point) = Rect(x - point.x, y - point.y, size)
-operator fun Rectangle.plus(point: Point) = Rect(x + point.x, y + point.y, size)
+val Rectangle.text get() = "($x, $y) $width x $height"
+operator fun Rectangle.minus(point: Point) = Rect(x - point.x, y - point.y, width, height)
+operator fun Rectangle.plus(point: Point) = Rect(x + point.x, y + point.y, width, height)
 //#endregion

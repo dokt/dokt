@@ -1,6 +1,6 @@
 package app.dokt.generator.building
 
-import app.dokt.*
+import app.dokt.common.*
 
 /** Architecture layer */
 enum class Layer(

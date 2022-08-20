@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package app.dokt
+package app.dokt.common
 
 import java.io.File
 import java.util.*

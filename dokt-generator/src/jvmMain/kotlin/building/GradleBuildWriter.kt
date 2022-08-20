@@ -1,6 +1,6 @@
 package app.dokt.generator.building
 
-import app.dokt.deleteIfEmpty
+import app.dokt.common.deleteIfEmpty
 import app.dokt.generator.code.*
 import com.squareup.kotlinpoet.*
 import kotlin.io.path.listDirectoryEntries
@@ -12,25 +12,25 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptWriter() {
 
     override val name = "build.gradle"
 
-    @Suppress("unchecked_cast")
     override fun FileSpec.Builder.generateScript() {
         if (project.hasSources) {
+            project.resolveDependencies()
             when (project) {
                 is MultiProject -> {
                     addCode(project.plugins())
-                    addCode(repositories())
+                    if (!GradleSettingsWriter.CENTRALIZED_REPOSITORY_DECLARATION) addCode(repositories())
                     addCode(project.kotlin())
                 }
                 is SingleProject -> {
                     addCode(project.plugins())
-                    addCode(repositories())
+                    if (!GradleSettingsWriter.CENTRALIZED_REPOSITORY_DECLARATION) addCode(repositories())
                     addCode(project.kotlin())
                 }
             }
         } else if (project.isRoot) { addStatement("plugins { id(%S) }", GROUP) }
         if (project.isRoot) {
             addStatement("tasks.wrapper { distributionType = Wrapper.DistributionType.ALL }")
-            addCode(controlFlow("tasks.create(\"copyDokt\")") {
+            if (Dokt.LOCAL) addCode(controlFlow("tasks.create(%S)", "copyDokt") {
                 addStatement("group = %S", "dokt")
                 addStatement("description = %S", "Copy Dokt libraries to root project as a workaround for KTIJ-22057.")
                 controlFlow("doLast") {
@@ -66,10 +66,10 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptWriter() {
     private fun CodeBlock.Builder.id(pluginId: String) = addStatement("id(%S)", pluginId)
 
     private fun CodeBlock.Builder.sourceSet(name: String, code: CodeBlock.Builder.() -> Unit) =
-        controlFlow("val $name by getting", code)
+        controlFlow("val $name by getting", code = code)
 
     private fun CodeBlock.Builder.sourceSetDependencies(name: String, code: CodeBlock.Builder.() -> Unit) =
-        controlFlow("sourceSets[\"$name\"].dependencies", code)
+        controlFlow("sourceSets[\"$name\"].dependencies", code = code)
 
     private fun MultiProject.kotlin() = controlFlow("kotlin") {
         // TODO add JVM only when jvmMain exists or only commonMain
@@ -210,8 +210,6 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptWriter() {
         private const val JSON = "KotlinX.serialization.json"
         private const val KOTEST = "Testing.kotest.runner.junit5"
 
-        private const val useLocalDokt = true
-
         private val commonLibraries = mapOf(
             "com.benasher44.uuid" to "com.benasher44:uuid",
             "kotlin.time" to "KotlinX.datetime", // TODO Move from core to app
@@ -238,16 +236,15 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptWriter() {
             if (dep.contains(':')) addStatement("$config(%S)", "$dep:_")
             else addStatement("$config($dep)")
 
-        /** TODO KTIJ-22057 */
         private fun CodeBlock.Builder.dep(config: String, dokt: Dokt) =
-            if (useLocalDokt) depProject(config, ":${dokt.artifact}")
-            else dep(config, "$GROUP:${dokt.artifact}:_")
+            if (Dokt.LOCAL) depProject(config, ":${dokt.artifact}")
+            else dep(config, "$GROUP:${dokt.artifact}")
 
         private fun CodeBlock.Builder.depProject(config: String, dep: String) =
             addStatement("$config(project(%S))", dep)
 
         private fun CodeBlock.Builder.dependencies(code: CodeBlock.Builder.() -> Unit) =
-            controlFlow("dependencies", code)
+            controlFlow("dependencies", code = code)
 
         private fun CodeBlock.Builder.implementation(dep: String) = dep(IMPL, dep)
 

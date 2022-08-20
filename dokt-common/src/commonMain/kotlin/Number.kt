@@ -1,4 +1,4 @@
-package app.dokt
+package app.dokt.common
 
 import kotlin.math.*
 
