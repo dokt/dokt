@@ -7,10 +7,11 @@ import app.dokt.generator.*
  * Generates support and test classes for given aggregate root to application layer.
  */
 abstract class AggregateCoder<F, M, P, T>(
+    func: () -> Unit,
     root: AggregateRoot,
     main: GeneratedSources = GeneratedSources(),
     test: GeneratedSources = GeneratedSources(true)
-) : AbstractCoder<F, AggregateRoot>(root, main, test) {
+) : AbstractCoder<F, AggregateRoot>(func, root, main, test) {
     protected val application = "${root.module}.app"
     protected val commandCoders by lazy { root.commands.map { it.toCoder() } }
     protected val domain = root.module
@@ -21,8 +22,8 @@ abstract class AggregateCoder<F, M, P, T>(
     private val idName = id.name
     protected val infrastructure = "${root.module}.infra"
     protected val uuid = id.type == uuidRef
-    protected val name = root.name
-    protected val memberName = name.lowerFirst()
+    protected val rootName = root.name
+    protected val memberName = rootName.lowerFirst()
     protected val testIdName = "test${id.name.upperFirst()}"
 
     override fun code() {
@@ -100,15 +101,16 @@ abstract class AggregateEventCoder<M, T>(event: AggregateEvent) {
 }
 
 abstract class BoundedContextCoder<F, T>(
+    func: () -> Unit,
     boundedContext: BoundedContext,
     main: GeneratedSources = GeneratedSources(),
     test: GeneratedSources = GeneratedSources(true)
-) : AbstractCoder<F, BoundedContext>(boundedContext, main, test) {
+) : AbstractCoder<F, BoundedContext>(func, boundedContext, main, test) {
     abstract val aggregateCoders: List<AggregateCoder<*, *, *, *>>
 
     override fun code() {
         aggregateCoders.forEach {
-            log.info { "Coding $it aggregate" }
+            info { "Coding $it aggregate" }
             it.code()
         }
     }

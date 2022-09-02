@@ -21,6 +21,7 @@ kotlin {
         @Suppress("UNUSED_VARIABLE")
         val commonMain by getting {
             dependencies {
+                api(KotlinX.serialization.json)
                 api(Testing.kotest.assertions.core)
                 api(Testing.kotest.framework.api)
             }

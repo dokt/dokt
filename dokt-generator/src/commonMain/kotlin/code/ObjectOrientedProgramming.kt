@@ -12,6 +12,9 @@ import kotlin.reflect.KClass
  * Source code file
  */
 interface CodeFile : Packaged {
+    /** TODO File annotations
+    val annotations: List<Annotation>*/
+
     val types: List<TypeDef>
 
     val path: String
@@ -65,6 +68,8 @@ interface TypeDef : Packaged {
 
     val isInterface: Boolean
 
+    val isValue: Boolean
+
     val methods: List<Method>
 
     /**
@@ -96,6 +101,11 @@ interface TypeRef : Packaged {
     val isList get() = name.endsWith("List")
 
     /**
+     * Can be null or not. Java types can be null by default.
+     */
+    val nullable: Boolean
+
+    /**
      * Simple names eg. Map.Entry
      */
     val simpleNames: List<String>
@@ -116,6 +126,9 @@ value class Ref(override val qualifiedName: String) : TypeRef {
         .takeLastWhile { it[0].isUpperCase() }
 
     override val name get() = simpleNames.joinToString(".")
+
+    /** References cant be null */
+    override val nullable get() = false
 
     override val packageName get() = qualifiedName
         .substringBefore('<')

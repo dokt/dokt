@@ -25,7 +25,7 @@ kotlin {
             dependencies {
                 api(KotlinX.coroutines.core)
                 api("io.github.microutils:kotlin-logging:_")
-                implementation(project(":dokt-domain"))
+                api(project(":dokt-domain"))
             }
         }
 

@@ -32,7 +32,6 @@ kotlin {
                 api("com.github.jiconfont:jiconfont-google_material_design_icons:_")
                 api("com.github.jiconfont:jiconfont-font_awesome:_")
                 //api(KotlinX.coroutines.swing) TODO ?
-                implementation(project(":dokt-common"))
                 implementation("com.github.jiconfont:jiconfont-swing:_")
             }
         }

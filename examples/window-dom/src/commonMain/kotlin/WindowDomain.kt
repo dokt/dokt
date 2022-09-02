@@ -1,49 +1,72 @@
 package fi.papinkivi.window
 
-import app.dokt.common.Pt
+import app.dokt.common.*
 import app.dokt.domain.Root
 import fi.papinkivi.file.FileId
+import fi.papinkivi.file.FileInfo
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class WindowId(val processPath: String, val title: String = "")
 
 interface Events {
+    fun captured(file: FileId)
     fun hidden()
     fun moved(point: Pt)
-    fun resized(width: Int, height: Int)
-    fun screenshotTaken(file: FileId)
+    fun resized(dimension: Dim)
 }
 
 @Serializable
 class Window(private val id: WindowId) : Root<Events>(), Events {
-    var x = 0
-    var y = 0
-    var width = 0
-    var height = 0
+    var location = Pt.ZERO
+        private set
+
+    var area = Rect.ZERO
+        private set
+
+    var size = Dim.ZERO
+        private set
+
     var visible = false
+        private set
+
     val screenshots = mutableListOf<FileId>()
 
     //#region Command handlers
-    fun detect()
+    fun capture() {
+        if (!visible) return
+        val fileId = FileId.uuid(screen.captureExtension)
+        val file = FileInfo(fileId)
+        file.create(screen.capture(area)) // TODO use service here
+        emit.captured(fileId)
+    }
 
-    fun takeScreenshot() { emit.screenshotTaken(screen.takeScreenshot(id)) }
+    fun measure() {
+        val rect = screen.measure(id)
+        if (rect == null) emit.hidden()
+        else {
+            rect.location.let { if (it != location) moved(it) }
+            rect.size.let { if (it != size) resized(it) }
+        }
+    }
     //#endregion
 
     //#region Event handlers
-    override fun hidden() {
-        TODO("Not yet implemented")
+    override fun captured(file: FileId) { screenshots.add(file) }
+
+    override fun hidden() { visible = false }
+
+    override fun moved(point: Pt) {
+        visible = true
+        location = point
+        area = Rect(location, size)
     }
 
-    override fun moved(x: Int, y: Int) {
-        TODO("Not yet implemented")
+    override fun resized(dimension: Dim) {
+        visible = true
+        size = dimension
+        area = Rect(location, size)
     }
-
-    override fun resized(width: Int, height: Int) {
-        TODO("Not yet implemented")
-    }
-
-    override fun screenshotTaken(file: FileId) { screenshots.add(file) }
     //#endregion
 
     companion object {
@@ -52,7 +75,11 @@ class Window(private val id: WindowId) : Root<Events>(), Events {
 }
 
 interface Screen {
-    fun detect(id: WindowId)
+    val captureExtension: String
 
-    fun takeScreenshot(id: WindowId): FileId
+    /** Take screenshot */
+    fun capture(area: Rect): ByteArray
+
+    /** Measure location and size */
+    fun measure(id: WindowId): Rect?
 }

@@ -11,18 +11,6 @@ class GradleBuildWriterTest : FunSpec({
             generateScript() shouldCode """
                 plugins { id("app.dokt") }
                 tasks.wrapper { distributionType = Wrapper.DistributionType.ALL }
-                tasks.create("copyDokt") {
-                  group = "dokt"
-                  description = "Copy Dokt libraries to root project as a workaround for KTIJ-22057."
-                  doLast {
-                    copy {
-                      from("..")
-                      include("dokt-*/**")
-                      exclude("dokt-g*", "*/build", "*/src/*Test")
-                      into(projectDir)
-                    }
-                  }
-                }
             """
         }
 
@@ -33,25 +21,19 @@ class GradleBuildWriterTest : FunSpec({
                   kotlin("plugin.serialization")
                   id("app.dokt.domain")
                 }
-                repositories {
-                  mavenCentral()
-                }
                 kotlin {
                   jvm { testRuns["test"].executionTask.configure { useJUnitPlatform() } }
                   sourceSets {
                     val commonMain by getting {
                       dependencies {
-                        implementation(project(":dokt-application"))
-                        implementation(project(":dokt-domain"))
-                        implementation(KotlinX.serialization.core)
+                        implementation("app.dokt:dokt-application:_")
                       }
                       kotlin.srcDir(buildDir.resolve("commonMain"))
                     }
                     val commonTest by getting {
                       dependencies {
-                        implementation(project(":dokt-domain-test"))
-                        implementation(KotlinX.serialization.json)
-                        implementation("io.kotest:kotest-runner-junit5-jvm:_")
+                        implementation("app.dokt:dokt-domain-test:_")
+                        implementation(Testing.kotest.runner.junit5)
                       }
                       kotlin.srcDir(buildDir.resolve("commonTest"))
                     }
@@ -67,25 +49,19 @@ class GradleBuildWriterTest : FunSpec({
                   kotlin("plugin.serialization")
                   id("app.dokt.domain")
                 }
-                repositories {
-                  mavenCentral()
-                }
                 kotlin {
                   jvm { testRuns["test"].executionTask.configure { useJUnitPlatform() } }
                   sourceSets {
                     val commonMain by getting {
                       dependencies {
-                        implementation(project(":dokt-application"))
-                        implementation(project(":dokt-domain"))
-                        implementation(KotlinX.serialization.core)
+                        implementation("app.dokt:dokt-application:_")
                       }
                       kotlin.srcDir(buildDir.resolve("commonMain"))
                     }
                     val commonTest by getting {
                       dependencies {
-                        implementation(project(":dokt-domain-test"))
-                        implementation(KotlinX.serialization.json)
-                        implementation("io.kotest:kotest-runner-junit5-jvm:_")
+                        implementation("app.dokt:dokt-domain-test:_")
+                        implementation(Testing.kotest.runner.junit5)
                       }
                       kotlin.srcDir(buildDir.resolve("commonTest"))
                     }
@@ -99,16 +75,18 @@ class GradleBuildWriterTest : FunSpec({
                 plugins {
                   kotlin("multiplatform")
                 }
-                repositories {
-                  mavenCentral()
-                }
                 kotlin {
-                  jvm()
+                  jvm { testRuns["test"].executionTask.configure { useJUnitPlatform() } }
                   sourceSets["commonMain"].dependencies {
-                    implementation(project(":dokt-application"))
+                    implementation("app.dokt:dokt-application:_")
                   }
                   sourceSets["jvmMain"].dependencies {
                     implementation("net.java.dev.jna:jna-platform:_")
+                  }
+                  sourceSets["jvmTest"].dependencies {
+                    implementation("app.dokt:dokt-test:_")
+                    implementation(Testing.kotest.runner.junit5)
+                    runtimeOnly("ch.qos.logback:logback-classic:_")
                   }
                 }
             """
@@ -120,12 +98,10 @@ class GradleBuildWriterTest : FunSpec({
                   application
                   kotlin("jvm")
                 }
-                repositories {
-                  mavenCentral()
-                }
                 dependencies {
-                  implementation(project(":dokt-interface"))
+                  implementation("app.dokt:dokt-interface:_")
                   implementation(project(":window-simulator-app"))
+                  runtimeOnly("ch.qos.logback:logback-classic:_")
                 }
                 application { mainClass.set("fi.papinkivi.simulator.WindowSimulatorSwingKt") }
             """

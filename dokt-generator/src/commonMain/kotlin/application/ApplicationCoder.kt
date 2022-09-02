@@ -4,28 +4,29 @@ import app.dokt.generator.code.*
 import app.dokt.generator.domain.*
 import app.dokt.generator.upperFirst
 
-abstract class ApplicationCoder<F, T>(application: Application): AbstractCoder<F, Application>(
+abstract class ApplicationCoder<F, T>(func: () -> Unit, application: Application): AbstractCoder<F, Application>(
+    func,
     application,
     GeneratedSources(application.generatedSources),
     GeneratedSources(application.generatedTestSources)
 ) {
     protected abstract val boundedContextCoders: List<BoundedContextCoder<*, *>>
 
-    protected val name = application.appName.upperFirst()
+    protected val appName = application.appName.upperFirst()
 
-    override fun code() {
+    override fun  code() {
         boundedContextCoders.forEach {
-            log.info { "Coding $it bounded context" }
+            info { "Coding $it bounded context" }
             it.code()
         }
 
-        log.info { "Writing ${generatedMain.files.size} files to ${generatedMain.basePath}" }
+        info { "Writing ${generatedMain.files.size} files to ${generatedMain.basePath}" }
         generatedMain.write()
 
-        log.info { "Writing ${generatedTest.files.size} files to ${generatedTest.basePath}" }
+        info { "Writing ${generatedTest.files.size} files to ${generatedTest.basePath}" }
         generatedTest.write()
 
-        log.info { "Finished application coding." }
+        info { "Finished application coding." }
     }
 
     abstract fun codeTestInitializer() : T

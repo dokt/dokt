@@ -44,6 +44,8 @@ class KotlinPoetAggregateCoderTest : FunSpec({
 
     test("codeApplication") {
         coder.codeApplication() shouldCode """
+            @file:Suppress("unused")
+            
             package com.airline.plane.app
             
             import app.dokt.app.Aggregate
@@ -175,9 +177,10 @@ class KotlinPoetAggregateCoderTest : FunSpec({
             import io.kotest.core.spec.style.FunSpec
             import io.kotest.core.spec.style.scopes.FunSpecContainerScope
             
+            @Suppress("unused", "MemberVisibilityCanBePrivate")
             abstract class PlaneSpec(
               body: PlaneSpec.() -> Unit,
-              private val testTailNo: String = "testTailNo",
+              val testTailNo: String = "testTailNo",
             ) : FunSpec() {
               init {
                 body()}
@@ -240,9 +243,10 @@ class KotlinPoetAggregateCoderTest : FunSpec({
             import io.kotest.core.spec.style.FunSpec
             import io.kotest.core.spec.style.scopes.FunSpecContainerScope
             
+            @Suppress("unused", "MemberVisibilityCanBePrivate")
             abstract class PlaneSpec(
               body: PlaneSpec.() -> Unit,
-              private val testTailNo: String = "testTailNo",
+              val testTailNo: String = "testTailNo",
             ) : FunSpec() {
               init {
                 body()}

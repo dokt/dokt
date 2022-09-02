@@ -10,6 +10,10 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import io.kotest.core.spec.style.scopes.FunSpecContainerScope
 import kotlinx.serialization.KSerializer
 
+val SUPPRESS_UNUSED = AnnotationSpec.builder(Suppress::class).addMember("%S", "unused").build()
+val SUPPRESS_UNUSED_PRIVATE = AnnotationSpec.builder(Suppress::class)
+    .addMember("%S, %S", "unused", "MemberVisibilityCanBePrivate").build()
+
 val BuildingBlock.asClassName get() = ClassName(module, name)
 
 class KotlinPoetAggregateCommandCoder(command: AggregateCommand, private val toType: TypeName)
@@ -29,6 +33,7 @@ class KotlinPoetAggregateCommandCoder(command: AggregateCommand, private val toT
         .addParameters(parameters)
         .returns("tx(to) { $methodCall }")
 
+    // TODO Handle multiple parameters and their default values
     override fun codeSpec() = FunSpec.builder(methodName)
         .addParameter(testParam)
         .returns("context(%S, test)", methodName)
@@ -74,7 +79,7 @@ class KotlinPoetAggregateCoder(
     root: AggregateRoot,
     main: GeneratedSources = GeneratedSources(),
     test: GeneratedSources = GeneratedSources(true)
-) : AggregateCoder<FileSpec, FunSpec, PropertySpec, TypeSpec>(root, main, test) {
+) : AggregateCoder<FileSpec, FunSpec, PropertySpec, TypeSpec>({}, root, main, test) {
     companion object {
         private val aggregateType = Aggregate::class.asTypeName()
         private val applicationServiceType = ApplicationService::class.asTypeName()
@@ -100,9 +105,9 @@ class KotlinPoetAggregateCoder(
 
     private val actorType = genericActorType.parameterizedBy(commandsType, rootType, eventType)
 
-    private fun application(suffix: String) = ClassName(application, "$name$suffix")
+    private fun application(suffix: String) = ClassName(application, "$rootName$suffix")
 
-    override fun codeAggregate() = TypeSpec.classBuilder(name + "Aggregate")
+    override fun codeAggregate() = TypeSpec.classBuilder(rootName + "Aggregate")
         .primaryConstructor(id.asConstructor)
         .superclass(aggregateType.parameterizedBy(rootType, idType, eventType))
         .addSuperclassConstructorParameter(id.name)
@@ -115,22 +120,22 @@ class KotlinPoetAggregateCoder(
             .build()
         )
         .addFunction(FunSpec.overrideBuilder("create")
-            .returns("$name${construct("id")}.also { it.emit = this }"))
+            .returns("$rootName${construct("id")}.also { it.emit = this }"))
         .addFunctions(eventCoders.map { it.codeAggregate() })
         .build()
 
-    override fun codeApplication(types: List<TypeSpec>) =
-        FileSpec.builder(application, name + "Application").addTypes(types).build()
+    override fun codeApplication(types: List<TypeSpec>) = FileSpec
+        .builder(application, rootName + "Application").addAnnotation(SUPPRESS_UNUSED).addTypes(types).build()
 
     override fun codeApplicationTest(property: PropertySpec, types: List<TypeSpec>) =
-        FileSpec.builder(application, name + "ApplicationTest").addProperty(property).addTypes(types).build()
+        FileSpec.builder(application, rootName + "ApplicationTest").addProperty(property).addTypes(types).build()
 
-    override fun codeCommands() = TypeSpec.interfaceBuilder(name + "Commands")
+    override fun codeCommands() = TypeSpec.interfaceBuilder(rootName + "Commands")
         .addFunctions(commandCoders.map { it.codeCommands() })
         .build()
 
     override fun codeDomain(types: List<TypeSpec>) =
-        FileSpec.builder(domain, name + "Events").addTypes(types).build()
+        FileSpec.builder(domain, rootName + "Events").addTypes(types).build()
 
     override fun codeDomainTest(type: TypeSpec) = FileSpec.get(domain, type)
 
@@ -141,13 +146,14 @@ class KotlinPoetAggregateCoder(
         .initializer("%T.serializer()", rootType)
         .build()
 
-    override fun codeService() = TypeSpec.objectBuilder("${name}Service")
+    override fun codeService() = TypeSpec.objectBuilder("${rootName}Service")
         .superclass(applicationServiceType.parameterizedBy(rootType, idType, eventType))
         .addSuperclassConstructorParameter("%T::class", rootType)
         .addFunctions(commandCoders.map { it.codeService() })
         .build()
 
     override fun codeSpec() = TypeSpec.abstractClassBuilder(specType)
+        .addAnnotation(SUPPRESS_UNUSED_PRIVATE)
         .primaryConstructor(FunSpec.constructorBuilder("body", LambdaTypeName.of(specType))
             .alsoIf (rootHasId) {
                 addParameter(
@@ -162,7 +168,7 @@ class KotlinPoetAggregateCoder(
             }
             .build())
         .alsoIf (rootHasId) {
-            addProperty(PropertySpec.privateInitialized(testIdName, idType))
+            addProperty(PropertySpec.initialized(testIdName, idType))
         }
         .superclass(funSpecType)
         .addInitializerBlock(CodeBlock.of("body()"))
@@ -182,7 +188,7 @@ class KotlinPoetAggregateCoder(
         .addFunctions(commandCoders.map { it.codeSpec() })
         .build()
 
-    override fun codeTestAggregate() = TypeSpec.classBuilder(name + "TestAggregate")
+    override fun codeTestAggregate() = TypeSpec.classBuilder(rootName + "TestAggregate")
         .primaryConstructor("root", rootType)
         .superclass(genericTestAggregateType.parameterizedBy(rootType, eventsType, eventType))
         .addSuperclassConstructorParameter("root, serializer")
@@ -191,7 +197,7 @@ class KotlinPoetAggregateCoder(
         .addFunctions(eventCoders.map { it.codeTestAggregate() })
         .build()
 
-    private fun domain(suffix: String = "") = ClassName(domain, "$name$suffix")
+    private fun domain(suffix: String = "") = ClassName(domain, "$rootName$suffix")
 
     override fun AggregateCommand.toCoder() = KotlinPoetAggregateCommandCoder(this, toType)
 
@@ -204,7 +210,7 @@ class KotlinPoetBoundedContextCoder(
     boundedContext: BoundedContext,
     main: GeneratedSources = GeneratedSources(),
     test: GeneratedSources = GeneratedSources(true)
-) : BoundedContextCoder<FileSpec, TypeSpec>(boundedContext, main, test) {
+) : BoundedContextCoder<FileSpec, TypeSpec>({}, boundedContext, main, test) {
     override val aggregateCoders =
         model.aggregateRoots.map { KotlinPoetAggregateCoder(it, generatedMain, generatedTest) }
 

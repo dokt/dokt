@@ -9,3 +9,5 @@ import mu.*
  * - "var org.example.Foo.bar: kotlin.String" Class property
  */
 val KProperty<*>.logger get() = KotlinLogging.logger(toString().substring(4).substringBefore(':'))
+
+abstract class Logger(func: () -> Unit) : KLogger by KotlinLogging.logger(func)

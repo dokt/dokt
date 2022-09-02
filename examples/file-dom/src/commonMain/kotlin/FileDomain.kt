@@ -3,13 +3,16 @@
 package fi.papinkivi.file
 
 import app.dokt.domain.Root
+import com.benasher44.uuid.uuid4
 import fi.papinkivi.hash.Hash
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.serialization.*
 
 class Corrupted : Exception()
 
 interface Events {
-    fun created(checksum: String, size: Int)
+    fun created(at: Instant, checksum: String, size: Int)
 }
 
 @Serializable
@@ -19,6 +22,9 @@ class FileInfo(val id: FileId) : Root<Events>(), Events {
 
     /** MD5 hash */
     lateinit var checksum: String
+        private set
+
+    lateinit var created: Instant
         private set
 
     @Transient
@@ -41,20 +47,22 @@ class FileInfo(val id: FileId) : Root<Events>(), Events {
     var size = 0
         private set
 
-    fun check() = hash(data, checksum)
+    fun check() { hash(data, checksum) }
 
     fun create(data: ByteArray, checksum: String? = null) {
         val hash = hash(data, checksum)
         files[id] = data
-        emit.created(hash, data.size)
+        emit.created(clock.now(), hash, data.size)
     }
 
-    override fun created(checksum: String, size: Int) {
+    override fun created(at: Instant, checksum: String, size: Int) {
+        created = at
         this.checksum = checksum
         this.size = size
     }
 
     companion object {
+        var clock: Clock = Clock.System
         lateinit var files: Files
 
         fun hash(data: ByteArray, checksum: String? = null) = Hash.MD5.hash(data).apply {
@@ -79,6 +87,10 @@ value class FileId(val path: String) {
     val name get() = path.substringAfterLast('/')
 
     override fun toString() = path
+
+    companion object {
+        fun uuid(extension: String) = FileId("${uuid4()}.$extension")
+    }
 }
 
 /** File store service */

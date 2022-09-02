@@ -22,9 +22,9 @@ class GradleProjectTest : FunSpec({
         }
         test("window-simulator-swing") { "window-simulator-swing" shouldImport listOf("app.dokt.ui") }
     }
-    test("all") { instance.all shouldHaveSize 7 }
+    test("all") { instance.all shouldHaveSize 8 }
     test("applications") { GradleProject.applications shouldHaveSize 1 }
-    test("domains") { GradleProject.domains shouldHaveSize 4 }
+    test("domains") { GradleProject.domains shouldHaveSize 5 }
     test("infrastructures") { GradleProject.infrastructures shouldHaveSize 0 }
     test("interfaces") { GradleProject.interfaces shouldHaveSize 1 }
 }) {

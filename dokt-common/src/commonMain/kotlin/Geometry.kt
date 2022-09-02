@@ -40,6 +40,7 @@ interface Dimensioned {
 expect class Dim(width: Int = 0, height: Int = 0) : Comparable<Dim>, Dimensioned {
     companion object {
         val ONE: Dim
+        val ZERO: Dim
     }
 }
 
@@ -67,5 +68,6 @@ expect class Rect : Dimensioned, Pointed {
 
     companion object {
         val DOT: Rect
+        val ZERO: Rect
     }
 }

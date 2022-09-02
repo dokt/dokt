@@ -32,6 +32,7 @@ data class TypeDefData(
     override val isData: Boolean,
     override val isEnumeration: Boolean,
     override val isInterface: Boolean,
+    override val isValue: Boolean,
     override val methods: List<Method>,
     override val primaryConstructor: List<Variable>,
     override val properties: List<Variable>

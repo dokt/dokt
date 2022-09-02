@@ -22,7 +22,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(project(":dokt-common"))
+                api(project(":dokt-application"))
                 implementation(project(":dokt-domain-test"))
                 implementation("io.github.microutils:kotlin-logging:_")
             }
@@ -37,7 +37,6 @@ kotlin {
 
         val jvmMain by getting {
             dependencies {
-                implementation(project(":dokt-application"))
                 implementation(Square.kotlinPoet)
                 // TODO `1.5.31` that might work differently than in the requested version `1.6.21`
                 implementation(kotlin("compiler-embeddable"))

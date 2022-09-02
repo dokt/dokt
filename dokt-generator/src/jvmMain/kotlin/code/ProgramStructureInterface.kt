@@ -6,6 +6,7 @@ package app.dokt.generator.code
 import org.jetbrains.kotlin.cli.jvm.compiler.*
 import org.jetbrains.kotlin.com.intellij.openapi.util.Disposer
 import org.jetbrains.kotlin.com.intellij.psi.*
+import org.jetbrains.kotlin.com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.com.intellij.testFramework.LightVirtualFile
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.idea.KotlinFileType
@@ -27,6 +28,8 @@ class KotlinClass(private val file: KotlinFile, element: KtClassOrObject)
 
     override val isInterface get() = element is KtClass && element.isInterface()
 
+    override val isValue get() = element is KtClass && element.isValue()
+
     override val methods by lazy { element.body?.functions?.map { KotlinFunction(it, file) } ?: emptyList() }
 
     override val packageName get() = file.packageName
@@ -34,7 +37,7 @@ class KotlinClass(private val file: KotlinFile, element: KtClassOrObject)
     override val primaryConstructor by lazy { element.primaryConstructorParameters.map { KotlinVariable(file, it) } }
 
     override val properties by lazy {
-        if (element is KtClass && element.isData()) primaryConstructor
+        if (isData || isValue) primaryConstructor
         else TODO()
     }
 }
@@ -51,7 +54,7 @@ class KotlinFile(val file: File, element: KtFile) : PackagedElement<KtFile>(elem
      * TODO Handle alias and multiple simple names
      */
     val imports by lazy {
-        element.importDirectives.associate { import -> import.importedFqName!!.asString().let {
+        element.importDirectives.associate { import -> import.text.removePrefix("import ").let {
             it.substringAfterLast('.') to it.substringBeforeLast('.')
         } }
     }
@@ -82,7 +85,7 @@ class KotlinFile(val file: File, element: KtFile) : PackagedElement<KtFile>(elem
      *
      * TODO handle [default imports](https://kotlinlang.org/docs/packages.html#default-imports)
      */
-    fun getPackageNameFor(name: String) = imports.getOrDefault(name, "kotlin.$name")
+    fun getPackageNameFor(name: String) = imports[name] ?: imports["*"] ?: "kotlin.$name"
 
     fun imports(packagePrefix: String) = imports.values.any { it.startsWith(packagePrefix) }
 
@@ -105,9 +108,9 @@ class KotlinFunction(element: KtNamedFunction, private val file: KotlinFile)
     override val parameters by lazy { element.valueParameters.map { KotlinVariable(file, it) } }
 }
 
-class KotlinType(private val file: KotlinFile, private val type: KtUserType) : TypeRef {
+class KotlinType(private val file: KotlinFile, private val type: KtTypeElement) : TypeRef {
 
-    constructor(file: KotlinFile, reference: KtTypeReference) : this(file, reference.typeElement as KtUserType)
+    constructor(file: KotlinFile, reference: KtTypeReference) : this(file, reference.typeElement as KtTypeElement)
 
     /**
      * Generic type arguments
@@ -119,9 +122,17 @@ class KotlinType(private val file: KotlinFile, private val type: KtUserType) : T
     /**
      * If KtTypeReference is fully qualified and not imported it doesn't work.
      */
-    override val name get() = type.referencedName!!
+    override val name get() = when (type) {
+        is KtUserType -> type.referencedName!!
+        is KtNullableType -> type.text!!.removeSuffix("?")
+        else -> TODO()
+    }
 
-    override val packageName by lazy { file.getPackageNameFor(name) }
+    override val nullable get() = type is KtNullableType
+
+    override val packageName by lazy {
+        if (file.types.any { it.name == name }) file.packageName else file.getPackageNameFor(name)
+    }
 
     override val simpleNames = name.split('.')
 

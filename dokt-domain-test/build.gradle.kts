@@ -25,7 +25,6 @@ kotlin {
             dependencies {
                 api(project(":dokt-domain"))
                 api(project(":dokt-test"))
-                implementation(KotlinX.serialization.json)
             }
         }
         val commonTest by getting {

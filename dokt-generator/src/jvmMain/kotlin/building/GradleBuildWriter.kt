@@ -84,8 +84,7 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptWriter() {
                 sourceSet("commonMain") {
                     dependencies {
                         implementation(Dokt.APPLICATION) // TODO This is added temporarily
-                        implementation(Dokt.DOMAIN)
-                        implementation("KotlinX.serialization.core") // TODO api(KotlinX.serialization.core) in dokt-domain doesn't work.
+                        //implementation(Dokt.DOMAIN)
 
                         GradleProject.domains.filter {
                                 domain -> domain.name != name && domain.exports.any { src.common.main.imports(it) }
@@ -98,9 +97,9 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptWriter() {
                     sourceSet("commonTest") {
                         dependencies {
                             implementation(Dokt.DOMAIN_TEST)
-                            implementation(JSON)
-                            //implementation(KOTEST) TODO KTIJ-22057
-                            implementation("io.kotest:kotest-runner-junit5-jvm")
+                            //implementation(JSON)
+                            implementation(KOTEST)
+                            //implementation("io.kotest:kotest-runner-junit5-jvm")
                             commonTestLibraries.used(src.common.test) { forEach { implementation(it) } }
                         }
                         generated("Test")
@@ -128,9 +127,10 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptWriter() {
             if (src.common.hasTests) {
                 sourceSetDependencies("commonTest") {
                     implementation(Dokt.TEST)
-                    implementation(JSON)
+                    //implementation(JSON)
                     implementation(KOTEST)
                     commonTestLibraries.used(src.common.test) { forEach { implementation(it) } }
+                    runtime(LOGBACK)
                 }
             }
 
@@ -145,9 +145,10 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptWriter() {
             if (src.jvm.hasTests) {
                 sourceSetDependencies("jvmTest") {
                     implementation(Dokt.TEST)
-                    implementation(JSON)
+                    //implementation(JSON)
                     implementation(KOTEST)
                     jvmTestLibraries.used(src.jvm.test) { forEach { implementation(it) } }
+                    runtime(LOGBACK)
                 }
             }
         }
@@ -182,8 +183,11 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptWriter() {
                     if (imports(packagePrefix)) implementation(dependency)
                 }
             }
-            if (isInterface && isJvm) runtime("ch.qos.logback:logback-classic")
-            if (hasTests) testImplementation(Dokt.TEST)
+            if (isInterface && isJvm) runtime(LOGBACK)
+            if (hasTests) {
+                testImplementation(Dokt.TEST)
+                if (isInterface && isJvm) testRuntime(LOGBACK)
+            }
         }
 
         application(mainClass)
@@ -207,8 +211,8 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptWriter() {
         private const val IMPL = "implementation"
         private const val SERIALIZATION_ID = "plugin.serialization"
         private const val SERIALIZATION_PACKAGE = "kotlinx.serialization"
-        private const val JSON = "KotlinX.serialization.json"
         private const val KOTEST = "Testing.kotest.runner.junit5"
+        private const val LOGBACK = "ch.qos.logback:logback-classic"
 
         private val commonLibraries = mapOf(
             "com.benasher44.uuid" to "com.benasher44:uuid",
@@ -255,6 +259,8 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptWriter() {
         private fun CodeBlock.Builder.runtime(dep: String) = dep("runtimeOnly", dep)
 
         private fun CodeBlock.Builder.testImplementation(dokt: Dokt) = dep("testImplementation", dokt)
+
+        private fun CodeBlock.Builder.testRuntime(dep: String) = dep("testRuntimeOnly", dep)
 
         private fun Map<String, String>.used(importer: Importer, action: List<String>.() -> Unit) {
             val dependencies = keys.filter { importer.imports(it) }.map { getValue(it) }.sorted()

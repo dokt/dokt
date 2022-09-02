@@ -8,6 +8,7 @@ import kotlinx.serialization.*
 import java.awt.*
 import java.awt.geom.*
 import java.awt.image.*
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.nio.file.Path
 import java.util.*
@@ -55,6 +56,12 @@ fun RenderedImage.write(file : File) {
 }
 
 fun RenderedImage.write(path : Path, filename: String) = write((path / filename).toFile())
+
+fun RenderedImage.writePng(): ByteArray {
+    val output = ByteArrayOutputStream(width * height)
+    ImageIO.write(this, PNG, output)
+    return output.toByteArray()
+}
 
 fun RenderedImage.writePng(file : File) = ImageIO.write(this, PNG, file)
 
@@ -120,6 +127,7 @@ actual data class Dim actual constructor(
 
     actual companion object {
         actual val ONE = Dim(1, 1)
+        actual val ZERO = Dim(0,0)
     }
 }
 
@@ -233,6 +241,7 @@ actual data class Rect actual constructor(
 
     actual companion object {
         actual val DOT: Rect = Rect(Pt.ZERO, Dim.ONE)
+        actual val ZERO: Rect = Rect(Pt.ZERO, Dim.ZERO)
     }
 }
 

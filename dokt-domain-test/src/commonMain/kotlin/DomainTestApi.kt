@@ -34,7 +34,7 @@ abstract class TestAggregate<Root: AggregateRoot<Events>, Events : Any, Event>(r
 
     override val collectedEvents = events
 
-    private var state = serialize()
+    private var state = "" // serialize() TODO lateinit properties can't be serialized
 
     init { root.emit = emit }
 

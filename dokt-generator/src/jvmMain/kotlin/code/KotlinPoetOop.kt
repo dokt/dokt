@@ -198,13 +198,26 @@ val List<Variable>.asParameters get() = map { ParameterSpec(it.name, it.asClassN
 
 fun Method.overrideBuilder() = FunSpec.overrideBuilder(name, parameters)
 
+fun PropertySpec.Companion.initialized(name: String, type: TypeName) =
+    builder(name, type).initializer(name).build()
+
 fun PropertySpec.Companion.privateBuilder(name: String, type: TypeName) =
     builder(name, type, KModifier.PRIVATE)
 
 fun PropertySpec.Companion.privateInitialized(name: String, type: TypeName) =
     privateBuilder(name, type).initializer(name).build()
 
-val TypeRef.asClassName get() = ClassName(packageName, simpleNames)
+fun PropertySpec.Companion.protectedBuilder(name: String, type: TypeName) =
+    builder(name, type, KModifier.PROTECTED)
+
+fun PropertySpec.Companion.protectedInitialized(name: String, type: TypeName) =
+    protectedBuilder(name, type).initializer(name).build()
+
+val TypeName.asNullable get() = copy(true)
+
+val TypeRef.asClassName get() = ClassName(packageName, simpleNames).let {
+    if (nullable) it.asNullable else it
+}
 
 fun TypeSpec.Builder.addSuperinterfaces(vararg superinterfaces: TypeName) =
     addSuperinterfaces(superinterfaces.asIterable())

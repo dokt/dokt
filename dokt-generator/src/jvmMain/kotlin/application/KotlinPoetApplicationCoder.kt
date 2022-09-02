@@ -7,7 +7,7 @@ import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
 class KotlinPoetApplicationCoder(application: Application)
-    : ApplicationCoder<FileSpec, TypeSpec>(application) {
+    : ApplicationCoder<FileSpec, TypeSpec>({}, application) {
     companion object {
         private val aggregateRepositoryType = AggregateRepository::class.asTypeName()
         private val applicationType = app.dokt.app.Application::class.asTypeName()
@@ -36,7 +36,7 @@ class KotlinPoetApplicationCoder(application: Application)
                 aggregateRepositoryType,
                 eventStoreRepositoryType.parameterizedBy(it.rootType, it.idType, it.eventType))
         }
-        return TypeSpec.classBuilder(name + "TestApplication")
+        return TypeSpec.classBuilder(appName + "TestApplication")
             .addModifiers(KModifier.OPEN)
             .superclass(applicationType)
             .addFunction(initDomainServices.build())

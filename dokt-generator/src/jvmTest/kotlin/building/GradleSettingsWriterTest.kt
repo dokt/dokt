@@ -16,6 +16,12 @@ class GradleSettingsWriterTest : FunSpec({
             plugins {
               id("de.fayard.refreshVersions") version "0.40.2"
             }
+            dependencyResolutionManagement {
+              repositories {
+                mavenCentral()
+                mavenLocal()
+              }
+            }
             rootProject.name = "examples"
             
             // Domain architecture layer projects

@@ -17,7 +17,7 @@ object BoundedContextModelReader : BoundedContextReader() {
             when {
                 it.isInterface -> interfaces[it.name] = it // TODO map using qualifiedName key
                 it.isException -> exceptions.add(DomainExceptionModel(it))
-                it.isData || it.isEnumeration -> valueObjects.add(ValueObjectModel(it))
+                it.isData || it.isEnumeration || it.isValue -> valueObjects.add(ValueObjectModel(it))
                 else -> log.warn { "$it type isn't detected!" }
             }
         }
