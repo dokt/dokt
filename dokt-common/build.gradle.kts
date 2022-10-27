@@ -34,5 +34,10 @@ kotlin {
                 implementation(Testing.kotest.runner.junit5)
             }
         }
+        val jvmMain by getting {
+            dependencies {
+                api("org.apache.commons:commons-lang3:_")
+            }
+        }
     }
 }

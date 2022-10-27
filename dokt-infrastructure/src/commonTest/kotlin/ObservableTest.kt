@@ -1,4 +1,4 @@
-package app.dokt.app
+package app.dokt.infra
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe

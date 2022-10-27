@@ -8,7 +8,7 @@ plugins {
 
 subprojects {
     group = "app.dokt"
-    version = "0.2.1"
+    version = "0.2.4"
 
     apply<MavenPublishPlugin>()
     apply<SigningPlugin>()
@@ -36,6 +36,21 @@ subprojects {
     }*/
 
     publishing {
+        repositories {
+            maven("https://pkgs.dev.azure.com/papinkivi/_packaging/common/maven/v1") {
+                name = "papinkivi"
+                authentication {
+                    create<BasicAuthentication>("basic")
+                }
+                credentials {
+                    username = "papinkivi"
+                    // read from user.home\.gradle\gradle.properties
+                    val papinkiviPersonalAccessToken: String? by project
+                    password = papinkiviPersonalAccessToken
+                }
+            }
+        }
+
         publications.withType<MavenPublication> {
             //artifact(javadocJar.get()) TODO
             pom {
@@ -67,6 +82,7 @@ subprojects {
     }
 
     signing {
+        // read from user.home\.gradle\gradle.properties
         val signingKey: String? by project
         val signingPassword: String? by project
         useInMemoryPgpKeys(signingKey, signingPassword)

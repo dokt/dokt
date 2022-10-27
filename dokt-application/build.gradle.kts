@@ -23,9 +23,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(KotlinX.coroutines.core)
-                api("io.github.microutils:kotlin-logging:_")
                 api(project(":dokt-domain"))
+                api(project(":dokt-infrastructure"))
             }
         }
 

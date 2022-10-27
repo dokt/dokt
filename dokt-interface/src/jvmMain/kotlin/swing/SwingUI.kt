@@ -3,6 +3,7 @@
 package app.dokt.ui.swing
 
 import app.dokt.app.Application
+import app.dokt.infra.SystemJvm
 import app.dokt.ui.*
 import java.awt.event.*
 import java.util.*
@@ -14,36 +15,19 @@ private val logger = mu.KotlinLogging.logger {}
  * https://github.com/Kotlin/kotlinx.coroutines/blob/master/ui/coroutines-guide-ui.md
  */
 abstract class SwingUI<A : Application, F>(
-    private var scaleDisabled: Boolean = false,
+    func: () -> Unit,
+    private var scale: Boolean = true,
     private val defaultLookAndFeelDecorated: Boolean = false,
     private val lookAndFeel: LookAndFeelData = currentLookAndFeel
-) : JavaUI<A>("a"), Runnable where F : JFrame, F : Localized {
+) : JavaUI<A>(func, "a"), Runnable where F : JFrame, F : Localized {
     lateinit var frame: F
 
     protected abstract fun createFrame(): F
 
-    override fun defineSystemProperties() { if (scaleDisabled) disableScale() }
-
-    private fun defineSystemProperty2d(suffix: String, value: Any = false) =
-        defineSystemProperty("sun.java2d.$suffix", value)
-
-    private fun defineSystemPropertyWinScale(suffix: String, scale: Double = 1.0) =
-        defineSystemProperty2d("win.uiScale$suffix", scale)
-
-    /**
-     * https://news.kynosarges.org/2019/03/24/swing-high-dpi-properties/
-     */
-    private fun disableScale() {
-        defineSystemProperty2d("dpiaware")
-        defineSystemProperty2d("uiScale", 1.0)
-        defineSystemProperty2d("uiScale.enabled")
-        defineSystemPropertyWinScale("")
-        defineSystemPropertyWinScale("X")
-        defineSystemPropertyWinScale("Y")
-    }
+    override fun defineSystemProperties() { if (SystemJvm.scale != scale) SystemJvm.scale = scale }
 
     override fun handleArgument(index: Int, argument: String) = if (argument == "scale=1") {
-        scaleDisabled = true
+        scale = true
         true
     } else false
 

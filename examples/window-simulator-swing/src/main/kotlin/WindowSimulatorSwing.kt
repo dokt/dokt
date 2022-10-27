@@ -10,6 +10,7 @@ object WindowSimulatorFrame : Frame(null, "Window simulator", Application) {
     val layout = BoxLayout(contentPane, BoxLayout.Y_AXIS).apply { contentPane.layout = this}
 
     val windowTable = addTable({ Windows.all }) {
+        column("id", { id }) { preferredWidth = 50 }
         column("icon", { icon }) { preferredWidth = 50 }
         column("title", { title }) { preferredWidth = 400 }
         column("process", { path }) { preferredWidth = 400 }

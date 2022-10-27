@@ -47,12 +47,13 @@ object Metal : LookAndFeelData {
  * https://docs.oracle.com/javase/tutorial/uiswing/lookandfeel/_nimbusDefaults.html
  */
 object Nimbus : LookAndFeelData {
+    /** https://community.oracle.com/tech/developers/discussion/1358501/jinternalframe-transparency-issues-with-nimbus-look-and-feel */
     override val decoratedTransparency = false
-    override val frameBorder = throw UnsupportedOperationException()
-    override val frameBorderAndTitle = throw UnsupportedOperationException()
-    override val frameBorderTitleAndMenu = throw UnsupportedOperationException()
+    override val frameBorder = 5 // TODO
+    override val frameBorderAndTitle = 28 // TODO
+    override val frameBorderTitleAndMenu = 51 // TODO
     override val id = "Nimbus"
-    override val iconSize get() = TODO()
+    override val iconSize = 15f // TODO
 }
 
 var currentLookAndFeel: LookAndFeelData = Metal

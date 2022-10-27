@@ -1,6 +1,8 @@
 package app.dokt.app
 
-open class Application {
+import app.dokt.infra.Logger
+
+open class Application(func: () -> Unit) : Logger(func) {
     protected open val eventBus: EventBus by lazy { LocalEventBus(eventStore) }
 
     protected open val eventStore: EventStore by lazy { InMemEventStore }

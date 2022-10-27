@@ -71,12 +71,13 @@ class TestFrame : Frame() {
     }
 }
 
-class TestSwingUI : SwingUI<Application, TestFrame>(){
-    override val application = Application()
+class TestSwingUI : SwingUI<Application, TestFrame>({}, true, true, Nimbus){
+    override val application = Application {}
 
     override fun createFrame() = TestFrame()
 }
 
 fun main() {
+    JFrame.setDefaultLookAndFeelDecorated(true)
     TestSwingUI().start()
 }

@@ -45,7 +45,7 @@ class GradleSettingsWriter(private val root: GradleProject) : KotlinScriptWriter
          */
         const val CENTRALIZED_REPOSITORY_DECLARATION = true
 
-        private const val REFRESH_VERSION = "0.40.2"
+        private const val REFRESH_VERSION = "0.50.2"
 
         private fun generateDependencyResolutionManagement() = controlFlow("dependencyResolutionManagement") {
             controlFlow("repositories") {

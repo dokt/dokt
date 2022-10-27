@@ -1,12 +1,13 @@
 package app.dokt.ui
 
 import app.dokt.app.Application
+import app.dokt.infra.SystemJvm
 import java.util.*
 
 private val logger = mu.KotlinLogging.logger {}
 
-abstract class JavaUI<A : Application>(private val bundleBaseName: String? = null)
-    : ConsoleUI<A>(), Localized {
+abstract class JavaUI<A : Application>(func: () -> Unit, private val bundleBaseName: String? = null)
+    : ConsoleUI<A>(func), Localized {
     companion object {
         lateinit var instance: JavaUI<*>
     }
@@ -44,12 +45,5 @@ abstract class JavaUI<A : Application>(private val bundleBaseName: String? = nul
         logger.debug { "No need to set system properties." }
     }
 
-    protected fun defineSystemProperty(key: String, value: Any) {
-        val old = System.getProperty(key)
-        if (value == old) logger.info { "'$key' system property '$value' value keep unchanged." }
-        else {
-            System.setProperty(key, value.toString())
-            logger.info { "'$key' system property value changed from '$old' to '$value'." }
-        }
-    }
+    protected fun defineSystemProperty(key: String, value: Any) = SystemJvm.defineProperty(key, value)
 }

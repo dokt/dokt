@@ -1,7 +1,7 @@
 # Domain-driven design using Kotlin
 
 [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
-[![Kotlin](https://img.shields.io/badge/kotlin-1.6.10-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.7.20-blue.svg?logo=kotlin)](http://kotlinlang.org)
 
 This framework lets you start your coding from *domain layer* with pure [Common Kotlin](https://kotlinlang.org/docs/multiplatform.html). Test-driven development is also supported via generated unit test stubs.
 

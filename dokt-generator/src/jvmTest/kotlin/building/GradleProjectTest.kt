@@ -20,7 +20,14 @@ class GradleProjectTest : FunSpec({
         test("window-simulator-app") {
             "window-simulator-app" shouldImport listOf("app.dokt.app", "com.sun.jna.platform")
         }
-        test("window-simulator-swing") { "window-simulator-swing" shouldImport listOf("app.dokt.ui") }
+        test("window-simulator-swing") { "window-simulator-swing" shouldImport listOf(
+            "app.dokt.ui.swing",
+            "java.awt.event",
+            "java.util",
+            "javax.swing",
+            "javax.swing.table",
+            "jiconfont.icons.google_material_design_icons"
+        ) }
     }
     test("all") { instance.all shouldHaveSize 8 }
     test("applications") { GradleProject.applications shouldHaveSize 1 }

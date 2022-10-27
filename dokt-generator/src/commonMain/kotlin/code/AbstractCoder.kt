@@ -1,6 +1,6 @@
 package app.dokt.generator.code
 
-import app.dokt.app.Logger
+import app.dokt.infra.Logger
 
 abstract class AbstractCoder<F, M>(
     func: () -> Unit,

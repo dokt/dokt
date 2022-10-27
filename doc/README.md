@@ -42,3 +42,7 @@ If the project:
 # TODO
 
 - Migrate to latest [Publish plugin](https://plugins.gradle.org/plugin/com.gradle.plugin-publish)
+- Add unit tests to generate all examples.
+- Log model which causes error
+- Add File system storage tests
+- Combine geometry classes: Eg. except class app.dokt.common.Point to actual java.awt.Point

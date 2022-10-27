@@ -1,4 +1,4 @@
-package app.dokt.app
+package app.dokt.infra
 
 class Foo(observer: (String) -> Unit) {
     private val observers = mutableListOf(observer)

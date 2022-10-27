@@ -2,8 +2,6 @@ package fi.papinkivi.simulator
 
 import app.dokt.app.Application
 
-
-
 class WindowInfo(
     val id: Int,
     val title: String,
@@ -17,6 +15,8 @@ class WindowInfo(
 ) {
     val visible get() = /*x != 0 && y != 0 && */ width > 0 && height > 0
 
+    override fun hashCode() = id.hashCode()
+
     override fun equals(other: Any?) = other is WindowInfo && other.id == id
 }
 
@@ -24,4 +24,6 @@ object WindowSimulator : Application()
 
 expect object Windows {
     val all: List<WindowInfo>
+
+    val captured: List<WindowInfo>
 }

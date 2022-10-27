@@ -14,6 +14,8 @@ actual object Windows {
         }
         .filter { it.visible && !it.path.contains("explorer") }
         .sortedBy { it.id }
+
+    actual val captured: List<WindowInfo> = emptyList()
 }
 
 val WindowInfo.icon get() = WindowUtils.getWindowIcon(handle as WinDef.HWND)?.let { ImageIcon(it) }

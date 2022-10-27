@@ -20,6 +20,10 @@
   - Add Dokt there
 - [Yet another kotlin multiplatform libraries](https://github.com/AAkira/Kotlin-Multiplatform-Libraries)
 
+### DDD links
+
+- [Domain vs. App Service](https://stackoverflow.com/questions/2268699/domain-driven-design-domain-service-application-service)
+
 ## TODO
 
 - [Idea doesn't recognize Kotlin Common Maven dependencies](https://youtrack.jetbrains.com/issue/IDEA-296313/Idea-doesnt-recognize-Kotlin-Common-Maven-dependencies)
