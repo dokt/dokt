@@ -3,6 +3,7 @@
 package app.dokt.ui.swing
 
 import app.dokt.common.*
+import app.dokt.common.Dimension
 import java.awt.*
 import java.awt.image.BufferedImage
 import javax.swing.JComponent
@@ -19,7 +20,7 @@ class ImageView(image: BufferedImage = DOT) : JComponent(), TableCellRenderer {
 
     init {
         image.size.let {
-            if (it.dot) preferredSize = Dim(100, 100)
+            if (it.area < 100) preferredSize = Dimension(100, 100)
             else size = it
         }
     }

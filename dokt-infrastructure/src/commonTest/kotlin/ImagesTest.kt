@@ -5,7 +5,7 @@ import app.dokt.test.Headed
 import io.kotest.core.annotation.EnabledIf
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.nulls.shouldNotBeNull
-import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 
 @EnabledIf(Headed::class)
 class ImagesTest : FunSpec({
@@ -13,7 +13,7 @@ class ImagesTest : FunSpec({
         test("pixel") { Capture(origin).shouldNotBeNull() }
         test("screen") {
             val screenshot = Capture()
-            screenshot shouldBe null
+            screenshot shouldNotBe null
         }
     }
 })

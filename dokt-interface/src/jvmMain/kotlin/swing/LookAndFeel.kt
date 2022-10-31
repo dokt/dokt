@@ -3,6 +3,8 @@
 package app.dokt.ui.swing
 
 import app.dokt.common.*
+import app.dokt.common.Dimension
+import app.dokt.common.Rectangle
 import jiconfont.IconCode
 import java.awt.*
 import javax.swing.*
@@ -58,18 +60,18 @@ object Nimbus : LookAndFeelData {
 
 var currentLookAndFeel: LookAndFeelData = Metal
 
-private fun boundsByContent(content: Rectangle, menuBar: JMenuBar?): Rect = with(currentLookAndFeel) {
+private fun boundsByContent(content: Rectangle, menuBar: JMenuBar?): Rectangle = with(currentLookAndFeel) {
     val top = if (menuBar == null) frameBorderAndTitle else frameBorderTitleAndMenu
-    return Rect(
+    return Rectangle(
         content.x - frameBorder,
         content.y - top,
         sizeByContent(content.size, menuBar)
     )
 }
 
-private fun sizeByContent(content: Dimension, menuBar: JMenuBar?): Dim = with(currentLookAndFeel) {
+private fun sizeByContent(content: Dimension, menuBar: JMenuBar?): Dimension = with(currentLookAndFeel) {
     val top = if (menuBar == null) frameBorderAndTitle else frameBorderTitleAndMenu
-    return Dim(
+    return Dimension(
         content.width + 2 * frameBorder,
         content.height + top + frameBorder
     )

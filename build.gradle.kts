@@ -8,7 +8,7 @@ plugins {
 
 subprojects {
     group = "app.dokt"
-    version = "0.2.4"
+    version = "0.2.6"
 
     apply<MavenPublishPlugin>()
     apply<SigningPlugin>()

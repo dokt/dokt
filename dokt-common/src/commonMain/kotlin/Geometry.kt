@@ -62,9 +62,9 @@ expect class Rectangle() {
     var height: Int
     constructor(x: Int, y: Int, width: Int, height: Int)
     constructor(width: Int, height: Int)
-    constructor(dimension: Dimension)
+    constructor(size: Dimension)
     constructor(point: Point)
-    constructor(point: Point, dimension: Dimension)
+    constructor(point: Point, size: Dimension)
     operator fun contains(point: Point): Boolean
     operator fun contains(rectangle: Rectangle): Boolean
     fun getLocation(): Point
@@ -82,6 +82,7 @@ expect class Rectangle() {
 }
 val Rectangle.area get() = width * height
 val Rectangle.text get() = "($x, $y; $width x $height)"
+fun Rectangle(x: Int, y: Int, size: Dimension) = Rectangle(x, y, size.width, size.height)
 operator fun Rectangle.minus(point: Point) = Rectangle(x - point.x, y - point.y, width, height)
 operator fun Rectangle.plus(point: Point) = Rectangle(x + point.x, y + point.y, width, height)
 //#endregion
