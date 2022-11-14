@@ -2,6 +2,9 @@
 
 package app.dokt.common
 
+import kotlin.math.pow
+import kotlin.math.roundToLong
+
 private const val B = 1024L
 
 val Long.bytesText : String get() {
@@ -15,6 +18,10 @@ val Long.bytesText : String get() {
     if (size < B) return "$size GB"
     size /= B
     return "$size TB"
+}
+
+fun Long.gigabytes(fractionDigits: Int = 1) = 10.0.pow(fractionDigits).let {
+    ((this / 1073741824.0) * it).roundToLong() / it
 }
 
 /** Non-blank text */

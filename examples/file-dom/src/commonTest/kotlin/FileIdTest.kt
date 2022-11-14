@@ -1,5 +1,6 @@
 package fi.papinkivi.file
 
+impost app.dokt.test.jsonShouldBe
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.json.Json
@@ -7,6 +8,6 @@ import kotlinx.serialization.json.Json
 class FileIdTest : FunSpec({
     test("serialize") {
         val name = "test.txt"
-        Json.encodeToString(FileId.serializer(), FileId(name)) shouldBe "\"$name\""
+        FileId(name) jsonShouldBe "\"$name\""
     }
 })

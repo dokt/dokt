@@ -12,5 +12,6 @@ include(
     "dokt-application",
     "dokt-interface",
     "dokt-generator",
-    "dokt-gradle"
+    "dokt-gradle",
+    "dokt-ktor-server",
 )

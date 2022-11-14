@@ -21,16 +21,16 @@ class KotlinSourcesTest : FunSpec({
         test("test") { test.commonRootPackage shouldBe "biz.bank.account" }
     }
     context("files") {
-        test("dokt") { dokt.files shouldHaveSize 11 }
+        test("dokt") { dokt.files shouldHaveSize 15 }
         test("erp") { erp.files shouldHaveSize 3 }
         test("hello") { hello.files shouldHaveSize 1 }
         test("test") { test.files shouldHaveSize 4 }
     }
     context("import") {
-        test("star") { window.files.first().imports shouldContain("*" to "app.dokt.common") }
+        test("star") { window.files.first().imports shouldContain("*" to "fi.papinkivi.file") }
     }
     context("types") {
-        test("dokt") { dokt.types shouldHaveSize 9 }
+        test("dokt") { dokt.types shouldHaveSize 15 }
         test("erp") { erp.types shouldHaveSize 6 }
         test("hello") { hello.types shouldHaveSize 2 }
         test("test") { test.types shouldHaveSize 14 }

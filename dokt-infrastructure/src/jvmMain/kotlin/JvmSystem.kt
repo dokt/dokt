@@ -52,3 +52,10 @@ object SystemJvm : Logger({}) {
     private fun definePropertyWinScale(suffix: String, scale: Double = 1.0) =
         defineProperty2d("win.uiScale$suffix", scale)
 }
+
+val runtime = Runtime.getRuntime()
+
+actual val cores get() = runtime.availableProcessors()
+actual val freeMem get() = runtime.freeMemory()
+actual val maxMem = runtime.maxMemory().let { if (it == Long.MAX_VALUE) null else it }
+actual val totalMem get() = runtime.totalMemory()

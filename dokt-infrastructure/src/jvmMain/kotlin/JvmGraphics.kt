@@ -4,9 +4,9 @@ import app.dokt.common.*
 import java.awt.GraphicsEnvironment
 import java.awt.Toolkit
 
-actual val centerPoint: Point get() = environment.centerPoint
+actual val centerPoint: Point get() = local.centerPoint
 
-private val environment = GraphicsEnvironment.getLocalGraphicsEnvironment()
+val local = GraphicsEnvironment.getLocalGraphicsEnvironment()
 
 /**
  * https://stackoverflow.com/questions/41067235/what-is-the-benefit-of-setting-java-awt-headless-true
