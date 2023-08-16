@@ -8,7 +8,7 @@ plugins {
 
 subprojects {
     group = "app.dokt"
-    version = "0.2.7"
+    version = "0.2.8"
 
     apply<MavenPublishPlugin>()
     apply<SigningPlugin>()
@@ -56,7 +56,7 @@ subprojects {
             pom {
                 // TODO Handle root name
                 name.set(project.name.split('-')
-                    .joinToString(" ") { it[0].toUpperCase() + it.substring(1) })
+                    .joinToString(" ") { it[0].uppercaseChar() + it.substring(1) })
                 description.set(project.description)
                 url.set("https://dokt.app/")
                 licenses {
@@ -90,16 +90,14 @@ subprojects {
     }
 }
 
+// https://issues.sonatype.org/browse/OSSRH-78373
 nexusPublishing {
     repositories {
-        sonatype {
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-        }
+        sonatype()
     }
 }
 
 tasks.wrapper {
     distributionType = Wrapper.DistributionType.ALL
-    gradleVersion = "7.5.1"
+    gradleVersion = "8.2.1"
 }

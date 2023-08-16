@@ -1,6 +1,6 @@
 package app.dokt.infra
 
-import org.apache.commons.lang3.SystemUtils
+import org.apache.commons.lang3.*
 
 actual val osArch: String? = SystemUtils.OS_ARCH
 actual val osName: String? = SystemUtils.OS_NAME
@@ -11,7 +11,7 @@ actual val windows = SystemUtils.IS_OS_WINDOWS
 
 actual val hostname: String? = SystemUtils.getHostName()
 actual val java = SystemUtils.JAVA_SPECIFICATION_VERSION?.substringAfter('.')?.toInt()
-actual val username: String = SystemUtils.getUserName()
+actual val username: String = SystemProperties.getUserName()
 actual val userDir = SystemUtils.getUserDir().toString()
 
 object SystemJvm : Logger({}) {
@@ -53,7 +53,7 @@ object SystemJvm : Logger({}) {
         defineProperty2d("win.uiScale$suffix", scale)
 }
 
-val runtime = Runtime.getRuntime()
+val runtime = Runtime.getRuntime()!!
 
 actual val cores get() = runtime.availableProcessors()
 actual val freeMem get() = runtime.freeMemory()

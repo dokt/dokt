@@ -119,8 +119,8 @@ class KotlinPoetAggregateCoderTest : FunSpec({
             
               override fun pilot(horizontal: Byte, vertical: Byte) = command.pilot(horizontal, vertical)
             
-              override fun landed(successful: Boolean, length: UShort) = apply(Landed(successful,
-                  length)) { landed(successful, length) }
+              override fun landed(successful: Boolean, length: UShort) = apply(Landed(successful, length))
+                  { landed(successful, length) }
             
               override fun takenOff() = apply(TakenOff) { takenOff() }
             
@@ -278,8 +278,8 @@ class KotlinPoetAggregateCoderTest : FunSpec({
             
               override fun pilot(horizontal: Byte, vertical: Byte) = command.pilot(horizontal, vertical)
             
-              override fun landed(successful: Boolean, length: UShort) = apply(Landed(successful,
-                  length)) { landed(successful, length) }
+              override fun landed(successful: Boolean, length: UShort) = apply(Landed(successful, length))
+                  { landed(successful, length) }
             
               override fun takenOff() = apply(TakenOff) { takenOff() }
             

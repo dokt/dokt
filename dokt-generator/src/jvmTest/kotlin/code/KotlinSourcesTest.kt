@@ -21,7 +21,7 @@ class KotlinSourcesTest : FunSpec({
         test("test") { test.commonRootPackage shouldBe "biz.bank.account" }
     }
     context("files") {
-        test("dokt") { dokt.files shouldHaveSize 15 }
+        test("dokt") { dokt.files shouldHaveSize 16 }
         test("erp") { erp.files shouldHaveSize 3 }
         test("hello") { hello.files shouldHaveSize 1 }
         test("test") { test.files shouldHaveSize 4 }
@@ -30,7 +30,7 @@ class KotlinSourcesTest : FunSpec({
         test("star") { window.files.first().imports shouldContain("*" to "fi.papinkivi.file") }
     }
     context("types") {
-        test("dokt") { dokt.types shouldHaveSize 15 }
+        test("dokt") { dokt.types shouldHaveSize 18 }
         test("erp") { erp.types shouldHaveSize 6 }
         test("hello") { hello.types shouldHaveSize 2 }
         test("test") { test.types shouldHaveSize 14 }

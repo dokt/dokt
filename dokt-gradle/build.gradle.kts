@@ -26,13 +26,10 @@ java {
     withSourcesJar()
 }
 
-pluginBundle {
+gradlePlugin {
     website = "https://dokt.app/"
     vcsUrl = "https://github.com/dokt/dokt"
-    tags = listOf("code-generation", "codegen", "cqrs", "ddd", "es", "kotlin", "kotlin-mpp", "mpp")
-}
-
-gradlePlugin {
+    //tags = listOf("code-generation", "codegen", "cqrs", "ddd", "es", "kotlin", "kotlin-mpp", "mpp")
     plugins {
         create("dokt") {
             id = "app.dokt"
