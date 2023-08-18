@@ -17,13 +17,7 @@ interface Sources {
 }
 
 class GeneratedSources(override val basePath: String) : Sources {
-    companion object {
-        private const val DEFAULT_GENERATED = "building/generated"
-        private const val DEFAULT_MAIN = "$DEFAULT_GENERATED/commonMain"
-        private const val DEFAULT_TEST = "$DEFAULT_GENERATED/commonTest"
-    }
-
-    constructor(test: Boolean = false) : this(if (test) DEFAULT_TEST else DEFAULT_MAIN)
+    constructor(test: Boolean = false) : this("build/common${if (test) "Test" else "Main"}")
 
     override val commonRootPackage by lazy { files.commonPackage }
 

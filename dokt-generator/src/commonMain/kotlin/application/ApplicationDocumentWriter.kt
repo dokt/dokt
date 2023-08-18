@@ -1,8 +1,8 @@
 package app.dokt.generator.application
 
+import app.dokt.common.pluralize
 import app.dokt.generator.documentation.Documentation
 import app.dokt.generator.domain.*
-import app.dokt.generator.pluralize
 
 class ApplicationDocumentWriter(documentation: Documentation) : Documentation by documentation {
     fun documentApplication(application: Application) = with(application) {

@@ -24,10 +24,6 @@ interface Events {
 
 @Serializable
 class SalesOrder : Root<Events>(), Events {
-    companion object {
-        lateinit var salesBans: SalesBans
-    }
-
     var customer: VatNo? = null
     //lateinit var customer: VatNo
 
@@ -75,4 +71,8 @@ class SalesOrder : Root<Events>(), Events {
         this.customer = customer
     }
     //#endregion
+
+    companion object {
+        lateinit var salesBans: SalesBans
+    }
 }

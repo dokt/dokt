@@ -30,7 +30,7 @@ kotlin {
                 api(Ktor.server.htmlBuilder)
                 api(Ktor.server.hostCommon) // for shutdown URL
                 api(Ktor.server.resources)
-                api("io.ktor:ktor-serialization-kotlinx-json:_")
+                api(Ktor.plugins.serialization.kotlinx.json)
             }
         }
 

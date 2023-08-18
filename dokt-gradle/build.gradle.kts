@@ -1,5 +1,6 @@
 plugins {
     `java-gradle-plugin`
+    //`kotlin-dsl`
     `maven-publish`
     id("com.gradle.plugin-publish")
     kotlin("jvm")
@@ -33,15 +34,9 @@ gradlePlugin {
     plugins {
         create("dokt") {
             id = "app.dokt"
-            displayName = "Dokt plugin for the root project"
+            displayName = "Dokt plugin"
             description = project.description
-            implementationClass = "app.dokt.gradle.RootProjectPlugin"
-        }
-        create("dokt-domain") {
-            id = "app.dokt.domain"
-            displayName = "Dokt plugin for domain projects"
-            description = project.description
-            implementationClass = "app.dokt.gradle.DomainProjectPlugin"
+            implementationClass = "app.dokt.gradle.DoktSettingsPlugin"
         }
     }
 }

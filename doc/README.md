@@ -46,3 +46,7 @@ If the project:
 - Log model which causes error
 - Add File system storage tests
 - Combine geometry classes: Eg. except class app.dokt.common.Point to actual java.awt.Point
+
+# Links
+
+- [Common Gradle Plugin Mistakes and Good Practices](https://marcelkliemannel.com/articles/2022/common-gradle-plugin-mistakes-and-good-practices/)

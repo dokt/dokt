@@ -2,4 +2,6 @@
 
 package app.dokt.infra
 
-fun logger(target: Any) = mu.KotlinLogging.logger(target.javaClass.name)
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+fun logger(target: Any) = KotlinLogging.logger(target.javaClass.name)

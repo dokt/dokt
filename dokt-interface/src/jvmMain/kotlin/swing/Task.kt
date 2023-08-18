@@ -2,12 +2,13 @@
 
 package app.dokt.ui.swing
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.time.*
 import javax.swing.*
 
 class Task<T>(private val job: () -> T, private val ui: (T) -> Unit, val name: String = "task")
     : SwingWorker<T, Nothing>() {
-    val logger = mu.KotlinLogging.logger {}
+    val logger = KotlinLogging.logger {}
 
     init { execute() }
 

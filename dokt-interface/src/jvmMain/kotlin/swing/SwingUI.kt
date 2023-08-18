@@ -5,11 +5,12 @@ package app.dokt.ui.swing
 import app.dokt.app.Application
 import app.dokt.infra.SystemJvm
 import app.dokt.ui.*
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.awt.event.*
 import java.util.*
 import javax.swing.*
 
-private val logger = mu.KotlinLogging.logger {}
+private val logger = KotlinLogging.logger {}
 
 /**
  * https://github.com/Kotlin/kotlinx.coroutines/blob/master/ui/coroutines-guide-ui.md
@@ -57,7 +58,7 @@ abstract class SwingUI<A : Application, F>(
             currentLookAndFeel = lookAndFeel
             UIManager.setLookAndFeel(lookAndFeel.className)
         }
-        if (logger.isDebugEnabled) {
+        if (logger.isDebugEnabled()) {
             val defaultScreen = localGraphicsEnvironment.defaultScreenDevice
             localGraphicsEnvironment.screenDevices.forEach {
                 val mode = it.displayMode

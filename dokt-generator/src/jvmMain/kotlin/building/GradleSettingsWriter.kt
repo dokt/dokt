@@ -21,7 +21,7 @@ class GradleSettingsWriter(private val root: GradleProject) : KotlinScriptWriter
         if (Dokt.LOCAL) {
             addCode("\n")
             addBodyComment("Dokt libraries")
-            addStatement("include(%L)", Dokt.values().joinToString { "\"${it.artifact}\"" })
+            addStatement("include(%L)", Dokt.entries.joinToString { "\"${it.artifact}\"" })
         }
         generateInclude(Layer.DOMAIN)
         generateInclude(Layer.APPLICATION)
@@ -45,7 +45,7 @@ class GradleSettingsWriter(private val root: GradleProject) : KotlinScriptWriter
          */
         const val CENTRALIZED_REPOSITORY_DECLARATION = true
 
-        private const val REFRESH_VERSION = "0.50.2"
+        private const val REFRESH_VERSION = "0.50.2" // TODO remove
 
         private fun generateDependencyResolutionManagement() = controlFlow("dependencyResolutionManagement") {
             controlFlow("repositories") {

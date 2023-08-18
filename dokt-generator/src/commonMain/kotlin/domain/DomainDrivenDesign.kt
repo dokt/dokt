@@ -3,6 +3,8 @@
  */
 package app.dokt.generator.domain
 
+import app.dokt.common.camelCaseToWords
+import app.dokt.common.lowerFirst
 import app.dokt.generator.*
 import app.dokt.generator.code.*
 
@@ -13,7 +15,7 @@ val defaultIdVar = Var("id", uuidRef)
  * https://en.wikipedia.org/wiki/Command_pattern
  */
 interface AggregateCommand : BuildingBlock {
-    val methodName get() = name.lowerFirst()
+    val methodName get() = name.lowerFirst
 
     val values: List<Variable>
 }
@@ -61,9 +63,9 @@ interface BoundedContext : BuildingBlock {
 }
 
 interface BuildingBlock {
-    val blockType get() = this::class.simpleName!!.camelCaseToWords().lowercase()
+    val blockType get() = this::class.simpleName!!.camelCaseToWords.lowercase()
 
-    val displayName get () = name.camelCaseToWords()
+    val displayName get () = name.camelCaseToWords
 
     val label get() = "$displayName $blockType"
 

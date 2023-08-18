@@ -24,29 +24,21 @@ kotlin {
             dependencies {
                 api(project(":dokt-application"))
                 implementation(project(":dokt-domain-test"))
-                implementation("io.github.microutils:kotlin-logging:_")
+                implementation("io.github.oshai:kotlin-logging:_")
             }
         }
 
         val commonTest by getting {
             dependencies {
-                implementation(Testing.kotest.runner.junit5)
-                runtimeOnly("ch.qos.logback:logback-classic:_")
+                api(Testing.kotest.runner.junit5)
+                implementation("ch.qos.logback:logback-classic:_")
             }
         }
 
         val jvmMain by getting {
             dependencies {
                 implementation(Square.kotlinPoet)
-                // TODO `1.5.31` that might work differently than in the requested version `1.6.21`
                 implementation(kotlin("compiler-embeddable"))
-            }
-        }
-
-        val jvmTest by getting {
-            dependencies {
-                implementation(Testing.kotest.runner.junit5)
-                runtimeOnly("ch.qos.logback:logback-classic:_")
             }
         }
     }

@@ -2,9 +2,10 @@ package app.dokt.ui
 
 import app.dokt.app.Application
 import app.dokt.infra.SystemJvm
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.util.*
 
-private val logger = mu.KotlinLogging.logger {}
+private val logger = KotlinLogging.logger {}
 
 abstract class JavaUI<A : Application>(func: () -> Unit, private val bundleBaseName: String? = null)
     : ConsoleUI<A>(func), Localized {

@@ -1,7 +1,8 @@
 package app.dokt.generator.code
 
+import app.dokt.common.pluralize
 import app.dokt.generator.building.Dir
-import app.dokt.generator.pluralize
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.nio.file.Path
 import kotlin.io.path.*
 
@@ -12,7 +13,7 @@ class KotlinSources(path: Path) : Dir(path, "kotlin"), Sources {
     val files by lazy { filesByPath.flatMap { it.value } }
     private val filesByPath = mutableMapOf<Path, List<KotlinFile>>()
     val importTypes by lazy { files.flatMap { it.imports.values }.filterNot { langImports.contains(it) }.toSortedSet() }
-    private val log = mu.KotlinLogging.logger { }
+    private val log = KotlinLogging.logger { }
     val mainFile by lazy { files.firstOrNull { it.hasMain } }
     override val types by lazy { typesByPackages.flatMap { it.value } }
     private val typesByPackages = mutableMapOf<String, MutableList<KotlinClass>>()

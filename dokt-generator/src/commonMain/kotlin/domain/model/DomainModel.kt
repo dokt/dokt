@@ -3,12 +3,13 @@
  */
 package app.dokt.generator.domain.model
 
+import app.dokt.common.*
 import app.dokt.generator.*
 import app.dokt.generator.code.*
 import app.dokt.generator.domain.*
 
 class AggregateCommandModel(method: Method) : BuildingBlockModel<Method>(method), AggregateCommand {
-    override val name by lazy { method.name.upperFirst() }
+    override val name by lazy { method.name.upperFirst }
 
     override val methodName get() = block.name
 
@@ -16,7 +17,7 @@ class AggregateCommandModel(method: Method) : BuildingBlockModel<Method>(method)
 }
 
 class AggregateEventModel(override val method: Method) : BuildingBlockModel<Method>(method), AggregateEvent {
-    override val name by lazy { method.name.upperFirst() }
+    override val name by lazy { method.name.upperFirst }
 
     override val details get() = method.parameters
 }
@@ -50,9 +51,9 @@ class BoundedContextModel(
 }
 
 abstract class BuildingBlockModel<B : Packaged>(protected val block: B) : BuildingBlock {
-    override val blockType by lazy { this::class.simpleName!!.removeSuffix("Model").camelCaseToWords().lowercase() }
+    override val blockType by lazy { this::class.simpleName!!.removeSuffix("Model").camelCaseToWords.lowercase() }
 
-    override val displayName by lazy { name.camelCaseToWords() }
+    override val displayName by lazy { name.camelCaseToWords }
 
     override val label by lazy { "$displayName $blockType" }
 
@@ -83,7 +84,7 @@ class DomainServiceInterfaceModel(definition: TypeDef) : DomainObjectModel(defin
 
 data class ModuleModel(override val name: String, override val packageName: String) : Packaged {
     constructor(packageName: String) : this(
-        packageName.substringAfterLast('.').upperFirst(),
+        packageName.substringAfterLast('.').upperFirst,
         packageName.substringBeforeLast('.')
     )
 }

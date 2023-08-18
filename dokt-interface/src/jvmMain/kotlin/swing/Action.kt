@@ -4,6 +4,7 @@ package app.dokt.ui.swing
 
 import app.dokt.common.*
 import app.dokt.ui.*
+import io.github.oshai.kotlinlogging.KotlinLogging
 import jiconfont.IconCode
 import jiconfont.icons.google_material_design_icons.GoogleMaterialDesignIcons
 import java.awt.event.*
@@ -21,7 +22,7 @@ abstract class Action(
     name: String? = null,
     private val localizeName: Boolean = true
 ) : AbstractAction(name), MenuComponent {
-    protected val logger = mu.KotlinLogging.logger { }
+    protected val logger = KotlinLogging.logger { }
     private val name = name ?: javaClass.simpleName
 
     init {

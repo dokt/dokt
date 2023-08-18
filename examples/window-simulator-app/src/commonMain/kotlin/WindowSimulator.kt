@@ -20,7 +20,7 @@ class WindowInfo(
     override fun equals(other: Any?) = other is WindowInfo && other.id == id
 }
 
-object WindowSimulator : Application()
+object WindowSimulator : Application({})
 
 expect object Windows {
     val all: List<WindowInfo>

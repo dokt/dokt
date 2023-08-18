@@ -1,5 +1,5 @@
 @file:Suppress("unused")
-
+/** Common english extensions */
 package app.dokt.common
 
 import kotlin.math.pow
@@ -22,6 +22,16 @@ val Long.bytesText : String get() {
 
 fun Long.gigabytes(fractionDigits: Int = 1) = 10.0.pow(fractionDigits).let {
     ((this / 1073741824.0) * it).roundToLong() / it
+}
+
+fun String.pluralize(collection: Collection<Any?> = emptyList()) =
+    if (collection.isEmpty()) pluralize(0)
+    else "${pluralize(collection.size)} (${collection.joinToString()})"
+
+fun String.pluralize(count: Int = 1) = when {
+    count == 1 -> "1 $this"
+    endsWith('s') -> "$count ${this}es"
+    else -> "$count ${this}s"
 }
 
 /** Non-blank text */

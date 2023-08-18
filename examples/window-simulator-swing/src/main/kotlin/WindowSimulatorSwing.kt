@@ -35,7 +35,7 @@ object WindowSimulatorFrame : Frame(null, "Window simulator", Application) {
     override fun localize(locale: Locale) {}
 }
 
-object WindowSimulatorSwing : SwingUI<WindowSimulator, WindowSimulatorFrame>(true) {
+object WindowSimulatorSwing : SwingUI<WindowSimulator, WindowSimulatorFrame>({}, true) {
     override val application = WindowSimulator
 
     override fun createFrame() = WindowSimulatorFrame

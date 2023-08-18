@@ -3,6 +3,7 @@
  */
 package app.dokt.generator.code
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.kotlin.cli.jvm.compiler.*
 import org.jetbrains.kotlin.com.intellij.openapi.util.Disposer
 import org.jetbrains.kotlin.com.intellij.psi.*
@@ -63,7 +64,7 @@ class KotlinFile(val file: File, element: KtFile) : PackagedElement<KtFile>(elem
 
     val javaFileName get() = name.substringBefore('.') + "Kt"
 
-    private val log by lazy { mu.KotlinLogging.logger {  } }
+    private val log by lazy { KotlinLogging.logger {  } }
 
     override val path: String get() = file.path
 

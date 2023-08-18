@@ -1,6 +1,6 @@
 package app.dokt.generator.building
 
-import app.dokt.generator.lowerFirst
+import app.dokt.common.lowerFirst
 
 enum class Configuration {
     Api,
@@ -9,7 +9,7 @@ enum class Configuration {
     TestImplementation,
     TestRuntimeOnly;
 
-    override fun toString() = name.lowerFirst()
+    override fun toString() = name.lowerFirst
 }
 
 data class Dependency(

@@ -3,7 +3,7 @@
  */
 package app.dokt.generator.code
 
-import app.dokt.generator.commonPrefix
+import app.dokt.common.commonPrefix
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
 import kotlin.reflect.KClass

@@ -25,7 +25,7 @@ kotlin {
             dependencies {
                 api(KotlinX.coroutines.core)
                 api(project(":dokt-common"))
-                api("io.github.microutils:kotlin-logging:_")
+                api("io.github.oshai:kotlin-logging:_")
             }
         }
         val commonTest by getting {

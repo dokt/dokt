@@ -3,6 +3,7 @@
  */
 package app.dokt.generator.domain.data
 
+import app.dokt.common.*
 import app.dokt.generator.*
 import app.dokt.generator.code.*
 import app.dokt.generator.code.data.MethodData
@@ -15,10 +16,10 @@ data class AggregateCommandData(
     override val values: List<Variable> = emptyList(),
     override val module: String = ""
 ) : AggregateCommand {
-    override val methodName get() = name.lowerFirst()
+    override val methodName get() = name.lowerFirst
 
     constructor(method: Method, module: String = "") :
-            this(method.name.upperFirst(), method.parameters, module)
+            this(method.name.upperFirst, method.parameters, module)
 
     constructor(name: String, module: String = "", vararg values: Variable) :
             this(name, values.toList(), module)
@@ -31,12 +32,12 @@ data class AggregateEventData(
     override val module: String = ""
 ) : AggregateEvent {
     constructor(method: Method, module: String = "") :
-            this(method.name.upperFirst(), method.parameters, module)
+            this(method.name.upperFirst, method.parameters, module)
 
     constructor(name: String, module: String = "", vararg details: Variable) :
             this(name, details.toList(), module)
 
-    override val method get() = MethodData(name.lowerFirst(), details)
+    override val method get() = MethodData(name.lowerFirst, details)
 }
 
 @Serializable

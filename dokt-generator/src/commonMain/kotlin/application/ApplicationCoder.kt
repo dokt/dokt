@@ -1,10 +1,10 @@
 package app.dokt.generator.application
 
+import app.dokt.common.upperFirst
 import app.dokt.generator.code.*
 import app.dokt.generator.domain.*
-import app.dokt.generator.upperFirst
 
-abstract class ApplicationCoder<F, T>(func: () -> Unit, application: Application): AbstractCoder<F, Application>(
+abstract class ApplicationCoder<F, T>(func: () -> Unit, application: Application): AbstractSourcesCoder<F, Application>(
     func,
     application,
     GeneratedSources(application.generatedSources),
@@ -12,7 +12,7 @@ abstract class ApplicationCoder<F, T>(func: () -> Unit, application: Application
 ) {
     protected abstract val boundedContextCoders: List<BoundedContextCoder<*, *>>
 
-    protected val appName = application.appName.upperFirst()
+    protected val appName = application.appName.upperFirst
 
     override fun  code() {
         boundedContextCoders.forEach {

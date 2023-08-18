@@ -1,7 +1,10 @@
 package app.dokt.common
 
+import kotlinx.serialization.Serializable
+
 /** [Semantic version](https://semver.org) **/
 @JvmInline
+@Serializable
 value class Version(private val no: String) : Comparable<Version> {
     /** Build metadata. */
     val build get() = no.substringAfter('+', "").ifBlank { null }

@@ -2,7 +2,7 @@
 
 package app.dokt.ui.swing
 
-import app.dokt.common.uppercaseFirst
+import app.dokt.common.upperFirst
 import app.dokt.ui.*
 import jiconfont.icons.google_material_design_icons.GoogleMaterialDesignIcons
 import java.awt.event.ActionEvent
@@ -18,7 +18,7 @@ class MenuBar(private vararg val menus: Menu): JMenuBar(), Localized {
 }
 
 class SetLocale(private val locale: Locale) : Action(
-    name = locale.nativeDisplayName.uppercaseFirst,
+    name = locale.nativeDisplayName.upperFirst,
     localizeName = false
 ) {
     override fun actionPerformed(e: ActionEvent?) { JavaUI.instance.locale = locale }

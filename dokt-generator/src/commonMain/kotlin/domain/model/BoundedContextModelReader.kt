@@ -1,8 +1,8 @@
 package app.dokt.generator.domain.model
 
+import app.dokt.common.pluralize
 import app.dokt.generator.code.TypeDef
 import app.dokt.generator.domain.*
-import app.dokt.generator.pluralize
 
 object BoundedContextModelReader : BoundedContextReader() {
     private fun List<*>.detected(name: String) {

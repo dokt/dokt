@@ -3,7 +3,7 @@
  */
 package app.dokt.generator.code
 
-import app.dokt.generator.*
+import app.dokt.common.lowerFirst
 import com.squareup.kotlinpoet.*
 import java.io.*
 import java.nio.file.Path
@@ -20,7 +20,7 @@ fun controlFlow(controlFlow: String, vararg args: Any?, code: CodeBlock.Builder.
 fun script(fileName: String, code: FileSpec.Builder.() -> Unit) = FileSpec
     .scriptBuilder(fileName).apply { code() }.build()
 
-val Array<out ClassName>.asParameters get() = map { ParameterSpec(it.simpleName.lowerFirst(), it) }
+val Array<out ClassName>.asParameters get() = map { ParameterSpec(it.simpleName.lowerFirst, it) }
 
 val Array<out Pair<String, TypeName>>.asParameters get() = map { ParameterSpec(it.first, it.second) }
 

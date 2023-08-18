@@ -1,6 +1,6 @@
 package app.dokt.infra
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.net.*
 import java.util.*
 

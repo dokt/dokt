@@ -1,7 +1,7 @@
 package app.dokt.infra
 
+import io.github.oshai.kotlinlogging.*
 import kotlin.reflect.KProperty
-import mu.*
 import kotlin.properties.ReadWriteProperty
 
 fun logger(func: () -> Unit) = KotlinLogging.logger(func)
@@ -47,7 +47,7 @@ class Observable<V>(
     private val observers: List<(V) -> Unit>,
     private val equalizer: (V, V) -> Boolean = { old, new -> old == new }
 ) : ReadWriteProperty<Any?, V> {
-    private lateinit var logger: mu.KLogger
+    private lateinit var logger: KLogger
 
     private var value = initialValue
 
