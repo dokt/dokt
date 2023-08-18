@@ -5,14 +5,11 @@ import commonTestDependencies
 import jvmMainDependencies
 import jvmTestDependencies
 import org.gradle.api.*
-import org.gradle.api.initialization.Settings
-import org.gradle.api.logging.Logging
 import org.gradle.api.plugins.PluginContainer
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 
 class DoktPlugin : Plugin<Any> {
-    private val logger = Logging.getLogger(DoktPlugin::class.java)
 
     /**
      * Apply this plugin to the given target object.
@@ -20,12 +17,7 @@ class DoktPlugin : Plugin<Any> {
      * @param target The target object
      */
     override fun apply(target: Any) {
-        logger.error("Error loggerista!")
-        logger.warn("Varoitus loggerista!")
-        logger.info("Info loggerista!")
-        logger.debug("Debug loggerista!")
         if (target is Project) target.configure()
-        else if (target is Settings) target.initialize()
     }
 
     private fun KotlinDependencyHandler.jvmTestDependencies() {
@@ -127,25 +119,6 @@ class DoktPlugin : Plugin<Any> {
         it.group = "dokt"
         it.description = description
         it.actions.add(action)
-    }
-
-    private fun Settings.initialize() {
-        println("> Initialize Dokt")
-
-        dependencyResolutionManagement {
-            with(it.repositories) {
-                mavenCentral()
-                mavenLocal()
-            }
-        }
-
-        gradle.rootProject {
-            it.pluginManager.apply(DoktPlugin::class.java)
-        }
-
-        //gradle.rootProject.plugins.apply(DoktPlugin::class.java) // TODO The root project is not yet available for build.
-
-        // TODO validate settings file rootProject.name = rootDir.name This doesn't work in CI builds.
     }
 
     private val String.dokt get() = "app.dokt:dokt-$this:_"

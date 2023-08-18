@@ -26,7 +26,5 @@ class DoktSettingsPlugin : SettingsPlugin(DoktSettingsPlugin::class) {
             debug { "Add Dokt root project plugin." }
             it.pluginManager.apply(RootProjectPlugin::class.java)
         }
-
-        // TODO validate settings file rootProject.name = rootDir.name This doesn't work in CI builds.
     }
 }
