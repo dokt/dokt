@@ -4,7 +4,7 @@ import app.dokt.generator.code.*
 import com.squareup.kotlinpoet.*
 
 /**
- * Gradle Kotlin settings script updater
+ * Gradle Kotlin settings script writer
  *
  * TODO update functionality
  */

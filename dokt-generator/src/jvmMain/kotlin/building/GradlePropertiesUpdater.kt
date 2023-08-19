@@ -8,6 +8,7 @@ class GradlePropertiesUpdater(override val directory: Path) : PropertiesUpdater(
     override fun updateProperties() { map += defaults }
 
     companion object {
+        @Suppress("SpellCheckingInspection")
         private val defaults = mapOf(
             "kotlin.code.style" to "official",
             "kotlin.mpp.stability.nowarn" to "true",

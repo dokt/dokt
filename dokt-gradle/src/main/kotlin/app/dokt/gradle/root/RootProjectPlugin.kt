@@ -18,9 +18,6 @@ class RootProjectPlugin : ProjectPlugin(RootProjectPlugin::class) {
         }*/
 
         register<UpdateSettings>()
-        /*tasks.register("dfg") {
-            it.logger
-        }*/
 
         task("updateBuild") {
             it.actions.add {
