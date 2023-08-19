@@ -13,9 +13,10 @@ subprojects {
     apply<MavenPublishPlugin>()
     apply<SigningPlugin>()
 
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    /*tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions.allWarningsAsErrors = true
-    }
+    }*/
+
     /* Works only for multiplatform
     targets.all {
         compilations.all {

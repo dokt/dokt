@@ -40,6 +40,7 @@ sealed class GradleProject(
         val infrastructures = mutableListOf<GradleProject>()
         val interfaces = mutableListOf<SingleProject>()
 
+        @Deprecated("Use ProjectType.parse")
         fun parse(dir: Path, parent: GradleProject? = null, name: String = dir.name): GradleProject {
             val names = dir.flatMap { it.name.split('-') }
             val layer = Layer.parse(names)

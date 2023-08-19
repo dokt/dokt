@@ -9,6 +9,9 @@
 Dokt detects architecture layer and platform from project using following logic:
 
 If the project:
+- is root project it's only container project.
+- name starts with `dom`, it's a project containing only domain logic projects for Multiplatform.
+- path starts with `dom`, it's a domain logic project for Multiplatform.
 - name ends with `-dom`, it's a domain logic project for Multiplatform.
 - name ends with `-app`, it's an application services project for Multiplatform.
 - name contains `-if`, it's application interface project:
