@@ -20,7 +20,7 @@ dependencies {
     // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.plugin.serialization
     implementation(kotlin("serialization", "_"))
 
-    implementation(project(":dokt-generator"))
+    implementation(project(":dokt-generator-app"))
 }
 
 java {

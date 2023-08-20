@@ -16,7 +16,7 @@ sealed class GradleProject(
     val dependencies = mutableListOf<Dependency>()
 
     override val children by lazy {
-        dir.filterDirectoryEntries { path ->
+        dir.filterEntries { path ->
             path.isDirectory() && !path.name.let {
                 it.startsWith(".") || ignoredDirectories.contains(it) || it.startsWith("dokt-") }
         }.map { parse(it, this) }

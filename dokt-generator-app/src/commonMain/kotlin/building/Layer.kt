@@ -37,7 +37,7 @@ enum class Layer(
      * - Contains runnable interface application and its implementation.
      * - Dispatches calls to application services.
      */
-    INTERFACE(false, "api", "if", "int", "ktor", "swing", "swt", "ui");
+    INTERFACE(false, "api", "if", "int", "itf", "ktor", "swing", "swt", "ui");
 
     val en = "${name.capitalize} architecture layer"
 

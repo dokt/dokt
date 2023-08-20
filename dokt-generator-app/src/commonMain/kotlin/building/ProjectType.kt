@@ -10,8 +10,6 @@ enum class ProjectType(val platform: Platform? = null, val layer: Layer? = null)
     INTERFACE(Platform.MULTI, Layer.INTERFACE),
     INTERFACE_JS(Platform.JS, Layer.INTERFACE),
     INTERFACE_JVM(Platform.JVM, Layer.INTERFACE),
-    JVM(Platform.JVM),
-    JS(Platform.JS),
     KTOR_SERVER(Platform.JVM, Layer.INTERFACE),
     ROOT,
     SWING(Platform.JVM, Layer.INTERFACE),
@@ -21,30 +19,34 @@ enum class ProjectType(val platform: Platform? = null, val layer: Layer? = null)
         private val ignoredNames = setOf("build", "gradle", "src")
         private val ignoredNamePrefixes = setOf("doc", "x")
 
+        fun ignore(name: String) = ignoredNames.contains(name) || ignoredNamePrefixes.any { name.startsWith(it) }
+
         /** Detect project type. See [Flowchart](doc/project-detection.graphml). */
         fun parse(path: String) = parse(path, path.substringAfterLast(':'))
 
         fun parse(path: String, name: String) = when {
             path == ":" -> ROOT
-            ignoredNames.contains(name) || ignoredNamePrefixes.any { name.startsWith(it) } -> null
+            ignore(name) -> null
+            path.contains("test") -> parseInfrastructure(path)
             name.startsWith("dom") -> DOMAINS // Do not parse subprojects. They are domains.
             name.contains("-dom") -> DOMAIN
             name.contains("-app") -> APPLICATION
-            name == Platform.JVM.id -> JVM // Offer platform for subprojects.
-            name == Platform.JS.id -> JS // Offer platform for subprojects.
-            name.contains("-if") -> when (Platform.parse(path)) {
-                Platform.JVM -> INTERFACE_JVM
-                Platform.JS -> INTERFACE_JS
-                Platform.MULTI -> INTERFACE
-            }
+            name.contains("-if") || name.contains("-int") || name.contains("-itf") ->
+                when (Platform.parse(path)) {
+                    Platform.JVM -> INTERFACE_JVM
+                    Platform.JS -> INTERFACE_JS
+                    Platform.MULTI -> INTERFACE
+                }
             name.endsWith("-api") || name.contains("ktor-s") -> KTOR_SERVER
             name.endsWith("-swing") -> SWING
             name.endsWith("-swt") -> SWT
-            else -> when (Platform.parse(path)) {
-                Platform.JVM -> INFRASTRUCTURE_JVM
-                Platform.JS -> INFRASTRUCTURE_JS
-                Platform.MULTI -> INFRASTRUCTURE
-            }
+            else -> parseInfrastructure(path)
+        }
+
+        private fun parseInfrastructure(path: String) = when (Platform.parse(path)) {
+            Platform.JVM -> INFRASTRUCTURE_JVM
+            Platform.JS -> INFRASTRUCTURE_JS
+            Platform.MULTI -> INFRASTRUCTURE
         }
     }
 }

@@ -10,7 +10,7 @@ include(
     "dokt-domain-test",
     "dokt-application",
     "dokt-interface",
-    "dokt-generator",
+    "dokt-generator-app",
     "dokt-gradle",
     "dokt-ktor-server",
 )

@@ -17,6 +17,8 @@ class RootProjectPlugin : ProjectPlugin(RootProjectPlugin::class) {
             it.plugins.apply(DoktPlugin::class.java)
         }*/
 
+        projectDir
+
         register<UpdateSettings>()
 
         task("updateBuild") {
