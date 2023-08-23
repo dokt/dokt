@@ -15,8 +15,8 @@ abstract class ProjectPlugin(type: KClass<out ProjectPlugin>) : LoggablePlugin<P
     /** Configure project */
     protected abstract fun Project.configure()
 
-    protected inline fun <reified T : Task> Project.register() {
+    protected inline fun <reified T : Task> Project.register() = tasks.run {
         debug { "Registering ${T::class.simpleName} task" }
-        tasks.register<T>()
+        register<T>()
     }
 }

@@ -1,26 +1,32 @@
 package app.dokt.gradle.core
 
+import app.dokt.generator.building.FileUpdater
 import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.provider.Property
 import org.gradle.api.tasks.*
-import org.gradle.work.*
-import java.io.File
 import kotlin.reflect.KClass
 
 @CacheableTask
-abstract class UpdateFile(type: KClass<out UpdateFile>, description: String? = null) : LoggableTask(type, description) {
-    @get:Incremental
-    @get:InputFile
-    //@get:OutputFile
-    @get:PathSensitive(PathSensitivity.RELATIVE)
+abstract class UpdateFile(type: KClass<out UpdateFile>) : LoggableTask(type) {
+    @get:OutputFile // Output is required at minimum
     abstract val file: RegularFileProperty
 
-    @TaskAction
-    fun execute(inputChanges: InputChanges) {
-        inputChanges.getFileChanges(file).forEach { change ->
-            info { "${change.normalizedPath} ${change.changeType}" }
-            change.file.changed()
-        }
+    @get:Input
+    abstract val modified: Property<Long>
+
+    private lateinit var updater: FileUpdater
+
+    override fun getDescription() = "Update ${updater.file.name} file."
+
+    protected fun init(updater: FileUpdater) {
+        this.updater = updater
+        modified.set(updater.modified)
+        file.set(updater.file)
     }
 
-    abstract fun File.changed()
+    @TaskAction
+    fun update() {
+        lifecycle { "Updating $file" }
+        updater.update()
+    }
 }

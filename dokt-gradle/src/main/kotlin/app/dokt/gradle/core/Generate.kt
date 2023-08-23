@@ -13,4 +13,7 @@ abstract class Generate(type: KClass<out Generate>, description: String? = null)
     @get:SkipWhenEmpty
     @get:PathSensitive(PathSensitivity.RELATIVE)
     abstract val source: DirectoryProperty
+
+    @TaskAction
+    abstract fun generate()
 }

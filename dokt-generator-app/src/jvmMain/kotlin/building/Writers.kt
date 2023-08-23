@@ -28,26 +28,39 @@ abstract class KotlinScriptWriter : FileWriter() {
     protected abstract fun FileSpec.Builder.generateScript()
 }
 
-abstract class PropertiesUpdater : FileWriter(), Updater {
+abstract class PropertiesUpdater : FileWriter(), FileUpdater {
+    private lateinit var after: String
+
+    private lateinit var before: String
+
     final override val extension = "properties"
 
     protected val map = mutableMapOf<String, String>().toSortedMap()
 
+    override val modified get() = file.lastModified()
+
     private fun read() {
-        if (file.exists()) file.readLines().forEach { line ->
-            if (line.isNotBlank() && !line.startsWith('#')) {
-                line.split("=").let { (key, value) -> map[key.trim()] = value.trim() }
+        map.clear()
+        if (file.exists()) {
+            file.readLines().forEach { line ->
+                if (line.isNotBlank() && !line.startsWith('#')) {
+                    line.split("=").let { (key, value) -> map[key.trim()] = value.trim() }
+                }
             }
         }
+        before = map.text
     }
 
     final override fun update() {
         read()
         updateProperties()
-        write()
+        after = map.text
+        if (after != before) write()
     }
 
     protected open fun updateProperties() {}
 
-    final override fun write() = file.writeText(map.map { (key, value) -> "$key=$value" }.joinToString("\n") )
+    final override fun write() = file.writeText(after)
+
+    private val Map<String, String>.text get() = map { (key, value) -> "$key=$value" }.joinToString("\n")
 }

@@ -2,26 +2,20 @@ package app.dokt.gradle.root
 
 import app.dokt.generator.building.*
 import app.dokt.gradle.core.ProjectPlugin
-import app.dokt.gradle.register
 import isRoot
 import org.gradle.api.Project
 
-class RootProjectPlugin : ProjectPlugin(RootProjectPlugin::class) {
+class DoktRootProjectPlugin : ProjectPlugin(DoktRootProjectPlugin::class) {
     override fun applyPlugin() {
         if (target.isRoot) configureProject()
         else error("Isn't applied on root project!")
     }
 
     override fun Project.configure() {
-        /*subprojects {
-            it.plugins.apply(DoktPlugin::class.java)
-        }*/
-
-        projectDir
-
+        register<UpdateProperties>()
         register<UpdateSettings>()
 
-        task("updateBuild") {
+        /*task("updateBuild") {
             it.actions.add {
                 val dir = projectDir.toPath()
                 GradlePropertiesUpdater(dir).update()
@@ -30,11 +24,9 @@ class RootProjectPlugin : ProjectPlugin(RootProjectPlugin::class) {
                     GradleSettingsWriter(project).write()
                 }
             }
-        }.description = "Update build files."
-
-
-        /*task("updateSettings") {
-            //it.dependsOn(":refreshVersions")
-        }.description = "Updates settings file."*/
+        }.apply {
+            description = "Update build files."
+            group = "dokt"
+        }*/
     }
 }

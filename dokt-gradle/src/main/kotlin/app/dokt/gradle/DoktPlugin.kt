@@ -9,6 +9,7 @@ import org.gradle.api.plugins.PluginContainer
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 
+@Deprecated("Use separate plugins")
 class DoktPlugin : Plugin<Any> {
 
     /**

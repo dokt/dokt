@@ -1,15 +1,26 @@
 package app.dokt.generator.building
 
 import app.dokt.common.*
-import app.dokt.infra.Logger
-import java.nio.file.Path
-import kotlin.io.path.*
+import java.io.File
 
 /**
  * Gradle Kotlin settings script updater
  */
-class GradleSettingsUpdater(refreshVer: String) : Logger({}) {
+class GradleSettingsUpdater(private val path: File, refreshVer: String) :
+    AbstractFileUpdater(path.resolve(FILENAME), {}) {
+
     private val refreshLine = """    id("$REFRESH_ID") version "$refreshVer""""
+
+    override fun update() {
+        if (!file.exists()) throw UnsupportedOperationException("Updating settings requires $FILENAME file!")
+        debug { "Reading $file" }
+        val lines = update(file.readLines(), path.name)
+        if (lines == null) info { "$file not modified" }
+        else {
+            debug { "Writing $file" }
+            file.writeLines(lines)
+        }
+    }
 
     fun update(lines: List<String>, rootProjectName: String) : List<String>? {
         val updated = lines.toMutableList()
@@ -36,22 +47,6 @@ class GradleSettingsUpdater(refreshVer: String) : Logger({}) {
             info { "$FILENAME not modified" }
             null
         }
-    }
-
-    fun update(dir: Path) {
-        val file = dir.resolve(FILENAME)
-        val lines = update(file.read(), dir.name)
-        if (lines == null) info { "$file not modified" }
-        else {
-            debug { "Writing $file" }
-            file.writeLines(lines)
-        }
-    }
-
-    private fun Path.read(): List<String> {
-        if (!exists()) throw UnsupportedOperationException("Updating settings requires $FILENAME file!")
-        debug { "Reading $this" }
-        return readLines()
     }
 
     companion object {

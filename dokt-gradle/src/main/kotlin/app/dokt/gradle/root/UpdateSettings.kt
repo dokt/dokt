@@ -2,17 +2,13 @@ package app.dokt.gradle.root
 
 import app.dokt.generator.building.GradleSettingsUpdater
 import app.dokt.gradle.REFRESH_VER
-import app.dokt.gradle.core.LoggableTask
-import org.gradle.api.tasks.TaskAction
+import app.dokt.gradle.core.UpdateFile
+import org.gradle.api.tasks.CacheableTask
 
-abstract class UpdateSettings : LoggableTask(UpdateSettings::class,
-    "Update ${GradleSettingsUpdater.FILENAME} file.") {
-    private val dir by lazy { project.projectDir.toPath()!! }
-    private val updater by lazy { GradleSettingsUpdater(REFRESH_VER) }
-
-    @TaskAction
-    fun update() {
-        lifecycle { "Updating ${GradleSettingsUpdater.FILENAME}" }
-        updater.update(dir)
+// TODO dependsOn(":refreshVersions")?
+@CacheableTask
+abstract class UpdateSettings : UpdateFile(UpdateSettings::class) {
+    init {
+        init(GradleSettingsUpdater(project.projectDir, REFRESH_VER))
     }
 }
