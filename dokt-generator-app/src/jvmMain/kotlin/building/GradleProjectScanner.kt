@@ -10,7 +10,7 @@ class GradleProjectScanner(private val root: Path) : Logger({}) {
     val projects = mutableMapOf<String, ProjectType>()
 
     private fun add(path: String, type: ProjectType) {
-        info { "$path project is $type." }
+        debug { "$path project is $type." }
         projects[path] = type
     }
 

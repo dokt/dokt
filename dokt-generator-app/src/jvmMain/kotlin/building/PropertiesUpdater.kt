@@ -6,7 +6,7 @@ import java.util.*
 
 abstract class PropertiesUpdater(directory: File, func: () -> Unit) :
     FileUpdater<SortedMap<String, String>>(directory, func) {
-    final override val extension = "properties"
+    final override val extension get() = "properties"
 
     override fun File.readModel() =
         if (exists()) readLines().filter { it.isNotBlank() && !it.startsWith('#') }.associate { line ->

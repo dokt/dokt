@@ -1,4 +1,4 @@
-package app.dokt.gradle.core
+package app.dokt.gradle.common
 
 import app.dokt.generator.building.FileUpdater
 import org.gradle.api.file.RegularFileProperty

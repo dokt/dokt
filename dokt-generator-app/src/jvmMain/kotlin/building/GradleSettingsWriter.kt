@@ -9,7 +9,7 @@ import com.squareup.kotlinpoet.*
  * TODO update functionality
  */
 class GradleSettingsWriter(private val root: GradleProject) : KotlinScriptGenerator(root, {}) {
-    override val name = "settings.gradle"
+    override val name get() = "settings.gradle"
 
     override fun FileSpec.Builder.generateModel() {
         addCode(generatePluginManagement())

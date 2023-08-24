@@ -36,7 +36,7 @@ gradlePlugin {
             id = "app.dokt"
             displayName = "Dokt plugin"
             description = project.description
-            implementationClass = "app.dokt.gradle.DoktSettingsPlugin"
+            implementationClass = "app.dokt.gradle.build.DoktSettingsPlugin"
         }
     }
 }

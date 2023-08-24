@@ -7,9 +7,9 @@ import java.io.File
  * Gradle Kotlin settings script updater
  */
 class GradleSettingsUpdater(dir: File, refreshVer: String) : FileLinesUpdater(dir, {}) {
-    override val extension = EXTENSION
+    override val extension get() = EXTENSION
 
-    override val name = NAME
+    override val name get() = NAME
 
     private val refreshLine = """    id("$REFRESH_ID") version "$refreshVer""""
 

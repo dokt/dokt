@@ -1,4 +1,4 @@
-package app.dokt.gradle.core
+package app.dokt.gradle.common
 
 import org.gradle.api.logging.Logger
 
@@ -13,8 +13,14 @@ abstract class LoggableAdapter : Loggable {
     /** Always log error (the highest level) message to error stream. */
     override fun error(message: Any?) = logger.error(format(message))
 
+    /** Always log error (the highest level) message to error stream. */
+    override fun error(message: () -> Any?) = logger.error(format(message))
+
     /** Always log error (the highest level) message with throwable to error stream. */
     override fun error(throwable: Throwable?, message: Any?) = logger.error(format(message), throwable)
+
+    /** Always log error (the highest level) message with throwable to error stream. */
+    override fun error(throwable: Throwable?, message: () -> Any?) = logger.error(format(message), throwable)
 
     /**
      * Log important information (a higher level) message to output stream by default or `-q` or `--quiet` is switched.

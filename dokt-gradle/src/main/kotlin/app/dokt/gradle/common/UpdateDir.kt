@@ -1,4 +1,4 @@
-package app.dokt.gradle.core
+package app.dokt.gradle.common
 
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.tasks.*
