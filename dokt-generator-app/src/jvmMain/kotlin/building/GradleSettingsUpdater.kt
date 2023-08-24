@@ -6,25 +6,18 @@ import java.io.File
 /**
  * Gradle Kotlin settings script updater
  */
-class GradleSettingsUpdater(private val path: File, refreshVer: String) :
-    AbstractFileUpdater(path.resolve(FILENAME), {}) {
+class GradleSettingsUpdater(dir: File, refreshVer: String) : FileLinesUpdater(dir, {}) {
+    override val extension = EXTENSION
+
+    override val name = NAME
 
     private val refreshLine = """    id("$REFRESH_ID") version "$refreshVer""""
 
-    override fun update() {
-        if (!file.exists()) throw UnsupportedOperationException("Updating settings requires $FILENAME file!")
-        debug { "Reading $file" }
-        val lines = update(file.readLines(), path.name)
-        if (lines == null) info { "$file not modified" }
-        else {
-            debug { "Writing $file" }
-            file.writeLines(lines)
-        }
-    }
+    override fun update(previous: List<String>?) = update(previous, directory.name)
 
-    fun update(lines: List<String>, rootProjectName: String) : List<String>? {
-        val updated = lines.toMutableList()
-        var changed = false
+    fun update(lines: List<String>?, rootProjectName: String) : List<String>? {
+        val updated = lines?.toMutableList() ?: mutableListOf()
+        var changed = lines == null
 
         if (updated.anyContains(REFRESH_ID)) debug { "$REFRESH_ID found" }
         else {
@@ -42,17 +35,15 @@ class GradleSettingsUpdater(private val path: File, refreshVer: String) :
             changed = true
         }
 
-        return if (changed) updated
-        else {
-            info { "$FILENAME not modified" }
-            null
-        }
+        return if (changed) updated else null
     }
 
     companion object {
+        private const val EXTENSION = "gradle.kts"
+        private const val NAME = "settings"
+        const val FILENAME = "$NAME.$EXTENSION"
         @Suppress("SpellCheckingInspection")
         private const val REFRESH_ID = "de.fayard.refreshVersions"
         private const val ROOT_NAME = "rootProject.name"
-        const val FILENAME = "settings.gradle.kts"
     }
 }

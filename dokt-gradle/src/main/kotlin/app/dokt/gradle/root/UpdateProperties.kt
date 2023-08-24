@@ -7,6 +7,6 @@ import org.gradle.api.tasks.CacheableTask
 @CacheableTask
 abstract class UpdateProperties : UpdateFile(UpdateProperties::class) {
     init {
-        init(GradlePropertiesUpdater(project.projectDir.toPath()))
+        init(GradlePropertiesUpdater(project.projectDir))
     }
 }

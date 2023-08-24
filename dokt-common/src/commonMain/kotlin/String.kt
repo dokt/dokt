@@ -21,6 +21,8 @@ val Iterable<String>.commonPrefix get() = iterator().run {
 
 fun List<String>.anyContains(search: String) = any { it.contains(search) }
 
+fun List<String>.joinLines(separator: String = "\n") = joinToString(separator)
+
 /**
  * Adds line after the line which contains the search string.
  *

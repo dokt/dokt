@@ -1,11 +1,13 @@
 package app.dokt.generator.building
 
-import java.nio.file.Path
+import java.io.File
+import java.util.*
 
-class GradlePropertiesUpdater(override val directory: Path) : PropertiesUpdater() {
+class GradlePropertiesUpdater(dir: File) : PropertiesUpdater(dir, {}) {
     override val name = "gradle"
 
-    override fun updateProperties() { map += defaults }
+    override fun update(previous: SortedMap<String, String>?) =
+        if (previous == null) defaults else (previous + defaults).toSortedMap()
 
     companion object {
         @Suppress("SpellCheckingInspection")
@@ -18,6 +20,6 @@ class GradlePropertiesUpdater(override val directory: Path) : PropertiesUpdater(
             "org.gradle.logging.stacktrace" to "all",
             "org.gradle.parallel" to "true",
             "org.gradle.warning.mode" to "all"
-        )
+        ).toSortedMap()
     }
 }

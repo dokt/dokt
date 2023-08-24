@@ -14,14 +14,14 @@ abstract class UpdateFile(type: KClass<out UpdateFile>) : LoggableTask(type) {
     @get:Input
     abstract val modified: Property<Long>
 
-    private lateinit var updater: FileUpdater
+    private lateinit var updater: FileUpdater<*>
 
-    override fun getDescription() = "Update ${updater.file.name} file."
+    override fun getDescription() = "Update ${updater.filename} file."
 
-    protected fun init(updater: FileUpdater) {
+    protected fun init(updater: FileUpdater<*>) {
         this.updater = updater
-        modified.set(updater.modified)
-        file.set(updater.file)
+        modified.set(updater.lastModified)
+        file.set(updater.target)
     }
 
     @TaskAction

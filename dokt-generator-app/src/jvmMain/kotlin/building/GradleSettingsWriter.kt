@@ -8,12 +8,10 @@ import com.squareup.kotlinpoet.*
  *
  * TODO update functionality
  */
-class GradleSettingsWriter(private val root: GradleProject) : KotlinScriptWriter() {
-    override val directory = root.dir
-
+class GradleSettingsWriter(private val root: GradleProject) : KotlinScriptGenerator(root, {}) {
     override val name = "settings.gradle"
 
-    override fun FileSpec.Builder.generateScript() {
+    override fun FileSpec.Builder.generateModel() {
         addCode(generatePluginManagement())
         addCode(generatePlugins())
         if (CENTRALIZED_REPOSITORY_DECLARATION) addCode(generateDependencyResolutionManagement())

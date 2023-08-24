@@ -13,7 +13,23 @@ fun logger(func: () -> Unit) = KotlinLogging.logger(func)
  */
 val KProperty<*>.logger get() = KotlinLogging.logger(toString().substring(4).substringBefore(':'))
 
-abstract class Logger(private val logger: KLogger) {
+interface Log {
+    fun error(message: () -> Any?)
+
+    fun error(throwable: Throwable?, message: () -> Any?)
+
+    fun warn(message: () -> Any?)
+
+    fun warn(throwable: Throwable?, message: () -> Any?)
+
+    fun info(message: () -> Any?)
+
+    fun debug(message: () -> Any?)
+
+    fun trace(message: () -> Any?)
+}
+
+abstract class Logger(private val logger: KLogger) : Log {
     constructor(func: () -> Unit) : this(KotlinLogging.logger(func))
     constructor(name: String) : this(KotlinLogging.logger(name))
 
@@ -21,19 +37,19 @@ abstract class Logger(private val logger: KLogger) {
         trace { "Initializing" }
     }
 
-    protected fun trace(msg: () -> Any?) = logger.trace(msg)
+    final override fun error(message: () -> Any?) = logger.error(message)
 
-    protected fun debug(msg: () -> Any?) = logger.debug(msg)
+    final override fun error(throwable: Throwable?, message: () -> Any?) = logger.error(throwable, message)
 
-    protected fun info(msg: () -> Any?) = logger.info(msg)
+    final override fun warn(message: () -> Any?) = logger.warn(message)
 
-    protected fun warn(msg: () -> Any?) = logger.warn(msg)
+    final override fun warn(throwable: Throwable?, message: () -> Any?) = logger.warn(throwable, message)
 
-    protected fun warn(t: Throwable?, msg: () -> Any?) = logger.warn(t, msg)
+    final override fun info(message: () -> Any?) = logger.info(message)
 
-    protected fun error(msg: () -> Any?) = logger.error(msg)
+    final override fun debug(message: () -> Any?) = logger.debug(message)
 
-    protected fun error(t: Throwable?, msg: () -> Any?) = logger.error(t, msg)
+    final override fun trace(message: () -> Any?) = logger.trace(message)
 
     override fun toString(): String = logger.name
 }

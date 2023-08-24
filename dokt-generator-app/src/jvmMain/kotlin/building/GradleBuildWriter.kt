@@ -1,18 +1,15 @@
 package app.dokt.generator.building
 
-import app.dokt.common.deleteIfEmpty
 import app.dokt.generator.code.*
 import com.squareup.kotlinpoet.*
 import kotlin.io.path.listDirectoryEntries
 
 /**
  * Gradle Kotlin build script updater */
-class GradleBuildWriter(val project: GradleProject): KotlinScriptWriter() {
-    override val directory = project.dir
-
+class GradleBuildWriter(val project: GradleProject): KotlinScriptGenerator(project, {}) {
     override val name = "build.gradle"
 
-    override fun FileSpec.Builder.generateScript() {
+    override fun FileSpec.Builder.generateModel() {
         if (project.hasSources) {
             project.resolveDependencies()
             when (project) {
@@ -48,9 +45,9 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptWriter() {
         }
     }
 
-    override fun write() {
-        super.write()
-        file.deleteIfEmpty()
+    fun write() {
+        //super.write()
+        //file.deleteIfEmpty()
         project.children.forEach { GradleBuildWriter(it).write() }
     }
 
