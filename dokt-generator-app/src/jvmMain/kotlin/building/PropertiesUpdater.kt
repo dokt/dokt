@@ -1,28 +1,20 @@
 package app.dokt.generator.building
 
-import app.dokt.common.writeLines
+import app.dokt.common.*
 import java.io.File
-import java.util.*
 
-abstract class PropertiesUpdater(directory: File, func: () -> Unit) :
-    FileUpdater<SortedMap<String, String>>(directory, func) {
+abstract class PropertiesUpdater(dir: File, func: () -> Unit) :
+    FileUpdater<Props>(dir, func)
+{
     final override val extension get() = "properties"
 
     override fun File.readModel() =
-        if (exists()) readLines().filter { it.isNotBlank() && !it.startsWith('#') }.associate { line ->
-            line.split("=").let { (key, value) -> key.trim() to value.trim() }
-        }.toSortedMap()
+        if (exists()) useLines { PropertyReader(it).properties().toSortedMap() }
         else null
 
-    override val SortedMap<String, String>.log get() = "$size properties"
+    override val Props.log get() = "$size properties"
 
-    override fun SortedMap<String, String>.write(target: File) {
-        target.writeLines(lines)
+    override fun Props.write(target: File) {
+        target.writeLines(lines())
     }
-
-    val Map<String, String>.lines get() = map { it.line }
-
-    val Map.Entry<String, String>.line get() = "$key=$value"
-
-    val Map<String, String>.text get() = lines.joinToString("\n")
 }

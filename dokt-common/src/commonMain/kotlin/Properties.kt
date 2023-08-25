@@ -56,7 +56,7 @@ class PropertyReader(lines: Sequence<String>) {
         return properties
     }
 
-    fun property() : Pair<String, CommentsToValue>? {
+    private fun property() : Pair<String, CommentsToValue>? {
         val comments = mutableListOf<String>()
         do {
             val comment = comment()
