@@ -12,7 +12,7 @@ class StringTest : FunSpec({
             "CAPS" to "CAPS",
             "NameIDResolver" to "Name ID Resolver"
         ).forEach {
-            test(it.toString()) { -> it.key.camelCaseToWords() shouldBe it.value }
+            test(it.toString()) { -> it.key.camelCaseToWords shouldBe it.value }
         }
     }
 
@@ -39,5 +39,8 @@ class StringTest : FunSpec({
 
             test("transform") { joinWithSpace { "${it + 1}" } shouldBe "2 3" }
         }
+    }
+    test("unicode") {
+        "306f".unicode shouldBe 'は'
     }
 })

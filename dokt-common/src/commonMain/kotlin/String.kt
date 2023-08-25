@@ -57,4 +57,8 @@ val String.tokens get() = split(WHITESPACE_REGEX).filter { it.isNotBlank() }
 
 val String.upperFirst get() = replaceFirstChar { it.uppercaseChar() }
 
+/** Converts unicode hex notation \u<hex> to character. E.g. 306f = は */
+@OptIn(ExperimentalStdlibApi::class)
+val String.unicode get() = Char(hexToInt())
+
 fun <R> String.tokenized(apply: List<String>.() -> R) = apply(tokens)
