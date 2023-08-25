@@ -52,4 +52,8 @@ If the project:
 
 # Links
 
+- [Best practices for authoring maintainable builds](https://docs.gradle.org/current/userguide/authoring_maintainable_build_scripts.html)
 - [Common Gradle Plugin Mistakes and Good Practices](https://marcelkliemannel.com/articles/2022/common-gradle-plugin-mistakes-and-good-practices/)
+- [Best Practices when using Gradle](https://github.com/liutikas/gradle-best-practices)
+- [Gradle Best Practices Plugin](https://github.com/autonomousapps/gradle-best-practices-plugin)
+- [10 Gradle best practices to supercharge your project](https://gradlehero.com/gradle-best-practices/)

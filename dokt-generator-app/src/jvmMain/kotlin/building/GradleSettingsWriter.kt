@@ -1,5 +1,6 @@
 package app.dokt.generator.building
 
+import app.dokt.generator.*
 import app.dokt.generator.code.*
 import com.squareup.kotlinpoet.*
 
@@ -16,11 +17,6 @@ class GradleSettingsWriter(private val root: GradleProject) : KotlinScriptGenera
         addCode(generatePlugins())
         if (CENTRALIZED_REPOSITORY_DECLARATION) addCode(generateDependencyResolutionManagement())
         addStatement("rootProject.name = %S", root.name)
-        if (Dokt.LOCAL) {
-            addCode("\n")
-            addBodyComment("Dokt libraries")
-            addStatement("include(%L)", Dokt.entries.joinToString { "\"${it.artifact}\"" })
-        }
         generateInclude(Layer.DOMAIN)
         generateInclude(Layer.APPLICATION)
         generateInclude(Layer.INFRASTRUCTURE)
@@ -43,8 +39,6 @@ class GradleSettingsWriter(private val root: GradleProject) : KotlinScriptGenera
          */
         const val CENTRALIZED_REPOSITORY_DECLARATION = true
 
-        private const val REFRESH_VERSION = "0.50.2" // TODO remove
-
         private fun generateDependencyResolutionManagement() = controlFlow("dependencyResolutionManagement") {
             controlFlow("repositories") {
                 addStatement("mavenCentral()")
@@ -60,7 +54,8 @@ class GradleSettingsWriter(private val root: GradleProject) : KotlinScriptGenera
         }
 
         private fun generatePlugins() = controlFlow("plugins") {
-            addStatement("id(%S) version %S", "de.fayard.refreshVersions", REFRESH_VERSION)
+            addStatement("id(%S) version %S", "app.dokt", DOKT_VER)
+            addStatement("id(%S) version %S", "de.fayard.refreshVersions", REFRESH_VER)
         }
     }
 }

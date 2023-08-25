@@ -1,5 +1,7 @@
-package app.dokt.gradle.common
+package app.dokt.gradle.common.task
 
+import app.dokt.gradle.common.Loggable
+import app.dokt.gradle.common.LoggableWrapper
 import org.gradle.api.DefaultTask
 import kotlin.reflect.KClass
 

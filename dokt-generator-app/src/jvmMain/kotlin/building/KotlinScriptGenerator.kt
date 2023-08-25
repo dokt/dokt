@@ -8,9 +8,9 @@ abstract class KotlinScriptGenerator(directory: File, func: () -> Unit) :
 {
     constructor(project: GradleProject, func: () -> Unit) : this(project.dir.toFile(), func)
 
-    final override val extension = "kts"
+    final override val extension get() = "kts"
 
-    override fun createModel() = FileSpec.scriptBuilder(filename)
+    override fun createModel() = FileSpec.scriptBuilder(name)
 
     override val FileSpec.Builder.log get() = name
 

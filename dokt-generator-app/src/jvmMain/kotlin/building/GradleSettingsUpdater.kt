@@ -1,17 +1,18 @@
 package app.dokt.generator.building
 
 import app.dokt.common.*
+import app.dokt.generator.REFRESH_VER
 import java.io.File
 
 /**
  * Gradle Kotlin settings script updater
  */
-class GradleSettingsUpdater(dir: File, refreshVer: String) : FileLinesUpdater(dir, {}) {
+class GradleSettingsUpdater(dir: File) : FileLinesUpdater(dir, {}) {
     override val extension get() = EXTENSION
 
     override val name get() = NAME
 
-    private val refreshLine = """    id("$REFRESH_ID") version "$refreshVer""""
+    private val refreshLine = """    id("$REFRESH_ID") version "$REFRESH_VER""""
 
     override fun update(previous: List<String>?) = update(previous, directory.name)
 

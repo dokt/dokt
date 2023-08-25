@@ -8,7 +8,7 @@
    2. `build.gradle.kts`:
       1. `subprojects.version`
       2. `tasks.wrapper.gradleVersion` 
-   3. `app.dokt.gradle.Versions.kt`
+   3. `app.dokt.generator.Versions.kt`
 3. Check that there isn't failing tests by running `allTests` tasks.
 4. Do manual testing
 5. Remove `-SNAPSHOT` from versions.

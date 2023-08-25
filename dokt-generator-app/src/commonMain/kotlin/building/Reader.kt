@@ -1,7 +1,7 @@
 package app.dokt.generator.building
 
 import app.dokt.infra.Log
-import kotlin.system.measureNanoTime
+import kotlin.system.measureTimeMillis
 
 interface Reader<S, M : Any> : Log {
     val source: S
@@ -9,11 +9,11 @@ interface Reader<S, M : Any> : Log {
     fun read(): M? {
         debug { "Reading $source." }
         val model: M?
-        val ns = measureNanoTime {
+        val ms = measureTimeMillis {
             model = source.readModel()
         }
-        if (model == null) warn { "$source not found in $ns!" }
-        else info { "Read ${model.log} in $ns ns from $source." }
+        if (model == null) warn { "$source not found in $ms!" }
+        else info { "Read ${model.log} in $ms ns from $source." }
         return model
     }
 

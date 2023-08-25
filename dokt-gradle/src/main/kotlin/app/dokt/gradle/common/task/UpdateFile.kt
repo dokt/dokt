@@ -1,4 +1,4 @@
-package app.dokt.gradle.common
+package app.dokt.gradle.common.task
 
 import app.dokt.generator.building.FileUpdater
 import org.gradle.api.file.RegularFileProperty
@@ -27,6 +27,6 @@ abstract class UpdateFile(type: KClass<out UpdateFile>) : LoggableTask(type) {
     @TaskAction
     fun update() {
         lifecycle { "Updating $file" }
-        updater.update()
+        didWork = updater.update()
     }
 }

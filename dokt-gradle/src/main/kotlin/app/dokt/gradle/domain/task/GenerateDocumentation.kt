@@ -1,11 +1,12 @@
-package app.dokt.gradle.domain
+package app.dokt.gradle.domain.task
 
 import app.dokt.generator.application.MarkDownApplicationDocumentWriter
 import app.dokt.generator.building.*
 import app.dokt.gradle.GradleApplication
-import app.dokt.gradle.common.Generate
+import app.dokt.gradle.common.task.Generate
 
-abstract class GenerateDocumentation : Generate(GenerateDocumentation::class,
+abstract class GenerateDocumentation : Generate(
+    GenerateDocumentation::class,
     "Generate Markdown documentation of this domain.") {
     private val application by lazy { GradleApplication(project, multiProject) }
     private val documentWriter by lazy { MarkDownApplicationDocumentWriter(application) }

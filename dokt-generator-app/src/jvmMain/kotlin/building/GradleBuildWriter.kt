@@ -2,7 +2,6 @@ package app.dokt.generator.building
 
 import app.dokt.generator.code.*
 import com.squareup.kotlinpoet.*
-import kotlin.io.path.listDirectoryEntries
 
 /**
  * Gradle Kotlin build script updater */
@@ -27,21 +26,6 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptGenerator(proje
         } else if (project.isRoot) { addStatement("plugins { id(%S) }", GROUP) }
         if (project.isRoot) {
             addStatement("tasks.wrapper { distributionType = Wrapper.DistributionType.ALL }")
-            if (Dokt.LOCAL) addCode(controlFlow("tasks.create(%S)", "copyDokt") {
-                addStatement("group = %S", "dokt")
-                addStatement("description = %S", "Copy Dokt libraries to root project as a workaround for KTIJ-22057.")
-                controlFlow("doLast") {
-                    controlFlow("copy") {
-                        addStatement(
-                            "from(%S)",
-                            if (project.dir.parent.listDirectoryEntries("dokt").any()) "../dokt" else ".."
-                        )
-                        addStatement("include(%S)", "dokt-*/**")
-                        addStatement("exclude(%S, %S, %S)", "dokt-g*", "*/build", "*/src/*Test")
-                        addStatement("into(projectDir)")
-                    }
-                }
-            })
         }
     }
 
@@ -237,9 +221,7 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptGenerator(proje
             if (dep.contains(':')) addStatement("$config(%S)", "$dep:_")
             else addStatement("$config($dep)")
 
-        private fun CodeBlock.Builder.dep(config: String, dokt: Dokt) =
-            if (Dokt.LOCAL) depProject(config, ":${dokt.artifact}")
-            else dep(config, "$GROUP:${dokt.artifact}")
+        private fun CodeBlock.Builder.dep(config: String, dokt: Dokt) = dep(config, "$GROUP:${dokt.artifact}")
 
         private fun CodeBlock.Builder.depProject(config: String, dep: String) =
             addStatement("$config(project(%S))", dep)

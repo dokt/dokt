@@ -12,9 +12,4 @@ enum class Dokt {
     TEST;
 
     val artifact = "dokt-${name.toLowerCaseAsciiOnly().replace('_', '-')}"
-
-    companion object {
-        /** Use local project copies (workaround for KTIJ-22057). */
-        const val LOCAL = false
-    }
 }

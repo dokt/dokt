@@ -1,21 +1,24 @@
 package app.dokt.generator.building
 
-import kotlin.system.measureNanoTime
+import kotlin.system.measureTimeMillis
 
 interface Updater<S, M : Any, T> : Writer<M, T>, Reader<S, M> {
-    fun update() {
+    fun update(): Boolean {
         val previous = read()
         val current: M?
         if (previous == null) debug { "Creating new." }
         else debug { "Updating ${previous.log}." }
-        val ns = measureNanoTime {
+        val ms = measureTimeMillis {
             current = update(previous)
         }
         // Model equals should work. Works with String, List and Map.
-        if (current == null || current == previous) info { "Up-to-date in $ns ns." }
-        else {
-            info { "Updated to ${current.log} in $ns ns." }
+        return if (current == null || current == previous) {
+            info { "Up-to-date in $ms ms." }
+            false
+        } else {
+            info { "Updated to ${current.log} in $ms ms." }
             current.write()
+            true
         }
     }
 
