@@ -1,7 +1,11 @@
+@file:Suppress("SpellCheckingInspection")
+
 plugins {
     id("de.fayard.refreshVersions") version "0.51.0"
 }
+
 rootProject.name = "dokt"
+
 include(
     "dokt-test",
     "dokt-common",

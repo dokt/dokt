@@ -13,9 +13,12 @@ subprojects {
     apply<MavenPublishPlugin>()
     apply<SigningPlugin>()
 
-    /*tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.allWarningsAsErrors = true
-    }*/
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions {
+            //allWarningsAsErrors = true
+            jvmTarget = "1.8"
+        }
+    }
 
     /* Works only for multiplatform
     targets.all {

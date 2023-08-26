@@ -13,6 +13,7 @@ class GradleSettingsWriter(private val root: GradleProject) : KotlinScriptGenera
     override val name get() = "settings.gradle"
 
     override fun FileSpec.Builder.generateModel() {
+        addStatement("@file:Suppress(%S)", "SpellCheckingInspection")
         addCode(generatePluginManagement())
         addCode(generatePlugins())
         if (CENTRALIZED_REPOSITORY_DECLARATION) addCode(generateDependencyResolutionManagement())

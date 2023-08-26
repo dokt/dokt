@@ -1,8 +1,27 @@
 @file:Suppress("unused")
 
 import org.gradle.api.*
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.plugin.*
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsSetupTask
 import java.nio.file.Path
+
+private fun KotlinMultiplatformExtension.dependencies(
+    sourceSet: String, configure: KotlinDependencyHandler.() -> Unit) = sourceSets.getByName(sourceSet) {
+    it.dependencies(configure)
+} as KotlinSourceSet
+
+fun KotlinMultiplatformExtension.commonMainDependencies(configure: KotlinDependencyHandler.() -> Unit) =
+    dependencies("commonMain", configure)
+
+fun KotlinMultiplatformExtension.commonTestDependencies(configure: KotlinDependencyHandler.() -> Unit) =
+    dependencies("commonTest", configure)
+
+fun KotlinMultiplatformExtension.jvmMainDependencies(configure: KotlinDependencyHandler.() -> Unit) =
+    dependencies("jvmMain", configure)
+
+fun KotlinMultiplatformExtension.jvmTestDependencies(configure: KotlinDependencyHandler.() -> Unit) =
+    dependencies("jvmTest", configure)
 
 val Project.isRoot get() = path == ":"
 

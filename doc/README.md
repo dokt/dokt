@@ -54,24 +54,8 @@ If the project:
     org.slf4j.bridge = implementation("org.slf4j:jul-to-slf4j:_")
     ```
   - Can be configured per project
-  - Can be configured via extension:
-    ```kotlin
-    dependencyGenerator {
-      useRefreshVersionsNotation = true // defaults to false
-    }
-    ```
   - Dokt project plugin configures
-- DoktSettingsExtensions
-  ```kotlin
-  dokt {
-    // Store configuration in-memory (default) or in build.gradle.kts file.
-    configureBuildFile = true
-    // Is build.gradle.kts file updated (default) or replaced.
-    replaceBuildFile = false
-    // Dokt dependency generator uses refreshVersions dependency notations e.g. `Kotlin.stdlib.jdk8`
-    useRefreshVersionsNotation = true // defaults to false
-  }
-  ```
+- Create `RemoveUnusedDependencies` tasks.
 - Migrate to latest [Publish plugin](https://plugins.gradle.org/plugin/com.gradle.plugin-publish)
 - Add unit tests to generate all examples.
 - Log model which causes error
