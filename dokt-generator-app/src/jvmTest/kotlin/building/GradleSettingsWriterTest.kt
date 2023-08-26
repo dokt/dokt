@@ -6,7 +6,7 @@ import io.kotest.core.spec.style.FunSpec
 class GradleSettingsWriterTest : FunSpec({
     val instance = GradleSettingsWriter(GradleProjectTest.instance)
     test("generateScript") {
-        instance.generateScript() shouldCode """
+        instance.createModel().build() shouldCode """
             pluginManagement {
               repositories {
                 gradlePluginPortal()
@@ -35,5 +35,5 @@ class GradleSettingsWriterTest : FunSpec({
             """
     }
 
-    test("write") { instance.write() }
+    test("write") { instance.generate() }
 })

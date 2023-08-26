@@ -44,11 +44,40 @@ If the project:
 
 # TODO
 
+- Parse Kotlin script files.
+- Parse package and imports from files.
+- Create Dependency generator
+  - Configured in properties files e.g.:
+    ```properties
+    org.slf4j = api("org.slf4j:slf4j-api:_")\
+                runtimeOnly("ch.qos.logback:logback-classic:_")
+    org.slf4j.bridge = implementation("org.slf4j:jul-to-slf4j:_")
+    ```
+  - Can be configured per project
+  - Can be configured via extension:
+    ```kotlin
+    dependencyGenerator {
+      useRefreshVersionsNotation = true // defaults to false
+    }
+    ```
+  - Dokt project plugin configures
+- DoktSettingsExtensions
+  ```kotlin
+  dokt {
+    // Store configuration in-memory (default) or in build.gradle.kts file.
+    configureBuildFile = true
+    // Is build.gradle.kts file updated (default) or replaced.
+    replaceBuildFile = false
+    // Dokt dependency generator uses refreshVersions dependency notations e.g. `Kotlin.stdlib.jdk8`
+    useRefreshVersionsNotation = true // defaults to false
+  }
+  ```
 - Migrate to latest [Publish plugin](https://plugins.gradle.org/plugin/com.gradle.plugin-publish)
 - Add unit tests to generate all examples.
 - Log model which causes error
 - Add File system storage tests
 - Combine geometry classes: Eg. except class app.dokt.common.Point to actual java.awt.Point
+- use [.editorconfig](https://editorconfig.org/)
 
 # Links
 

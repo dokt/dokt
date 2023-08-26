@@ -1,6 +1,4 @@
-/**
- * [Program Structure Interface (PSI)](https://plugins.jetbrains.com/docs/intellij/psi.html)
- */
+/** [Program Structure Interface (PSI)](https://plugins.jetbrains.com/docs/intellij/psi.html) */
 package app.dokt.generator.code
 
 import io.github.oshai.kotlinlogging.KotlinLogging

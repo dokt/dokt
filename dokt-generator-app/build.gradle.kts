@@ -38,6 +38,10 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(Square.kotlinPoet)
+                // Using `compiler-embeddable` because the base `compiler` is missing
+                // `org.jetbrains.kotlin.com.intellij` packages.
+                // See: https://discuss.kotlinlang.org/t/kotlin-compiler-embeddable-vs-kotlin-compiler/3196
+                // There is also `kotlin-scripting-compiler-embeddable` in dependencies
                 implementation(kotlin("compiler-embeddable"))
             }
         }

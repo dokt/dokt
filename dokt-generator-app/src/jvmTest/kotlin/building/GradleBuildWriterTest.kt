@@ -110,7 +110,7 @@ class GradleBuildWriterTest : FunSpec({
         xtest("descendants") {
             instance.project.descendants.forEach {
                 println(it.path)
-                GradleBuildWriter(it).generateScript().print()
+                GradleBuildWriter(it).createModel().print()
             }
         }
     }
@@ -131,6 +131,6 @@ class GradleBuildWriterTest : FunSpec({
         val instance = GradleBuildWriter(GradleProjectTest.instance)
 
         private fun generateScript(path: String = ":") =
-            GradleBuildWriter(GradleProjectTest.instance[path]).generateScript()
+            GradleBuildWriter(GradleProjectTest.instance[path]).createModel().build()
     }
 }

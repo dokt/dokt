@@ -7,7 +7,7 @@ import java.io.File
 /**
  * Gradle Kotlin settings script updater
  */
-class GradleSettingsUpdater(dir: File) : FileLinesUpdater(dir, {}) {
+class GradleSettingsUpdater(dir: File = File(".")) : FileLinesUpdater(dir, {}) {
     override val extension get() = EXTENSION
 
     override val name get() = NAME

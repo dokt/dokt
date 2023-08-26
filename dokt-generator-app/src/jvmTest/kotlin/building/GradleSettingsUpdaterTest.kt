@@ -47,7 +47,7 @@ class GradleSettingsUpdaterTest : FunSpec({
         """
         const val ROOT = """rootProject.name = "foo""""
         fun update(input: String, expected: String? = null) {
-            GradleSettingsUpdater("1.0").update(input.lines(), "foo") linesShouldBe expected
+            GradleSettingsUpdater().update(input.lines(), "foo") linesShouldBe expected
         }
     }
 }
