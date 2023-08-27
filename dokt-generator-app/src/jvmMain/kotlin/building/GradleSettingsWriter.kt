@@ -55,8 +55,8 @@ class GradleSettingsWriter(private val root: GradleProject) : KotlinScriptGenera
         }
 
         private fun generatePlugins() = controlFlow("plugins") {
-            addStatement("id(%S) version %S", "app.dokt", DOKT_VER)
-            addStatement("id(%S) version %S", "de.fayard.refreshVersions", REFRESH_VER)
+            addStatement("id(%S) version %S", "app.dokt", vDokt)
+            addStatement("id(%S) version %S", "de.fayard.refreshVersions", vRefreshVersions)
         }
     }
 }

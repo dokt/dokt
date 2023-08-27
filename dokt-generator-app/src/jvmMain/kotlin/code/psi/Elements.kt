@@ -3,8 +3,6 @@ package app.dokt.generator.code.psi
 import org.jetbrains.kotlin.com.intellij.psi.*
 import org.jetbrains.kotlin.psi.*
 
-val KtCallExpression.calleeName get() = (calleeExpression as? KtNameReferenceExpression)?.getReferencedName()
-
 fun KtElement.findCall(to: String) = findElement<KtCallExpression> { calleeName == to }
 
 fun KtElement.findCalls() = findElements<KtCallExpression>()

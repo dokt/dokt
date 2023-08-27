@@ -57,6 +57,7 @@ If the project:
   - Dokt project plugin configures
 - Create `RemoveUnusedDependencies` tasks.
 - [InitializationScript](https://docs.gradle.org/current/userguide/init_scripts.html)
+- Abstract `File`, `Path` and `URL` to `value class Resource(value: String)`.
 - Migrate to latest [Publish plugin](https://plugins.gradle.org/plugin/com.gradle.plugin-publish)
 - Add unit tests to generate all examples.
 - Log model which causes error

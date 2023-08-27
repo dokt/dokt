@@ -1,7 +1,7 @@
 package app.dokt.generator.building
 
 import app.dokt.common.*
-import app.dokt.generator.REFRESH_VER
+import app.dokt.generator.*
 import java.io.File
 
 /**
@@ -12,7 +12,7 @@ class GradleSettingsUpdater(dir: File = File(".")) : FileLinesUpdater(dir, {}) {
 
     override val name get() = NAME
 
-    private val refreshLine = """    id("$REFRESH_ID") version "$REFRESH_VER""""
+    private val refreshLine = """    id("$REFRESH_VERSIONS_PLUGIN_ID") version "$vRefreshVersions""""
 
     override fun update(previous: List<String>?) = update(previous, directory.name)
 
@@ -20,9 +20,9 @@ class GradleSettingsUpdater(dir: File = File(".")) : FileLinesUpdater(dir, {}) {
         val updated = lines?.toMutableList() ?: mutableListOf()
         var changed = lines == null
 
-        if (updated.anyContains(REFRESH_ID)) debug { "$REFRESH_ID found" }
+        if (updated.anyContains(REFRESH_VERSIONS_PLUGIN_ID)) debug { "$REFRESH_VERSIONS_PLUGIN_ID found" }
         else {
-            info { "Adding $REFRESH_ID plugin" }
+            info { "Adding $REFRESH_VERSIONS_PLUGIN_ID plugin" }
             if (updated.addAfterContains("app.dokt", refreshLine) < 0) error("Plugin dependency not found!")
             else changed = true
         }
@@ -43,8 +43,6 @@ class GradleSettingsUpdater(dir: File = File(".")) : FileLinesUpdater(dir, {}) {
         private const val EXTENSION = "gradle.kts"
         private const val NAME = "settings"
         const val FILENAME = "$NAME.$EXTENSION"
-        @Suppress("SpellCheckingInspection")
-        private const val REFRESH_ID = "de.fayard.refreshVersions"
         private const val ROOT_NAME = "rootProject.name"
     }
 }

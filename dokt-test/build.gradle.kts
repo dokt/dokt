@@ -24,6 +24,7 @@ kotlin {
                 api(KotlinX.serialization.json)
                 api(Testing.kotest.assertions.core)
                 api(Testing.kotest.framework.api)
+                api(Testing.mockK)
             }
         }
     }

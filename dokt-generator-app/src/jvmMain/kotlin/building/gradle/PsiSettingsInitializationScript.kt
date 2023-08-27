@@ -1,17 +1,10 @@
-package app.dokt.generator.building.psi
+package app.dokt.generator.building.gradle
 
 import app.dokt.common.Version
-import app.dokt.generator.building.GradleSettingsScriptUpdater
 import app.dokt.generator.code.psi.*
-import org.jetbrains.kotlin.com.intellij.psi.PsiElement
-import org.jetbrains.kotlin.com.intellij.psi.PsiRecursiveElementWalkingVisitor
-import org.jetbrains.kotlin.psi.KtCallExpression
-import org.jetbrains.kotlin.psi.KtFile
 
-class GradleSettingsScriptPsiUpdater(file: KtFile, env: Env = Psi) : ScriptUpdater({}, file, env),
-    GradleSettingsScriptUpdater
-{
-    override fun addPlugin(id: String, version: Version) {
+class PsiSettingsInitializationScript(context: Context) : ScriptEditor(context, {}), SettingsInitialization {
+    override fun applyPlugin(id: String, version: Version) {
         val pluginsBlock = block.findCall("plugins")
         println(pluginsBlock?.text)
         pluginsBlock?.findCalls("id")?.forEach {

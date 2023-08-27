@@ -10,7 +10,7 @@ import org.jetbrains.kotlin.idea.KotlinFileType
 import org.jetbrains.kotlin.psi.*
 
 /** PSI environment */
-open class Env(
+open class Environment(
     // TODO different environments for JVM, JS, Native and WASM
     environment: KotlinCoreEnvironment = KotlinCoreEnvironment.createForProduction(
         Disposer.newDisposable(),
@@ -20,7 +20,7 @@ open class Env(
 ) : Logger({}) {
     private val project = environment.project
 
-    val documentManager by lazy { PsiDocumentManager.getInstance(project) }
+    val documentManager by lazy { PsiDocumentManager.getInstance(project)!! }
 
     val factory by lazy { KtPsiFactory(project) }
 
@@ -28,12 +28,15 @@ open class Env(
 
     private val manager = PsiManager.getInstance(project)
 
+    private fun context(file: PsiFile?) = Context(this, file as KtFile)
+
     fun parse(filename: String, text: String) =
-        manager.findFile(LightVirtualFile(filename, KotlinFileType.INSTANCE, text)) as KtFile
+        context(manager.findFile(LightVirtualFile(filename, KotlinFileType.INSTANCE, text)))
 
-    fun parseKt(text: String) = parse("a.kt", text)
+    fun parseKt(text: String) = parse("tmp.kt", text)
 
-    fun parseKts(text: String) = parse("a.kts", text)
+    fun parseKts(text: String) = parse("tmp.kts", text)
 
-    fun create(filename: String, text: String) = fileFactory.createFileFromText(filename, KotlinFileType.INSTANCE, text)
+    fun create(filename: String, text: String) =
+        context(fileFactory.createFileFromText(filename, KotlinFileType.INSTANCE, text))
 }
