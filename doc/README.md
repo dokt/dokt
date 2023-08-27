@@ -28,7 +28,7 @@ If the project:
 - Defines Gradle Wrapper version
 
 #### For all projects
- 
+
 - Adds Maven Central repository
 
 #### Activates Dokt plugin if project has `src/commonMain` directory
@@ -40,7 +40,7 @@ If the project:
 - Adds Dokt Test to Common Test dependencies
 - Adds generated sources to Common Main
 - Adds generated sources to Common Test
-- Triggers code generation before compiling Kotlin 
+- Triggers code generation before compiling Kotlin
 
 # TODO
 
@@ -56,6 +56,7 @@ If the project:
   - Can be configured per project
   - Dokt project plugin configures
 - Create `RemoveUnusedDependencies` tasks.
+- [InitializationScript](https://docs.gradle.org/current/userguide/init_scripts.html)
 - Migrate to latest [Publish plugin](https://plugins.gradle.org/plugin/com.gradle.plugin-publish)
 - Add unit tests to generate all examples.
 - Log model which causes error

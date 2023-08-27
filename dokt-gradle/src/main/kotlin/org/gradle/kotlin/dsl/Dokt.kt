@@ -1,6 +1,6 @@
 package org.gradle.kotlin.dsl
 
-import app.dokt.gradle.build.DoktExtension
+import app.dokt.gradle.building.DoktExtension
 import org.gradle.api.initialization.Settings
 
 // This function is needed because Gradle doesn't generate accessors for settings extensions.

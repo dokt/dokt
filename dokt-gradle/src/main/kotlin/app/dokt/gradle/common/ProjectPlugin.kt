@@ -1,7 +1,7 @@
 package app.dokt.gradle.common
 
 import app.dokt.common.*
-import app.dokt.gradle.build.task.GenerateBuild
+import app.dokt.gradle.building.task.GenerateBuild
 import org.gradle.api.*
 import org.gradle.api.plugins.PluginContainer
 import org.gradle.api.tasks.*

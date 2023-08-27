@@ -16,7 +16,7 @@ class KotlinPoetTestAggregateCoder(
 ) : AggregateCoder<FileSpec, FunSpec, PropertySpec, TypeSpec>({}, root, main, test) {
     companion object {
         private val aggregateType = Aggregate::class.asTypeName()
-        private val applicationServiceType = ApplicationService::class.asTypeName()
+        private val aggregateApplicationServiceType = AggregateApplicationService::class.asTypeName()
         private val arrangerType = Arranger::class.asTypeName()
         private val funSpecType = io.kotest.core.spec.style.FunSpec::class.asTypeName()
         private val genericActorType = Actor::class.asTypeName()
@@ -81,7 +81,7 @@ class KotlinPoetTestAggregateCoder(
         .build()
 
     override fun codeService() = TypeSpec.objectBuilder("${rootName}Service")
-        .superclass(applicationServiceType.parameterizedBy(rootType, idType, eventType))
+        .superclass(aggregateApplicationServiceType.parameterizedBy(rootType, idType, eventType))
         .addSuperclassConstructorParameter("%T::class", rootType)
         .addFunctions(commandCoders.map { it.codeService() })
         .build()

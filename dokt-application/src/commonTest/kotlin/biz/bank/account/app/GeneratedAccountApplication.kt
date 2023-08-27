@@ -30,7 +30,7 @@ class AccountAggregate(number: Iban) : Aggregate<Account, Iban, AccountEvent>(nu
     }
 }
 
-object AccountService : ApplicationService<Account, Iban, AccountEvent>(Account::class) {
+object AccountService : AggregateApplicationService<Account, Iban, AccountEvent>(Account::class) {
     suspend fun deposit(to: To<Iban>, amount: Euros) = tx(to) { deposit(amount) }
 
     suspend fun withdraw(to: To<Iban>, amount: Euros) = tx(to) { withdraw(amount) }

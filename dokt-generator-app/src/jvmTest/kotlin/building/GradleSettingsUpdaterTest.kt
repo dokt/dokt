@@ -1,3 +1,5 @@
+@file:Suppress("SpellCheckingInspection")
+
 package app.dokt.generator.building
 
 import app.dokt.test.linesShouldBe
@@ -10,14 +12,14 @@ class GradleSettingsUpdaterTest : FunSpec({
             plugins {
                 id("app.dokt) version "2.0"
             }
-            
+
             $ROOT
         """.trimIndent(), """
             plugins {
                 id("app.dokt) version "2.0"
                 id("de.fayard.refreshVersions") version "1.0"
             }
-            
+
             $ROOT
         """.trimIndent())
     }
@@ -26,14 +28,14 @@ class GradleSettingsUpdaterTest : FunSpec({
             $PLUGINS
         """.trimIndent(), """
             $PLUGINS
-            
+
             $ROOT
         """.trimIndent())
     }
     test("ignore root project") {
         update("""
             $PLUGINS
-            
+
             rootProject.name = "bar"
         """.trimIndent())
     }

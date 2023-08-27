@@ -28,6 +28,8 @@ value class Version(private val no: String) : Comparable<Version> {
     /** A pre-release identifiers. */
     val preReleaseIds get() = preRelease.ids
 
+    constructor(major: Int = 1, minor: Int = 0, patch: Int = 0) : this("$major.$minor.$patch")
+
     /**
      * Compares this object with the specified object for order. Returns zero if this object is equal
      * to the specified [other] object, a negative number if it's less than [other], or a positive number

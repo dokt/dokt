@@ -41,7 +41,8 @@ class VersionMismatch(val id: Any, val actual: Version, val expected: Version) :
 
 class DomainException(val id: Any, cause: Exception) : Exception(cause)
 
-abstract class ApplicationService<R : Any, I : Any, E : RootEvent>(rootType: KClass<R>) {
+@ApplicationService
+abstract class AggregateApplicationService<R : Any, I : Any, E : RootEvent>(rootType: KClass<R>) {
     private val repository = AggregateRepository.get<R, I, E>(rootType)
 
     protected suspend fun <T> tx(to: To<I>, command: R.() -> T) = with(repository.get(to.id)) {
