@@ -1,9 +1,17 @@
 package app.dokt.common
 
-import app.dokt.common.support.*
+import app.dokt.common.support.DimensionSerializer
+import app.dokt.common.support.PointSerializer
+import app.dokt.common.support.RectangleSerializer
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.descriptors.*
-import kotlinx.serialization.encoding.*
+import kotlinx.serialization.descriptors.ClassSerialDescriptorBuilder
+import kotlinx.serialization.descriptors.buildClassSerialDescriptor
+import kotlinx.serialization.encoding.CompositeDecoder
+import kotlinx.serialization.encoding.CompositeEncoder
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.encoding.decodeStructure
+import kotlinx.serialization.encoding.encodeStructure
 import kotlinx.serialization.modules.SerializersModule
 
 val module = SerializersModule {
@@ -23,7 +31,7 @@ abstract class ClassSerializer<T>(
         deserialize()
     }
 
-    protected fun unexpected(index: Int): Nothing = error("Unexpected index: $index")
+    protected fun unexpected(index: Int): Nothing = kotlin.error("Unexpected index: $index")
 
     final override fun serialize(encoder: Encoder, value: T) = encoder.encodeStructure(descriptor) {
         serialize(value)

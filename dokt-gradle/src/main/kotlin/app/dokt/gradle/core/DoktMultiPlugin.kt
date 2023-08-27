@@ -1,6 +1,5 @@
 package app.dokt.gradle.core
 
-import app.dokt.common.throwUnsupportedOperation
 import org.gradle.api.*
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.*
@@ -31,8 +30,8 @@ abstract class DoktMultiPlugin(type: KClass<out DoktMultiPlugin>) :
     override val platformName = kotlinModule
 
     final override fun Project.validate() {
-        if (!commonMainExists && !jvmMainExists && !jsMainExists)
-            throwUnsupportedOperation("Missing target platform for $path project!")
+        require(commonMainExists || jvmMainExists || jsMainExists) {
+            "Require Common, JVM or JS sources to detect target platform for $path project!" }
     }
 
     override fun KotlinMultiplatformExtension.configureKotlin() {

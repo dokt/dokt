@@ -1,9 +1,10 @@
-@file:Suppress("UNUSED_VARIABLE")
+@file:Suppress("SpellCheckingInspection")
 
 plugins {
     `maven-publish`
     signing
     kotlin("multiplatform")
+    id("io.gitlab.arturbosch.detekt")
 }
 
 description = "Dokt Ktor server for defining presentation layer infrastructure."

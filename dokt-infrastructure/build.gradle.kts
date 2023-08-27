@@ -1,13 +1,14 @@
-@file:Suppress("UNUSED_VARIABLE")
+@file:Suppress("SpellCheckingInspection")
 
 plugins {
     `maven-publish`
     signing
     kotlin("multiplatform")
     kotlin("plugin.serialization")
+    id("io.gitlab.arturbosch.detekt")
 }
 
-description = "Common utilities to implement infrastucture services"
+description = "Common utilities to implement infrastructure services"
 
 repositories {
     mavenCentral()

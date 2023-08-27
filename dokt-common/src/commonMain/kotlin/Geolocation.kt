@@ -1,6 +1,7 @@
 package app.dokt.common
 
-import kotlinx.serialization.*
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /** Geolocation */
 @Serializable

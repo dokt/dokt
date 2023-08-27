@@ -16,7 +16,7 @@ data class Probability(val value: Double, private val event: String = "A") : Com
     val complement get() = Probability(ALWAYS - value, "$event'")
 
     init {
-        if (value !in range) throw IllegalArgumentException("$value isn't probability!")
+        require(value in range) { "$value isn't probability!" }
     }
 
 

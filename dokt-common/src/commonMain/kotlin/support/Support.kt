@@ -1,8 +1,12 @@
 package app.dokt.common.support
 
-import app.dokt.common.*
+import app.dokt.common.ClassSerializer
+import app.dokt.common.Dimension
+import app.dokt.common.Point
+import app.dokt.common.Rectangle
 import kotlinx.serialization.descriptors.element
-import kotlinx.serialization.encoding.*
+import kotlinx.serialization.encoding.CompositeDecoder
+import kotlinx.serialization.encoding.CompositeEncoder
 
 expect abstract class Point2D {
     fun distance(point: Point2D): Double

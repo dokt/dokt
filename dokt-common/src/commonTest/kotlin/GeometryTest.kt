@@ -18,9 +18,9 @@ class GeometryTest : FunSpec({
         test("json") { json.encodeToString(pixel) shouldBe """{"width":1,"height":1}""" }
         test("point") { dimension.point shouldBe point }
         context("ratio") {
-            test("VGA") { VGA.ratio shouldBe fullscreen }
-            test("StandardHD") { StandardHD.ratio shouldBe widescreen }
-            test("FullHD") { FullHD.ratio shouldBe widescreen }
+            test("VGA") { VGA.ratio shouldBe FULLSCREEN }
+            test("StandardHD") { StandardHD.ratio shouldBe WIDESCREEN }
+            test("FullHD") { FullHD.ratio shouldBe WIDESCREEN }
         }
         //test("scale") { FullHD.scale(UHD.height) shouldBe UHD }
         test("text") { CGA.text shouldBe "320 x 200" }

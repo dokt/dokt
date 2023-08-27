@@ -64,11 +64,22 @@ If the project:
 - Add File system storage tests
 - Combine geometry classes: Eg. except class app.dokt.common.Point to actual java.awt.Point
 - use [.editorconfig](https://editorconfig.org/)
+- Combine Detekt commands `detektMetadataMain` for commonMain and `detectJvmMain` for jvmMain.
 
 # Links
 
+- [Kotlin coding conventions](https://kotlinlang.org/docs/coding-conventions.html)
+- [Kotlin built-in exceptions](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-exception/#inheritors)
+- [Java built-in exceptions](https://www.geeksforgeeks.org/built-exceptions-java-examples/)
 - [Best practices for authoring maintainable builds](https://docs.gradle.org/current/userguide/authoring_maintainable_build_scripts.html)
 - [Common Gradle Plugin Mistakes and Good Practices](https://marcelkliemannel.com/articles/2022/common-gradle-plugin-mistakes-and-good-practices/)
 - [Best Practices when using Gradle](https://github.com/liutikas/gradle-best-practices)
 - [Gradle Best Practices Plugin](https://github.com/autonomousapps/gradle-best-practices-plugin)
 - [10 Gradle best practices to supercharge your project](https://gradlehero.com/gradle-best-practices/)
+
+# IDE setup
+
+## IntelliJ IDEA
+
+- File -> Settings... -> Editor -> Code Style -> Kotlin -> Top-Level Symbols -> Use single name import
+  ![Use single name import](single-name-import.png "Use single name import")

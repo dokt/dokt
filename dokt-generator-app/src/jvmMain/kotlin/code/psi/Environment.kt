@@ -15,7 +15,7 @@ open class Environment(
     environment: KotlinCoreEnvironment = KotlinCoreEnvironment.createForProduction(
         Disposer.newDisposable(),
         CompilerConfiguration(),
-        EnvironmentConfigFiles.METADATA_CONFIG_FILES
+        EnvironmentConfigFiles.JVM_CONFIG_FILES
     )
 ) : Logger({}) {
     private val project = environment.project
@@ -30,12 +30,12 @@ open class Environment(
 
     private fun context(file: PsiFile?) = Context(this, file as KtFile)
 
-    fun parse(filename: String, text: String) =
-        context(manager.findFile(LightVirtualFile(filename, KotlinFileType.INSTANCE, text)))
+    /*fun parse(filename: String, text: String) =
+        context(manager.findFile(LightVirtualFile(filename, KotlinFileType.INSTANCE, text)))*/
 
-    fun parseKt(text: String) = parse("tmp.kt", text)
+    fun parseKt(text: String) = create("tmp.kt", text)
 
-    fun parseKts(text: String) = parse("tmp.kts", text)
+    fun parseKts(text: String) = create("tmp.kts", text)
 
     fun create(filename: String, text: String) =
         context(fileFactory.createFileFromText(filename, KotlinFileType.INSTANCE, text))

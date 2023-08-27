@@ -23,7 +23,7 @@ class GradleSettingsUpdater(dir: File = File(".")) : FileLinesUpdater(dir, {}) {
         if (updated.anyContains(REFRESH_VERSIONS_PLUGIN_ID)) debug { "$REFRESH_VERSIONS_PLUGIN_ID found" }
         else {
             info { "Adding $REFRESH_VERSIONS_PLUGIN_ID plugin" }
-            if (updated.addAfterContains("app.dokt", refreshLine) < 0) error("Plugin dependency not found!")
+            if (updated.addAfterContains("app.dokt", refreshLine) < 0) kotlin.error("Plugin dependency not found!")
             else changed = true
         }
 

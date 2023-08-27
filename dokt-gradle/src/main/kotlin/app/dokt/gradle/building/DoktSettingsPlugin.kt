@@ -1,7 +1,7 @@
 package app.dokt.gradle.building
 
-import app.dokt.generator.MIN_GRADLE_VER
 import app.dokt.generator.building.ProjectType
+import app.dokt.generator.vGradleMin
 import app.dokt.gradle.app.DoktApplicationPlugin
 import app.dokt.gradle.common.SettingsPlugin
 import app.dokt.gradle.domain.DoktDomainPlugin
@@ -12,7 +12,7 @@ import org.gradle.util.GradleVersion
 
 @Suppress("unused")
 class DoktSettingsPlugin : SettingsPlugin(DoktSettingsPlugin::class) {
-    override val minimum: GradleVersion = GradleVersion.version(MIN_GRADLE_VER)
+    override val minimum: GradleVersion = GradleVersion.version(vGradleMin.toString())
 
     /** Initialize settings. */
     override fun Settings.applyPlugin() {

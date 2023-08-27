@@ -3,6 +3,8 @@ package app.dokt.common
 typealias CommentsToValue = Pair<List<String>, String?>
 typealias Props = Map<String, CommentsToValue>
 
+private const val UNICODE_HEXADECIMALS = 4
+
 fun Props.lines(delimiter: String = " = ") = flatMap { (key, prop) ->
     val escapedKey = key
         .replace(":", "\\:")
@@ -85,15 +87,14 @@ class PropertyReader(lines: Sequence<String>) {
             when (val char = line[currentCharIndex]) {
                 '\\' -> {
                     currentCharIndex++
-                    when (val escaped = currentChar) {
-                        null -> throw IllegalStateException(
-                            "Missing property key escape character on $location:\n$currentLine")
+                    val escaped = currentChar
+                    checkNotNull(escaped) { "Missing property key escape character on $location:\n$currentLine" }
+                    when (escaped) {
                         '=', ':', ' ' -> {
                             builder.append(escaped)
                             currentCharIndex++
                         }
-                        else -> throw IllegalStateException(
-                            "Invalid property key escape character on $location:\n$currentLine")
+                        else -> error("Invalid property key escape character on $location:\n$currentLine")
                     }
                 }
                 ' ', '=', ':', '\t', '\u000c' -> {
@@ -146,12 +147,10 @@ class PropertyReader(lines: Sequence<String>) {
                             currentCharIndex++
                         }
                         'u' -> {
-                            try {
-                                currentCharIndex += 5
-                                builder.append(line.substring(currentCharIndex - 4, currentCharIndex).unicode)
-                            } catch (e: Exception) {
-                                throw IllegalStateException("Invalid Unicode on $location:\n$currentLine", e)
-                            }
+                            currentCharIndex += 1 + UNICODE_HEXADECIMALS
+                            if (line.length < currentCharIndex) error("Invalid Unicode on $location:\n$currentLine")
+                            builder.append(
+                                line.substring(currentCharIndex - UNICODE_HEXADECIMALS, currentCharIndex).unicode)
                         }
                         else -> {
                             builder.append(escaped)

@@ -1,11 +1,16 @@
 package app.dokt.common
 
-import java.awt.*
-import java.awt.image.*
+import java.awt.Color
+import java.awt.Font
+import java.awt.image.BufferedImage
+import java.awt.image.DataBuffer
+import java.awt.image.DataBufferByte
+import java.awt.image.DataBufferInt
+import java.awt.image.Raster
+import java.awt.image.RenderedImage
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.nio.file.Path
-import java.util.*
 import javax.imageio.ImageIO
 import kotlin.io.path.div
 import kotlin.math.roundToInt
@@ -26,12 +31,13 @@ operator fun Font.times(multiplier: Int) = Font(name, style, size * multiplier)
 //#region Image
 val DOT = binaryImage()
 const val PNG = "png"
+private const val BYTES_PER_PIXEL = 4L
 
 fun binaryImage(width: Int = 1, height: Int = 1) = BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY)
 
 fun equal(a: BufferedImage?, b: BufferedImage?) = a?.isEqual(b) ?: (b == null)
 
-val BufferedImage.bytes get() = 4L * width * height
+val BufferedImage.bytes get() = BYTES_PER_PIXEL * width * height
 
 val BufferedImage.lastPixelColor get() = Color(getRGB(width - 1, height - 1))
 
@@ -68,22 +74,19 @@ fun RenderedImage.writePng(path : Path, filename: String): File =
     (path / "$filename.$PNG").toFile().apply { writePng(this) }
 
 //#region Image data
-fun DataBuffer.isEqual(other: DataBuffer): Boolean {
-    if (dataType != other.dataType || numBanks != other.numBanks) return false
-    if (other is DataBufferInt) {
-        return if (this is DataBufferInt) isEqual(other) else false
+fun DataBuffer.isEqual(other: DataBuffer) =
+    if (dataType != other.dataType || numBanks != other.numBanks) false
+    else when (other) {
+        is DataBufferInt -> if (this is DataBufferInt) isEqual(other) else false
+        is DataBufferByte -> if (this is DataBufferByte) isEqual(other) else false
+        else -> throw NotImplementedError("isEqual not implemented for class $javaClass!")
     }
-    if (other is DataBufferByte) {
-        return if (this is DataBufferByte) isEqual(other) else false
-    }
-    throw NotImplementedError("isEqual not implemented for class $javaClass!")
-}
 
 fun DataBufferByte.isEqual(other: DataBufferByte): Boolean {
     for (bank in 0 until numBanks) {
         val data = getData(bank)
         val otherData = other.getData(bank)
-        if (!Arrays.equals(data, otherData)) return false
+        if (!data.contentEquals(otherData)) return false
     }
     return true
 }
@@ -93,7 +96,7 @@ fun DataBufferInt.isEqual(other: DataBufferInt): Boolean {
     for (bank in 0 until numBanks) {
         val data = getData(bank)
         val otherData = other.getData(bank)
-        if (!Arrays.equals(data, otherData)) return false
+        if (!data.contentEquals(otherData)) return false
     }
     return true
 }

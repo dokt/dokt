@@ -71,7 +71,7 @@ interface MutableNode : Node {
     }
 
     fun remove(child: MutableNode) {
-        if (child.parent != this) throw IllegalArgumentException("$child isn't child of $this!")
+        require (equals(child.parent)) { "$child isn't child of $this!" }
         child.parent = null
         children.remove(child)
     }

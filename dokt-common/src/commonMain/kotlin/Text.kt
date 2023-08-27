@@ -6,6 +6,7 @@ import kotlin.math.pow
 import kotlin.math.roundToLong
 
 private const val B = 1024L
+private const val GIGABYTE = 1073741824.0
 
 val Long.bytesText : String get() {
     var size = this
@@ -21,7 +22,7 @@ val Long.bytesText : String get() {
 }
 
 fun Long.gigabytes(fractionDigits: Int = 1) = 10.0.pow(fractionDigits).let {
-    ((this / 1073741824.0) * it).roundToLong() / it
+    ((this / GIGABYTE) * it).roundToLong() / it
 }
 
 fun String.pluralize(collection: Collection<Any?> = emptyList()) =
@@ -44,6 +45,6 @@ value class Text
     @Suppress("DEPRECATION_ERROR")
     companion object {
         val String?.asText get() = if (isNullOrBlank()) null else Text(this)
-        val String.toText get() = if (isBlank()) throwIllegalState() else Text(this)
+        val String.toText get() = Text(this).also { require(isNotBlank()) { "Text can't be blank!" } }
     }
 }

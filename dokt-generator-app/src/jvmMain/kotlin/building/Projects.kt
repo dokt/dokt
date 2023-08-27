@@ -5,6 +5,8 @@ import app.dokt.generator.building.Layer.*
 import java.nio.file.Path
 import kotlin.io.path.*
 
+private const val INVALID_PLATFORM = "Invalid platform!"
+
 sealed class GradleProject(
     parent: GradleProject?,
     val dir: Path,
@@ -50,13 +52,13 @@ sealed class GradleProject(
                     APPLICATION -> applications.add(this)
                     DOMAIN -> domains.add(this)
                     INFRASTRUCTURE -> infrastructures.add(this)
-                    else -> throwIllegalState()
+                    else -> error(INVALID_PLATFORM)
                 }
             } else SingleProject(parent, dir, name, layer, platform).apply {
                 if (hasSources) when (layer) {
                     INFRASTRUCTURE -> infrastructures.add(this)
                     INTERFACE -> interfaces.add(this)
-                    else -> throwIllegalState()
+                    else -> error(INVALID_PLATFORM)
                 }
             }
         }
@@ -101,7 +103,7 @@ class SingleProject(
     private val target = when (platform) {
         Platform.JS -> Target.JS
         Platform.JVM -> Target.JVM
-        else -> throwIllegalState()
+        else -> error(INVALID_PLATFORM)
     }
 
     private fun implementation(expression: String, packagePrefix: String = "") =

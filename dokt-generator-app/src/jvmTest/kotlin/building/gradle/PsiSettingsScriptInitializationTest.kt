@@ -9,7 +9,10 @@ private fun String.sut(act: PsiSettingsInitializationScript.() -> Unit) =
 
 class PsiSettingsScriptInitializationTest : FunSpec({
     test("applyPlugin") {
-        incomplete.sut { applyPlugin(REFRESH_VERSIONS_PLUGIN_ID, vRefreshVersions) } shouldBe complete
+        incomplete.sut {
+            applyPlugin(DOKT_SETTINGS_PLUGIN_ID, vDokt)
+            applyPlugin(REFRESH_VERSIONS_PLUGIN_ID, vRefreshVersions)
+        } shouldBe complete
     }
 })
 

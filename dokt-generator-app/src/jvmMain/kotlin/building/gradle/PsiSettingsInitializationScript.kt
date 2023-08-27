@@ -4,29 +4,32 @@ import app.dokt.common.Version
 import app.dokt.generator.code.psi.*
 
 class PsiSettingsInitializationScript(context: Context) : ScriptEditor(context, {}), SettingsInitialization {
+    private val pluginsBlock by lazy {
+        (block.findCall("plugins") ?: TODO("Create plugins")).getBlock()
+    }
+
+    private val pluginBinaries by lazy { pluginsBlock.findBinaries() }
+
     override fun applyPlugin(id: String, version: Version) {
-        val pluginsBlock = block.findCall("plugins")
-        println(pluginsBlock?.text)
-        pluginsBlock?.findCalls("id")?.forEach {
-            println("->${it.text}")
+        val binary = pluginBinaries.find { it.hasCallValue(id) }
+        if (binary != null) {
+            debug { "Plugin $id already applied." }
+
+            binary.replace(createExpression("""id("foo") version "1.0.0""""))
+            return
         }
-            /*.filterIsInstance<KtCallExpression>()
-            .find { it.name == "plugins" }
-        info { pluginsBlock?.text }*/
+        //val expression = createExpression("""id("$id") version "$version"""")
+        //pluginsBlock.add(expression)
 
-        /*if (pluginsBlock  != null) {
-            val newPluginEntry = createExpression("id(\"$id\") version \"$version\"")
-
-            if (pluginsBlock.lambdaArguments.isNotEmpty()) {
-                val lastArgument = pluginsBlock.lambdaArguments.last()
-                if (lastArgument.firstChild.text == "}") {
-                    lastArgument.parent.addBefore(newPluginEntry, lastArgument)
-                } else {
-                    lastArgument.parent.addAfter(newPluginEntry, lastArgument)
-                }
+        /*if (pluginsBlock.lambdaArguments.isNotEmpty()) {
+            val lastArgument = pluginsBlock.lambdaArguments.last()
+            if (lastArgument.firstChild.text == "}") {
+                lastArgument.parent.addBefore(newPluginEntry, lastArgument)
             } else {
-                //pluginsBlock.addAaddArgument(newPluginEntry)
+                lastArgument.parent.addAfter(newPluginEntry, lastArgument)
             }
+        } else {
+            //pluginsBlock.addArgument(newPluginEntry)
         }*/
     }
 }

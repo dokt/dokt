@@ -15,14 +15,10 @@ abstract class LoggablePlugin<T : Any>(private val type: KClass<out LoggablePlug
      * @param target The target object
      */
     final override fun apply(target: T) {
-        try {
-            this.pluginTarget = target
-            target.validate()
-            debug { "Applying plugin to $target." }
-            target.applyPlugin()
-        } catch (e: UnsupportedOperationException) {
-            error(e, "Ignoring ${type.simpleName} because: ${e.message}")
-        }
+        this.pluginTarget = target
+        target.validate()
+        debug { "Applying plugin to $target." }
+        target.applyPlugin()
     }
 
     protected open fun T.validate() {

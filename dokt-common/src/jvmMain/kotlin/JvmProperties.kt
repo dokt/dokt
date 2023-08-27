@@ -7,7 +7,10 @@ import java.util.*
 
 fun File.loadProperties() = inputStream().use { Properties().apply { load(it) } }
 
-fun Properties.getInt(key: String) = getProperty(key)?.toInt() ?: throw Exception("Integer for '$key' key not found!")
+fun Properties.getInt(key: String) = getProperty(key)?.toInt().let {
+    require(it != null) { "Integer for '$key' key not found!" }
+    it
+}
 
 fun Properties.getInt(prefix: String, suffix: String) = getInt("$prefix.$suffix")
 

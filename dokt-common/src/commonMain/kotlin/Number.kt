@@ -1,13 +1,15 @@
 package app.dokt.common
 
-import kotlin.math.*
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.round
+
+private const val TWO_DECIMALS = 100f
 
 val Double.roundAwayFromZero get() = if (this < 0) floor(this).toInt() else ceil(this).toInt()
 
-/**
- * Round to 2 decimals
- */
-val Float.round2 get() = round(this * 100f) / 100f
+/** Round to 2 decimals */
+val Float.round2 get() = round(this * TWO_DECIMALS) / TWO_DECIMALS
 
 val Float.kotlin get(): String {
     val string = toString()

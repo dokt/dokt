@@ -1,7 +1,10 @@
+@file:Suppress("SpellCheckingInspection")
+
 plugins {
     `maven-publish`
     signing
     kotlin("multiplatform")
+    id("io.gitlab.arturbosch.detekt")
 }
 
 description = "Common (logging free) test utilities"
@@ -18,7 +21,6 @@ kotlin {
     }
 
     sourceSets {
-        @Suppress("UNUSED_VARIABLE")
         val commonMain by getting {
             dependencies {
                 api(KotlinX.serialization.json)

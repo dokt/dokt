@@ -2,8 +2,8 @@ plugins {
     `java-gradle-plugin`
     //`kotlin-dsl`
     `maven-publish`
-    id("com.gradle.plugin-publish")
     kotlin("jvm")
+    id("com.gradle.plugin-publish")
 }
 
 description = "Domain-driven design using Kotlin"

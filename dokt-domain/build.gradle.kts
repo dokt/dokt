@@ -1,8 +1,11 @@
+@file:Suppress("SpellCheckingInspection")
+
 plugins {
     `maven-publish`
     signing
     kotlin("multiplatform")
     kotlin("plugin.serialization")
+    id("io.gitlab.arturbosch.detekt")
 }
 
 description = "Dokt Domain API for defining domain layer and its infrastructure."
@@ -15,7 +18,6 @@ kotlin {
     jvm()
 
     sourceSets {
-        @Suppress("UNUSED_VARIABLE")
         val commonMain by getting {
             dependencies {
                 api(project(":dokt-common"))

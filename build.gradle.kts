@@ -1,9 +1,20 @@
+@file:Suppress("SpellCheckingInspection")
+
 plugins {
     `maven-publish`
     signing
     id("io.github.gradle-nexus.publish-plugin")
+    id("io.gitlab.arturbosch.detekt")
     kotlin("multiplatform") apply false
     kotlin("plugin.serialization") apply false
+}
+
+repositories { // detekt requires repositories
+    mavenCentral()
+}
+
+detekt {
+    config.setFrom(file("config/detekt/detekt.yml"))
 }
 
 subprojects {
@@ -17,6 +28,15 @@ subprojects {
         kotlinOptions {
             //allWarningsAsErrors = true
             jvmTarget = "1.8"
+        }
+    }
+
+    tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+        reports {
+            xml.required.set(false)
+            txt.required.set(false)
+            sarif.required.set(false)
+            md.required.set(false)
         }
     }
 

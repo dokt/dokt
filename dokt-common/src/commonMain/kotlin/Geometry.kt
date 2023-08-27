@@ -22,6 +22,8 @@ operator fun Dimension.contains(dimension: Dimension) = dimension.width <= width
 // TODO investigate equal cases
 operator fun Dimension.contains(point: Point) = point.x <= width && point.y <= height
 
+operator fun Dimension.times(multiplier: Int) = Dimension(width * multiplier, height * multiplier)
+
 /* TODO no point
 fun Dimension.scale(max: Int): Dimension {
     if (width <= max && height <= max) return this
@@ -31,16 +33,31 @@ fun Dimension.scale(max: Int): Dimension {
 val dimensionless = Dimension()
 val pixel = Dimension(1, 1)
 
-val fullscreen = 4.0 / 3
-val widescreen = 16.0 / 9
+const val FULLSCREEN = 4.0 / 3
+const val WIDESCREEN = 16.0 / 9
 
 //#region Display resolutions
 //https://en.wikipedia.org/wiki/720p#/media/File:Vector_Video_Standards8.svg
-val CGA = Dimension(320, 200)
-val VGA = Dimension(640, 480)
-val StandardHD = Dimension(1280, 720)
-val FullHD = Dimension(1920, 1080)
-val UHD = Dimension(3840, 2160)
+private const val CGA_WIDTH = 320
+private const val CGA_HEIGHT = 200
+private const val VGA_HEIGHT = 480
+private const val STANDARD_HD_HEIGHT = 720
+private const val FULL_HD_HEIGHT = 1080
+
+/** CGA 320 x 200 */
+val CGA = Dimension(CGA_WIDTH, CGA_HEIGHT)
+
+/** VGA 640 x 480 */
+val VGA = Dimension(CGA.width * 2, VGA_HEIGHT)
+
+/** Standard HD 720p 1280 x 720 */
+val StandardHD = Dimension(VGA.width * 2, STANDARD_HD_HEIGHT)
+
+/** Full HD 1920 x 1080 */
+val FullHD = Dimension(StandardHD.width + VGA.width, FULL_HD_HEIGHT)
+
+/** 4K UHD 3840 x 2160 */
+val UHD = FullHD * 2
 //#endregion
 //#endregion
 

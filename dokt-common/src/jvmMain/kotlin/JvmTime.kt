@@ -3,9 +3,12 @@
 
 package app.dokt.common
 
-import java.time.*
+import java.time.Duration
+import java.time.Instant
 
-actual fun epoch() = (System.currentTimeMillis() / 1000).toUInt()
+private const val MILLIS_IN_SECOND = 1_000
+
+actual fun epoch() = (System.currentTimeMillis() / MILLIS_IN_SECOND).toUInt()
 
 fun duration(operation: () -> Unit): Duration {
     val begin = Instant.now()
