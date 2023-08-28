@@ -13,7 +13,7 @@ sealed interface AccountEvent : RootEvent
 value class Deposited(val amount: Euros) : AccountEvent
 
 @Serializable
-object Frozen : AccountEvent
+data object Frozen : AccountEvent
 
 @JvmInline
 @Serializable

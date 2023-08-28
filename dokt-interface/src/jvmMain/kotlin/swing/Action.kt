@@ -64,4 +64,5 @@ object Exit : Action(
     GoogleMaterialDesignIcons.EXIT_TO_APP,
     accelerator = keyStroke(KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK)) {
     override fun actionPerformed(e: ActionEvent?) { JavaUI.instance.stop() }
+    private fun readResolve(): Any = Exit
 }

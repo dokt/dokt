@@ -47,7 +47,7 @@ enum class Layer(
     override fun toString() = en
 
     companion object {
-        private val tagMap = values().flatMap { layer -> layer.tags.map { it to layer } }.toMap()
+        private val tagMap = entries.flatMap { layer -> layer.tags.map { it to layer } }.toMap()
 
         fun parse(names: List<String>) = tagMap.firstValueByKey(INFRASTRUCTURE) {
                 tag -> names.any { it.startsWith(tag) }

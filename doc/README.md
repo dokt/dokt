@@ -1,5 +1,14 @@
 # Dokt documentation
 
+## JVM version
+
+Using target version that works by default with latest [stable](https://www.debian.org/releases/)
+[Debian](https://packages.debian.org/search?keywords=default-jre&searchon=names&suite=stable) and
+[Ubuntu LTS](https://wiki.ubuntu.com/Releases):
+- 2023-06-10 [OpenJDK 17](https://packages.debian.org/bookworm/default-jre) on Debian 12 bookworm
+- 2023-04-20 [OpenJDK 17](https://packages.ubuntu.com/lunar/default-jre) on Ubuntu 23.04 Lunar Lobster
+- 2023-02-23 [OpenJDK 11](https://packages.ubuntu.com/jammy/default-jre) on Ubuntu 22.04.2 LTS Jammy Jellyfish
+
 ## Features
 
 ### Dokt Gradle plugin features

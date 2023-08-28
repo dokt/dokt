@@ -36,6 +36,7 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.LambdaTypeName
 import com.squareup.kotlinpoet.MUTABLE_LIST
 import com.squareup.kotlinpoet.MemberName
@@ -96,7 +97,7 @@ class KotlinPoetAggregateEventCoder(event: AggregateEvent, private val eventType
     }
 
     override fun code() = when (details.size) {
-        0 -> TypeSpec.objectBuilder(name)
+        0 -> TypeSpec.objectBuilder(name).addModifiers(KModifier.DATA)
         1 -> TypeSpec.valueClassBuilder(name, details.single())
         else -> TypeSpec.dataClassBuilder(name, details)
     }.addAnnotation(serializableType).addSuperinterface(eventType).build()

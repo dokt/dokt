@@ -6,7 +6,7 @@ import kotlin.reflect.KClass
 
 open class DoktJvmInterfacePlugin(type: KClass<out DoktJvmInterfacePlugin> = DoktJvmInterfacePlugin::class) :
     DoktJvmPlugin(type), DoktInterfacePlugin {
-    override val pluginLabel = pluginLabel()
+    override val pluginLabel get() = pluginLabel()
 
     final override fun KotlinDependencyHandler.configureMainDependencies() = configureInterfaceApi()
 }

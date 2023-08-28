@@ -37,7 +37,8 @@ class DoktDomainPlugin : DoktMultiPlugin(DoktDomainPlugin::class) {
             delete(commonTestDir)
         }*/
 
-        val generateDomain = register<GenerateCommonMain>()
+        //val generateDomain =
+            register<GenerateCommonMain>()
 
         register<GenerateCommonTest>()
 

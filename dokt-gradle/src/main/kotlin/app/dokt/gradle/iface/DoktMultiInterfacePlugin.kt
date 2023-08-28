@@ -7,7 +7,7 @@ import kotlin.reflect.KClass
 open class DoktMultiInterfacePlugin(type: KClass<out DoktMultiInterfacePlugin> = DoktMultiInterfacePlugin::class) :
     DoktMultiPlugin(type), DoktInterfacePlugin
 {
-    override val pluginLabel = pluginLabel()
+    override val pluginLabel get() = pluginLabel()
 
     final override fun KotlinDependencyHandler.configureCommonMainDependencies() = configureInterfaceApi()
 }

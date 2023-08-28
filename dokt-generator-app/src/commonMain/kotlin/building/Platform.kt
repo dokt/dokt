@@ -22,9 +22,9 @@ enum class Platform(val id: String, en: String, val main: String = "main", val t
     override fun toString() = en
 
     companion object {
-        private val byId = values().associateBy { it.id }
+        private val byId = entries.associateBy { it.id }
 
-        @Deprecated("Use ProjectType and parse(path)")
+        //@Deprecated("Use ProjectType and parse(path)") TODO
         fun parse(layer: Layer, names: List<String>) = when {
             layer.multiplatform -> MULTI
             layer == Layer.INTERFACE && (names.contains("swing") || names.contains("swt")) -> JVM
