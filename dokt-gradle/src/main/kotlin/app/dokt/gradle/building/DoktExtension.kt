@@ -2,7 +2,7 @@ package app.dokt.gradle.building
 
 import org.gradle.api.provider.Property
 
-/** Extension to configure Dokt dependencies plugin. */
+/** Extension to configure Dokt project and settings plugin. */
 abstract class DoktExtension {
     /**
      * When `true` the generated dependencies uses Kotlin dependency extensions e.g.

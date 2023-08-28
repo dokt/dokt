@@ -16,7 +16,7 @@ class DoktSettingsPlugin : SettingsPlugin(DoktSettingsPlugin::class) {
     /** Initialize settings. */
     override fun Settings.applyPlugin() {
         lifecycle { "Initializing https://dokt.app" }
-        val extension = extensions.create("dokt", DoktExtension::class.java)
+        val extension = extensions.create("dokt", DoktSettingsExtension::class.java)
         debug { "Build File: ${extension.useBuildFile}" }
 
         configureDependencyResolutions()

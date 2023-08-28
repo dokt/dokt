@@ -37,7 +37,7 @@ subprojects {
     tasks.withType<KotlinCompile> {
         kotlinOptions {
             allWarningsAsErrors = true
-            jvmTarget = "1.8"
+            jvmTarget = "11"
         }
     }
 
@@ -124,5 +124,5 @@ nexusPublishing {
 
 tasks.wrapper {
     distributionType = Wrapper.DistributionType.ALL
-    gradleVersion = "8.2.1"
+    gradleVersion = "8.3"
 }

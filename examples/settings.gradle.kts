@@ -7,7 +7,10 @@ pluginManagement {
 }
 plugins {
   id("app.dokt") version "0.2.10"
-  id("de.fayard.refreshVersions") version "0.51.0"
+  id("de.fayard.refreshVersions") version "0.60.1"
+}
+dokt {
+    useBuildFile = true
 }
 dependencyResolutionManagement {
   repositories {

@@ -28,8 +28,8 @@ dependencies {
 
 java {
     withSourcesJar()
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 gradlePlugin {
@@ -41,7 +41,7 @@ gradlePlugin {
             id = "app.dokt"
             displayName = "Dokt plugin"
             description = project.description
-            implementationClass = "app.dokt.gradle.build.DoktSettingsPlugin"
+            implementationClass = "app.dokt.gradle.building.DoktSettingsPlugin"
         }
     }
 }
