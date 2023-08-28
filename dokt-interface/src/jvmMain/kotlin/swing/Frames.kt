@@ -2,17 +2,21 @@
 
 package app.dokt.ui.swing
 
-import app.dokt.common.*
-import app.dokt.ui.*
+import app.dokt.common.TRANSPARENT
+import app.dokt.common.get
+import app.dokt.ui.Localized
+import app.dokt.ui.bundle
 import java.util.*
-import javax.swing.*
+import javax.swing.JDesktopPane
+import javax.swing.JFrame
+import javax.swing.JInternalFrame
 
 open class Frame(
     name: String? = null,
     /** Localize title if null or use it as fixed. */
     title: String? = null,
     vararg menus: Menu
-) : JFrame(title ?: ""), Localized {
+) : JFrame(title.orEmpty()), Localized {
     init {
         name?.let { this.name = it }
         if (title == null) {
@@ -35,7 +39,7 @@ open class InternalFrame(
     closable: Boolean = false,
     maximizable: Boolean = false,
     iconifiable: Boolean = false,
-) : JInternalFrame(title ?: "", resizable, closable, maximizable, iconifiable), Localized {
+) : JInternalFrame(title.orEmpty(), resizable, closable, maximizable, iconifiable), Localized {
     init {
         if (title == null) {
             name = javaClass.simpleName

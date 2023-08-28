@@ -1,17 +1,20 @@
 package app.dokt.infra
 
-import io.github.oshai.kotlinlogging.*
+import io.github.oshai.kotlinlogging.KLogger
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.reflect.KProperty
 import kotlin.properties.ReadWriteProperty
 
 fun logger(func: () -> Unit) = KotlinLogging.logger(func)
+
+private const val PROPERTY_PREFIX = "var ".length
 
 /**
  * Examples
  * - "var bar: kotlin.String" Global property
  * - "var org.example.Foo.bar: kotlin.String" Class property
  */
-val KProperty<*>.logger get() = KotlinLogging.logger(toString().substring(4).substringBefore(':'))
+val KProperty<*>.logger get() = KotlinLogging.logger(toString().substring(PROPERTY_PREFIX).substringBefore(':'))
 
 interface Log {
     fun error(message: () -> Any?)
@@ -73,6 +76,7 @@ class Observable<V>(
         return value
     }
 
+    @Suppress("TooGenericExceptionCaught")
     override fun setValue(thisRef: Any?, property: KProperty<*>, value: V) {
         if (!::logger.isInitialized) logger = property.logger
         val old = this.value

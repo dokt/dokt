@@ -2,27 +2,31 @@
 
 package app.dokt.ui.swing
 
-import app.dokt.common.*
-import app.dokt.ui.*
+import app.dokt.common.find
+import app.dokt.common.get
+import app.dokt.ui.JavaUI
+import app.dokt.ui.bundle
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jiconfont.IconCode
 import jiconfont.icons.google_material_design_icons.GoogleMaterialDesignIcons
-import java.awt.event.*
+import java.awt.event.ActionEvent
+import java.awt.event.KeyEvent
 import java.util.*
-import javax.swing.*
+import javax.swing.AbstractAction
+import javax.swing.KeyStroke
 
 /**
  * https://docs.oracle.com/javase/tutorial/uiswing/misc/action.html
  * https://www.rd.com/article/computer-f-keys/
  */
-abstract class Action(
+open class Action(
     code: IconCode? = null,
     enabled: Boolean = true,
     accelerator: KeyStroke? = null,
     name: String? = null,
     private val localizeName: Boolean = true
 ) : AbstractAction(name), MenuComponent {
-    protected val logger = KotlinLogging.logger { }
+    protected val logger = KotlinLogging.logger { } // TODO Use own logger
     private val name = name ?: javaClass.simpleName
 
     init {

@@ -3,11 +3,13 @@
 package app.dokt.ui.swing
 
 import app.dokt.common.upperFirst
-import app.dokt.ui.*
+import app.dokt.ui.JavaUI
+import app.dokt.ui.Localized
+import app.dokt.ui.nativeDisplayName
 import jiconfont.icons.google_material_design_icons.GoogleMaterialDesignIcons
 import java.awt.event.ActionEvent
 import java.util.*
-import javax.swing.*
+import javax.swing.JMenuBar
 
 class Locales(vararg locales: Locale) : Menu(locales.map { SetLocale(it) }, GoogleMaterialDesignIcons.LANGUAGE)
 

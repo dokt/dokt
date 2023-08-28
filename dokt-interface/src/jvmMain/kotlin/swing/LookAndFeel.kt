@@ -2,12 +2,12 @@
 
 package app.dokt.ui.swing
 
-import app.dokt.common.*
 import app.dokt.common.Dimension
 import app.dokt.common.Rectangle
 import jiconfont.IconCode
-import java.awt.*
-import javax.swing.*
+import javax.swing.JFrame
+import javax.swing.JInternalFrame
+import javax.swing.JMenuBar
 
 interface LookAndFeelData {
     val className get() = "javax.swing.plaf.${id.lowercase()}.${id}LookAndFeel"
@@ -36,26 +36,38 @@ interface LookAndFeelData {
     val title get() = frameBorderAndTitle - frameBorder
 }
 
+private const val METAL_FRAME_BORDER = 5
+private const val METAL_FRAME_TITLE_OR_MENU = 23
+private const val METAL_ICON_SIZE = 15f
 object Metal : LookAndFeelData {
     override val decoratedTransparency = true
-    override val frameBorder = 5
-    override val frameBorderAndTitle = 28
-    override val frameBorderTitleAndMenu = 51
+
+    /** 5 px */
+    override val frameBorder = METAL_FRAME_BORDER
+
+    /** 5 + 23 = 28 px */
+    override val frameBorderAndTitle = METAL_FRAME_BORDER + METAL_FRAME_TITLE_OR_MENU
+
+    /** 5 + 2 * 23 = 51 px */
+    override val frameBorderTitleAndMenu = METAL_FRAME_BORDER + 2 * METAL_FRAME_TITLE_OR_MENU
+
     override val id = "Metal"
-    override val iconSize = 15f
+
+    /** 15f */
+    override val iconSize = METAL_ICON_SIZE
 }
 
-/**
- * https://docs.oracle.com/javase/tutorial/uiswing/lookandfeel/_nimbusDefaults.html
- */
+/** https://docs.oracle.com/javase/tutorial/uiswing/lookandfeel/_nimbusDefaults.html */
 object Nimbus : LookAndFeelData {
-    /** https://community.oracle.com/tech/developers/discussion/1358501/jinternalframe-transparency-issues-with-nimbus-look-and-feel */
+    /**
+     * https://community.oracle.com/tech/developers/discussion/1358501/jinternalframe-transparency-issues-with-nimbus-look-and-feel
+     */
     override val decoratedTransparency = false
-    override val frameBorder = 5 // TODO
-    override val frameBorderAndTitle = 28 // TODO
-    override val frameBorderTitleAndMenu = 51 // TODO
+    override val frameBorder = Metal.frameBorder // TODO
+    override val frameBorderAndTitle = Metal.frameBorderTitleAndMenu // TODO
+    override val frameBorderTitleAndMenu = Metal.frameBorderTitleAndMenu // TODO
     override val id = "Nimbus"
-    override val iconSize = 15f // TODO
+    override val iconSize = Metal.iconSize // TODO
 }
 
 var currentLookAndFeel: LookAndFeelData = Metal
@@ -81,7 +93,8 @@ fun JFrame.setBoundsByContent(content: Rectangle) { bounds = boundsByContent(con
 fun JFrame.setSizeByContent(content: Dimension) { size = sizeByContent(content, jMenuBar) }
 
 /** Default size for Windows 11 */
-fun JFrame.setIcons(code: IconCode) { iconImages = listOf(code.image, IconBuilder.image(code, 63f)) }
+private const val WINDOWS_11_ICON_SIZE = 63f
+fun JFrame.setIcons(code: IconCode) { iconImages = listOf(code.image, Icons.image(code, WINDOWS_11_ICON_SIZE)) }
 
 fun JInternalFrame.setBoundsByContent(content: Rectangle) { bounds = boundsByContent(content, jMenuBar) }
 fun JInternalFrame.setSizeByContent(content: Dimension) { size = sizeByContent(content, jMenuBar) }

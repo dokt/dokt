@@ -1,12 +1,13 @@
 package app.dokt.infra
 
-import app.dokt.common.*
+import app.dokt.common.Dimension
+import app.dokt.common.Point
 import java.awt.GraphicsEnvironment
 import java.awt.Toolkit
 
 actual val centerPoint: Point get() = local.centerPoint
 
-val local = GraphicsEnvironment.getLocalGraphicsEnvironment()
+val local = GraphicsEnvironment.getLocalGraphicsEnvironment()!!
 
 /**
  * https://stackoverflow.com/questions/41067235/what-is-the-benefit-of-setting-java-awt-headless-true

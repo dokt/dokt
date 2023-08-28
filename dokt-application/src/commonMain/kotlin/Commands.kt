@@ -2,7 +2,10 @@
 
 package app.dokt.app
 
-import app.dokt.domain.event.*
+import app.dokt.domain.event.EventMessage
+import app.dokt.domain.event.RootEvent
+import app.dokt.domain.event.UserId
+import app.dokt.domain.event.Version
 import kotlin.reflect.KClass
 
 /**

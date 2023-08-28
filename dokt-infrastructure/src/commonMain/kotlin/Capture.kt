@@ -1,6 +1,7 @@
 package app.dokt.infra
 
-import app.dokt.common.*
+import app.dokt.common.Point
+import app.dokt.common.Rectangle
 
 /** Take screenshot, capture area of single pixel of it. */
 expect object Capture {

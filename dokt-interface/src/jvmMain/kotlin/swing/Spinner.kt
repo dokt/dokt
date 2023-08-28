@@ -2,7 +2,9 @@
 
 package app.dokt.ui.swing
 
-import javax.swing.*
+import javax.swing.JPanel
+import javax.swing.JSpinner
+import javax.swing.SpinnerNumberModel
 
 class Spinner(label: String, value: Int, max: Int, onChange: (newValue: Int) -> Unit) : JPanel() {
     private val editor = JSpinner(SpinnerNumberModel(value, 0, max, 1))

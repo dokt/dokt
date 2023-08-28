@@ -4,7 +4,7 @@ package app.dokt.ui
 
 import java.util.*
 
-abstract class BundleResources(baseName: String? = null) : Resources {
+open class BundleResources(baseName: String? = null) : Resources {
     private val bundle = ResourceBundle.getBundle(baseName ?: "${javaClass.packageName}.Bundle")!!
 
     /**

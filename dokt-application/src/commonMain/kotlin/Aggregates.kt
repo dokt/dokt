@@ -2,9 +2,12 @@
 
 package app.dokt.app
 
-import app.dokt.domain.event.*
+import app.dokt.domain.event.EventMessage
+import app.dokt.domain.event.RootEvent
+import app.dokt.domain.event.UserId
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlin.reflect.KClass
-import kotlinx.coroutines.sync.*
 
 abstract class Aggregate<R : Any, I, E : RootEvent>(val id: I) {
     /**

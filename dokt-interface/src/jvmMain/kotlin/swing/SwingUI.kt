@@ -4,11 +4,15 @@ package app.dokt.ui.swing
 
 import app.dokt.app.Application
 import app.dokt.infra.SystemJvm
-import app.dokt.ui.*
+import app.dokt.ui.JavaUI
+import app.dokt.ui.Localized
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.awt.event.*
+import java.awt.event.WindowAdapter
+import java.awt.event.WindowEvent
 import java.util.*
-import javax.swing.*
+import javax.swing.JFrame
+import javax.swing.SwingUtilities
+import javax.swing.UIManager
 
 private val logger = KotlinLogging.logger {}
 
@@ -61,8 +65,11 @@ abstract class SwingUI<A : Application, F>(
         if (logger.isDebugEnabled()) {
             val defaultScreen = localGraphicsEnvironment.defaultScreenDevice
             localGraphicsEnvironment.screenDevices.forEach {
-                val mode = it.displayMode
-                logger.debug { "Screen '${it.iDstring}', ${mode.width}x${mode.height}${if (it == defaultScreen) ", default" else ""}." }
+                it.displayMode.apply {
+                    logger.debug {
+                        "Screen '${it.iDstring}', $width x$height${if (it == defaultScreen) ", default" else ""}."
+                    }
+                }
             }
 
             logger.debug { "Starting UI." }

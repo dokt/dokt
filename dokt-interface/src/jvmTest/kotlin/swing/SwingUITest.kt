@@ -1,8 +1,11 @@
 package app.dokt.ui.swing
 
 import app.dokt.app.Application
-import java.awt.*
-import javax.swing.*
+import java.awt.Color
+import java.awt.Component
+import javax.swing.JFrame
+import javax.swing.JLabel
+import javax.swing.JTable
 import javax.swing.table.TableCellRenderer
 
 object ColorRenderer : JLabel(), TableCellRenderer {

@@ -65,6 +65,7 @@ If the project:
 - Combine geometry classes: Eg. except class app.dokt.common.Point to actual java.awt.Point
 - use [.editorconfig](https://editorconfig.org/)
 - Combine Detekt commands `detektMetadataMain` for commonMain and `detectJvmMain` for jvmMain.
+  - Use `detektAll` from root. See https://github.com/detekt/detekt/issues/3663
 
 # Links
 
@@ -82,4 +83,6 @@ If the project:
 ## IntelliJ IDEA
 
 - File -> Settings... -> Editor -> Code Style -> Kotlin -> Top-Level Symbols -> Use single name import
+  Untick also `io.ktor`
   ![Use single name import](single-name-import.png "Use single name import")
+

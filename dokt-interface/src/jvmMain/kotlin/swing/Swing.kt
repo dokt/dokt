@@ -2,10 +2,16 @@
 
 package app.dokt.ui.swing
 
-import java.awt.*
-import java.awt.event.*
-import javax.swing.*
-import javax.swing.event.*
+import java.awt.Dimension
+import java.awt.event.ActionListener
+import javax.swing.BorderFactory
+import javax.swing.JButton
+import javax.swing.JComponent
+import javax.swing.JList
+import javax.swing.JSlider
+import javax.swing.JSpinner
+import javax.swing.event.ChangeEvent
+import javax.swing.event.ListSelectionEvent
 
 fun button(text: String, action: ActionListener) = JButton(text).apply { addActionListener(action) }
 

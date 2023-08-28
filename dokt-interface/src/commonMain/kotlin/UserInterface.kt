@@ -2,7 +2,7 @@
 
 package app.dokt.ui
 
-import app.dokt.app.*
+import app.dokt.app.Application
 
 interface UserInterface<A : Application> {
     val application: A

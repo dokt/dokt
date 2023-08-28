@@ -1,6 +1,6 @@
 package app.dokt.ui
 
-import app.dokt.app.*
+import app.dokt.app.Application
 import app.dokt.infra.Logger
 
 abstract class ConsoleUI<A : Application>(func: () -> Unit) : Logger(func), UserInterface<A> {

@@ -2,11 +2,17 @@
 
 package app.dokt.ui.swing
 
-import app.dokt.common.*
 import app.dokt.common.Rectangle
-import java.awt.*
-import java.awt.event.*
-import javax.swing.*
+import java.awt.Component
+import java.awt.GraphicsEnvironment
+import java.awt.GridBagConstraints
+import java.awt.Robot
+import java.awt.Toolkit
+import java.awt.event.ComponentAdapter
+import java.awt.event.ComponentEvent
+import java.awt.event.KeyEvent
+import javax.swing.KeyStroke
+import javax.swing.SwingUtilities
 
 val ROBOT = Robot()
 val defaultScreenSize get() = Toolkit.getDefaultToolkit().screenSize!!

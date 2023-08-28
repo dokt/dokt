@@ -9,6 +9,10 @@ private val CAMEL_CASE_REGEX = "(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])".to
 
 private val WHITESPACE_REGEX = "\\s".toRegex()
 
+fun Array<String>.prefix(prefix: String) = map { prefix + it }
+
+fun Array<String>.suffix(suffix: String) = map { it + suffix }
+
 fun <T> Iterable<T>.joinWithSpace(transform: ((T) -> CharSequence)? = null) = joinToString(" ", transform = transform)
 
 val Iterable<String>.commonPrefix get() = iterator().run {
@@ -18,6 +22,10 @@ val Iterable<String>.commonPrefix get() = iterator().run {
         prefix
     } else ""
 }
+
+fun Iterable<String>.prefix(prefix: String) = map { prefix + it }
+
+fun Iterable<String>.suffix(suffix: String) = map { it + suffix }
 
 fun List<String>.anyContains(search: String) = any { it.contains(search) }
 

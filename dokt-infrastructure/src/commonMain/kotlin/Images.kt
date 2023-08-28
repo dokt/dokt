@@ -1,6 +1,9 @@
+@file:Suppress("unused")
+
 package app.dokt.infra
 
-import kotlinx.serialization.*
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 /** Adds dot prefix for file extensions. */
 private fun dot(vararg extensions: String) = extensions.map { ".$it" }
@@ -46,8 +49,6 @@ enum class ImageFormat(
     val primarySuffix = extensions.first().substring(1)
 
     constructor(label: String, type: String) : this(label, dot(type), type)
-
-    constructor(label: String, extension: String, vararg types: String) : this(label, dot(extension), *types)
 
     constructor(label: String, extensions: List<String>, vararg types: String) :
             this(label, extensions, types.map { "image/$it" })

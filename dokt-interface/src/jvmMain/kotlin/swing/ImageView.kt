@@ -2,13 +2,17 @@
 
 package app.dokt.ui.swing
 
-import app.dokt.common.*
+import app.dokt.common.area
+import app.dokt.common.DOT
 import app.dokt.common.Dimension
-import java.awt.*
+import app.dokt.common.size
+import java.awt.Graphics
 import java.awt.image.BufferedImage
 import javax.swing.JComponent
 import javax.swing.JTable
 import javax.swing.table.TableCellRenderer
+
+private const val PREFERRED_SIZE = 100
 
 class ImageView(image: BufferedImage = DOT) : JComponent(), TableCellRenderer {
     var image = image
@@ -20,7 +24,7 @@ class ImageView(image: BufferedImage = DOT) : JComponent(), TableCellRenderer {
 
     init {
         image.size.let {
-            if (it.area < 100) preferredSize = Dimension(100, 100)
+            if (it.area < PREFERRED_SIZE) preferredSize = Dimension(PREFERRED_SIZE, PREFERRED_SIZE)
             else size = it
         }
     }

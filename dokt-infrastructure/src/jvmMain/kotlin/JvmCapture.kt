@@ -1,6 +1,11 @@
+@file:Suppress("MatchingDeclarationName")
+
 package app.dokt.infra
 
-import app.dokt.common.*
+import app.dokt.common.Point
+import app.dokt.common.Rectangle
+import app.dokt.common.origin
+import app.dokt.common.text
 import java.awt.Robot
 import kotlin.system.measureTimeMillis
 

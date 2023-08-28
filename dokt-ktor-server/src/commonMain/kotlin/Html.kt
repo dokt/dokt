@@ -1,10 +1,14 @@
+@file:Suppress("WildcardImport")
+
 package app.dokt.infra.ktor
 
 import app.dokt.infra.hostname
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.html.*
-import io.ktor.server.routing.*
+import io.ktor.http.HttpMethod
+import io.ktor.server.application.ApplicationCall
+import io.ktor.server.application.call
+import io.ktor.server.html.respondHtml
+import io.ktor.server.routing.Routing
+import io.ktor.server.routing.get
 import kotlinx.html.*
 
 /** HTML hyperlink target attribute which opens the linked document in a new window or tab. */

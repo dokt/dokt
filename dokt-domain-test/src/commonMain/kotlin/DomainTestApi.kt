@@ -3,8 +3,11 @@ package app.dokt.domain.test
 
 import app.dokt.domain.AggregateRoot
 import io.kotest.assertions.withClue
-import io.kotest.matchers.*
-import io.kotest.matchers.collections.*
+import io.kotest.matchers.collections.shouldContainInOrder
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.collections.shouldNotHaveSize
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 
@@ -16,8 +19,10 @@ abstract class RootSerializer<R>(val root: R, private val serializer: KSerialize
     protected fun serialize() = Json.encodeToString(serializer, root)
 }
 
-abstract class TestAggregate<Root: AggregateRoot<Events>, Events : Any, Event>(root: Root, serializer: KSerializer<Root>)
-    : RootSerializer<Root>(root, serializer), EventCollector {
+abstract class TestAggregate<Root: AggregateRoot<Events>, Events : Any, Event>(
+    root: Root,
+    serializer: KSerializer<Root>
+) : RootSerializer<Root>(root, serializer), EventCollector {
 
     var commands = 0
         private set

@@ -1,6 +1,7 @@
 package app.dokt.infra
 
-import org.apache.commons.lang3.*
+import org.apache.commons.lang3.SystemProperties
+import org.apache.commons.lang3.SystemUtils
 
 actual val osArch: String? = SystemUtils.OS_ARCH
 actual val osName: String? = SystemUtils.OS_NAME

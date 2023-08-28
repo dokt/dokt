@@ -2,7 +2,8 @@
 
 package biz.bank.account
 
-import app.dokt.domain.test.*
+import app.dokt.domain.test.Arranger
+import app.dokt.domain.test.TestAggregate
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.core.spec.style.scopes.FunSpecContainerScope
 

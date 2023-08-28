@@ -1,6 +1,8 @@
 package app.dokt.app
 
-import app.dokt.domain.event.*
+import app.dokt.domain.event.DomainEvent
+import app.dokt.domain.event.EventMessage
+import app.dokt.domain.event.UserId
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainInOrder
 import kotlinx.serialization.Serializable

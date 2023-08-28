@@ -1,11 +1,18 @@
 package app.dokt.ui.swing
 
 import app.dokt.common.get
-import app.dokt.ui.*
-import java.awt.*
+import app.dokt.ui.Localized
+import app.dokt.ui.bundle
+import java.awt.BorderLayout
+import java.awt.Component
+import java.awt.Container
 import java.util.*
-import javax.swing.*
-import javax.swing.table.*
+import javax.swing.JPanel
+import javax.swing.JScrollPane
+import javax.swing.JTable
+import javax.swing.ListSelectionModel
+import javax.swing.table.AbstractTableModel
+import javax.swing.table.TableCellRenderer
 import kotlin.reflect.KClass
 
 @DslMarker

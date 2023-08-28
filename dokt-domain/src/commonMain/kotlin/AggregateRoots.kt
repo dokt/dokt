@@ -3,7 +3,8 @@
  */
 package app.dokt.domain
 
-import kotlinx.serialization.*
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 /**
  * Every aggregate root must implement this interface and be serializable to allow snapshotting.

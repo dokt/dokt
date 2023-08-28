@@ -1,6 +1,9 @@
+@file:Suppress("SpellCheckingInspection", "TooManyFunctions", "unused")
+
 package app.dokt.infra
 
-import app.dokt.common.*
+import app.dokt.common.Dimension
+import app.dokt.common.Point
 import java.awt.Color
 import java.awt.image.ColorModel
 
@@ -76,5 +79,7 @@ expect class Color(rgb: Int) {
 const val TRANSPARENCY_OPAQUE = 1
 const val TRANSPARENCY_BITMASK = 2
 const val TRANSPARENCY_TRANSLUCENT = 3
+private const val HEX_RADIX = 16 // TODO Use toHexString()?
+private const val HEX_LENGTH = 6
 /** https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/serializers.md */
-val Color.text get() = rgb.toString(16).padStart(6, '0')
+val Color.text get() = rgb.toString(HEX_RADIX).padStart(HEX_LENGTH, '0')

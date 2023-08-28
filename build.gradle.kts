@@ -1,5 +1,8 @@
 @file:Suppress("SpellCheckingInspection")
 
+import io.gitlab.arturbosch.detekt.Detekt
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     `maven-publish`
     signing
@@ -17,6 +20,13 @@ detekt {
     config.setFrom(file("config/detekt/detekt.yml"))
 }
 
+tasks.register("detektAll") {
+    group = "verification"
+    allprojects {
+        this@register.dependsOn(tasks.withType<Detekt>())
+    }
+}
+
 subprojects {
     group = "app.dokt"
     version = "0.2.10"
@@ -24,19 +34,10 @@ subprojects {
     apply<MavenPublishPlugin>()
     apply<SigningPlugin>()
 
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    tasks.withType<KotlinCompile> {
         kotlinOptions {
             //allWarningsAsErrors = true
             jvmTarget = "1.8"
-        }
-    }
-
-    tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
-        reports {
-            xml.required.set(false)
-            txt.required.set(false)
-            sarif.required.set(false)
-            md.required.set(false)
         }
     }
 

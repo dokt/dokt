@@ -1,6 +1,7 @@
 package app.dokt.ui.swing
 
-import javax.swing.*
+import javax.swing.JFrame
+import javax.swing.SwingUtilities
 
 fun main() {
     SwingUtilities.invokeLater { JFrame("Default").apply {

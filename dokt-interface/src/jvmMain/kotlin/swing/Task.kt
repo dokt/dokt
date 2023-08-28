@@ -3,8 +3,11 @@
 package app.dokt.ui.swing
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.time.*
-import javax.swing.*
+import java.time.Duration
+import java.time.Instant
+import javax.swing.JFrame
+import javax.swing.JInternalFrame
+import javax.swing.SwingWorker
 
 class Task<T>(private val job: () -> T, private val ui: (T) -> Unit, val name: String = "task")
     : SwingWorker<T, Nothing>() {
@@ -16,6 +19,7 @@ class Task<T>(private val job: () -> T, private val ui: (T) -> Unit, val name: S
         logger.trace { "Starting $name" }
         val started = Instant.now()
         val value = job()
+        // TODO use kotlinx-datetime
         logger.debug { "Done $name in ${Duration.between(started, Instant.now())}."}
         return value
     }

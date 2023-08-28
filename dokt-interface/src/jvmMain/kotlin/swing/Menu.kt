@@ -1,9 +1,10 @@
-@file:Suppress("unused")
+@file:Suppress("EmptyFunctionBlock", "unused")
 
 package app.dokt.ui.swing
 
 import app.dokt.common.get
-import app.dokt.ui.*
+import app.dokt.ui.Localized
+import app.dokt.ui.bundle
 import jiconfont.IconCode
 import java.util.*
 import javax.swing.JMenu
@@ -46,4 +47,4 @@ open class Menu(
 }
 
 /** https://docs.oracle.com/javase/tutorial/uiswing/components/separator.html */
-object Separator : MenuComponent { override fun localize(locale: Locale) {} }
+data object Separator : MenuComponent { override fun localize(locale: Locale) { } }
