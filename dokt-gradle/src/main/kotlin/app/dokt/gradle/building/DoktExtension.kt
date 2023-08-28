@@ -3,7 +3,6 @@ package app.dokt.gradle.building
 import org.gradle.api.provider.Property
 
 /** Extension to configure Dokt dependencies plugin. */
-@Suppress("SpellCheckingInspection")
 abstract class DoktExtension {
     /**
      * When `true` the generated dependencies uses Kotlin dependency extensions e.g.

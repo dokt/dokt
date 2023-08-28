@@ -44,6 +44,7 @@ If the project:
 
 # TODO
 
+- Update JDK to latest supported in stable Debian and Ubuntu LTS.
 - Parse Kotlin script files.
 - Parse package and imports from files.
 - Create Dependency generator
@@ -64,8 +65,10 @@ If the project:
 - Add File system storage tests
 - Combine geometry classes: Eg. except class app.dokt.common.Point to actual java.awt.Point
 - use [.editorconfig](https://editorconfig.org/)
-- Combine Detekt commands `detektMetadataMain` for commonMain and `detectJvmMain` for jvmMain.
-  - Use `detektAll` from root. See https://github.com/detekt/detekt/issues/3663
+- Static code analyse
+  - Combine Detekt commands `detektMetadataMain` for commonMain and `detectJvmMain` for jvmMain.
+    - Use `detektAll` from root. See https://github.com/detekt/detekt/issues/3663
+  - Detect unused classes
 
 # Links
 

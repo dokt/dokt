@@ -1,13 +1,19 @@
 package app.dokt.generator.code.psi
 
 import app.dokt.infra.Logger
-import org.jetbrains.kotlin.cli.jvm.compiler.*
+import org.jetbrains.kotlin.cli.jvm.compiler.EnvironmentConfigFiles
+import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment
 import org.jetbrains.kotlin.com.intellij.openapi.util.Disposer
-import org.jetbrains.kotlin.com.intellij.psi.*
+import org.jetbrains.kotlin.com.intellij.psi.PsiDocumentManager
+import org.jetbrains.kotlin.com.intellij.psi.PsiFile
+import org.jetbrains.kotlin.com.intellij.psi.PsiFileFactory
+import org.jetbrains.kotlin.com.intellij.psi.PsiManager
 import org.jetbrains.kotlin.com.intellij.testFramework.LightVirtualFile
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.idea.KotlinFileType
-import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.psi.KtFile
+import org.jetbrains.kotlin.psi.KtPsiFactory
+import java.io.File
 
 /** PSI environment */
 open class Environment(
@@ -30,13 +36,15 @@ open class Environment(
 
     private fun context(file: PsiFile?) = Context(this, file as KtFile)
 
-    /*fun parse(filename: String, text: String) =
-        context(manager.findFile(LightVirtualFile(filename, KotlinFileType.INSTANCE, text)))*/
+    fun create(filename: String, text: String) =
+        context(fileFactory.createFileFromText(filename, KotlinFileType.INSTANCE, text))
+
+    fun parse(filename: String, text: String) =
+        manager.findFile(LightVirtualFile(filename, KotlinFileType.INSTANCE, text)) as KtFile
 
     fun parseKt(text: String) = create("tmp.kt", text)
 
     fun parseKts(text: String) = create("tmp.kts", text)
 
-    fun create(filename: String, text: String) =
-        context(fileFactory.createFileFromText(filename, KotlinFileType.INSTANCE, text))
+    fun read(file: File) = parse(file.name, file.readText())
 }

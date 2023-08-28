@@ -1,10 +1,19 @@
 package app.dokt.generator.application
 
-import app.dokt.app.*
-import app.dokt.generator.code.*
-import app.dokt.generator.domain.*
-import com.squareup.kotlinpoet.*
+import app.dokt.app.AggregateRepository
+import app.dokt.app.EventStoreRepository
+import app.dokt.generator.code.GeneratedSources
+import app.dokt.generator.code.KotlinPoetFile
+import app.dokt.generator.code.overrideBuilder
+import app.dokt.generator.code.write
+import app.dokt.generator.domain.KotlinPoetBoundedContextCoder
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.asTypeName
 
 class KotlinPoetApplicationCoder(application: Application)
     : ApplicationCoder<FileSpec, TypeSpec>({}, application) {

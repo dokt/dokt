@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package app.dokt.generator
 
 import app.dokt.common.Version

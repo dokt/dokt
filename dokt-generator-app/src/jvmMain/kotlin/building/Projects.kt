@@ -1,9 +1,9 @@
 package app.dokt.generator.building
 
-import app.dokt.common.*
-import app.dokt.generator.building.Layer.*
+import app.dokt.common.filterEntries
 import java.nio.file.Path
-import kotlin.io.path.*
+import kotlin.io.path.isDirectory
+import kotlin.io.path.name
 
 private const val INVALID_PLATFORM = "Invalid platform!"
 
@@ -29,7 +29,8 @@ sealed class GradleProject(
         "com.sun.jna.platform" to "net.java.dev.jna:jna-platform",
         "io.mockk" to "Testing.mockK",
         "kotlin.time" to "KotlinX.datetime", // TODO Move from core to app
-        "kotlinx.serialization" to "KotlinX.serialization.core", // TODO api(KotlinX.serialization.core) in dokt-domain doesn't work.
+        // TODO api(KotlinX.serialization.core) in dokt-domain doesn't work.
+        "kotlinx.serialization" to "KotlinX.serialization.core",
         "org.jfree.chart" to "org.jfree:jfreechart"
     )
 
@@ -49,15 +50,15 @@ sealed class GradleProject(
             val platform = Platform.parse(layer, names)
             return if (platform.isMulti) MultiProject(parent, dir, name, layer, platform).apply {
                 if (hasSources) when (layer) {
-                    APPLICATION -> applications.add(this)
-                    DOMAIN -> domains.add(this)
-                    INFRASTRUCTURE -> infrastructures.add(this)
+                    Layer.APPLICATION -> applications.add(this)
+                    Layer.DOMAIN -> domains.add(this)
+                    Layer.INFRASTRUCTURE -> infrastructures.add(this)
                     else -> error(INVALID_PLATFORM)
                 }
             } else SingleProject(parent, dir, name, layer, platform).apply {
                 if (hasSources) when (layer) {
-                    INFRASTRUCTURE -> infrastructures.add(this)
-                    INTERFACE -> interfaces.add(this)
+                    Layer.INFRASTRUCTURE -> infrastructures.add(this)
+                    Layer.INTERFACE -> interfaces.add(this)
                     else -> error(INVALID_PLATFORM)
                 }
             }

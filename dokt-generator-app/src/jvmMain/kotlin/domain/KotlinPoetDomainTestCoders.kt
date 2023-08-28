@@ -1,12 +1,44 @@
+@file:Suppress("SpellCheckingInspection")
+
 package app.dokt.generator.domain
 
-import app.dokt.app.*
+import app.dokt.app.Aggregate
+import app.dokt.app.AggregateApplicationService
+import app.dokt.app.To
 import app.dokt.common.alsoIf
 import app.dokt.domain.event.RootEvent
-import app.dokt.domain.test.*
-import app.dokt.generator.code.*
-import com.squareup.kotlinpoet.*
+import app.dokt.domain.test.Actor
+import app.dokt.domain.test.Arranger
+import app.dokt.domain.test.TestAggregate
+import app.dokt.generator.code.GeneratedSources
+import app.dokt.generator.code.KotlinPoetFile
+import app.dokt.generator.code.abstractClassBuilder
+import app.dokt.generator.code.addSuperinterfaces
+import app.dokt.generator.code.addTypes
+import app.dokt.generator.code.asClassName
+import app.dokt.generator.code.asConstructor
+import app.dokt.generator.code.beginReturn
+import app.dokt.generator.code.constructorBuilder
+import app.dokt.generator.code.get
+import app.dokt.generator.code.initialized
+import app.dokt.generator.code.of
+import app.dokt.generator.code.overrideBuilder
+import app.dokt.generator.code.primaryConstructor
+import app.dokt.generator.code.privateBuilder
+import app.dokt.generator.code.returns
+import app.dokt.generator.code.sealedInterfaceBuilder
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.LambdaTypeName
+import com.squareup.kotlinpoet.MUTABLE_LIST
+import com.squareup.kotlinpoet.MemberName
+import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.asTypeName
 import kotlinx.serialization.KSerializer
 
 class KotlinPoetTestAggregateCoder(

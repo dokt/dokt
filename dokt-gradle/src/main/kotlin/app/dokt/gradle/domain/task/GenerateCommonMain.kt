@@ -1,7 +1,8 @@
 package app.dokt.gradle.domain.task
 
 import app.dokt.generator.application.KotlinPoetApplicationCoder
-import app.dokt.generator.building.*
+import app.dokt.generator.building.GradleProject
+import app.dokt.generator.building.MultiProject
 import app.dokt.gradle.GradleApplication
 import app.dokt.gradle.common.task.Generate
 

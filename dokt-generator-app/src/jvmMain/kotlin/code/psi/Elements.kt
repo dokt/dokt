@@ -1,7 +1,13 @@
 package app.dokt.generator.code.psi
 
-import org.jetbrains.kotlin.com.intellij.psi.*
-import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.com.intellij.psi.PsiElement
+import org.jetbrains.kotlin.com.intellij.psi.PsiRecursiveElementVisitor
+import org.jetbrains.kotlin.com.intellij.psi.PsiRecursiveElementWalkingVisitor
+import org.jetbrains.kotlin.psi.KtBinaryExpression
+import org.jetbrains.kotlin.psi.KtBlockExpression
+import org.jetbrains.kotlin.psi.KtCallExpression
+import org.jetbrains.kotlin.psi.KtElement
+import org.jetbrains.kotlin.psi.KtLiteralStringTemplateEntry
 import kotlin.reflect.KClass
 
 open class ElementException(val element: KtElement, message: String, cause: Throwable? = null) :

@@ -1,8 +1,10 @@
 @file:Suppress("unused")
 
-import org.gradle.api.*
+import org.gradle.api.Project
+import org.gradle.api.Task
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.plugin.*
+import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsSetupTask
 import java.nio.file.Path
 

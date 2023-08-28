@@ -4,7 +4,11 @@ import app.dokt.common.pluralize
 import app.dokt.generator.building.Dir
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.nio.file.Path
-import kotlin.io.path.*
+import kotlin.io.path.Path
+import kotlin.io.path.extension
+import kotlin.io.path.forEachDirectoryEntry
+import kotlin.io.path.isDirectory
+import kotlin.io.path.relativeTo
 
 class KotlinSources(path: Path) : Dir(path, "kotlin"), Sources {
     override val basePath = path.toString()
@@ -34,17 +38,13 @@ class KotlinSources(path: Path) : Dir(path, "kotlin"), Sources {
         forEachDirectoryEntry {
             if (it.isDirectory()) it.scan()
             else if (it.extension == "kt") {
-                try {
-                    log.trace { "Parsing $it..." }
-                    val file = KotlinFile(it)
-                    files.add(file)
-                    val packageName = file.packageName
-                    val fileTypes = file.types
-                    log.debug { "Parsed ${"type".pluralize(fileTypes)} to '$packageName' package." }
-                    typesByPackages.getOrPut(packageName) { mutableListOf() }.addAll(fileTypes)
-                } catch (e: Exception) {
-                    log.error(e) { "Unable parse $it!" }
-                }
+                log.trace { "Parsing $it..." }
+                val file = KotlinFile(it)
+                files.add(file)
+                val packageName = file.packageName
+                val fileTypes = file.types
+                log.debug { "Parsed ${"type".pluralize(fileTypes)} to '$packageName' package." }
+                typesByPackages.getOrPut(packageName) { mutableListOf() }.addAll(fileTypes)
             } else {
                 log.warn { "Ignored $it." }
             }

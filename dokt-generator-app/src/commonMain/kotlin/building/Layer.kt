@@ -1,6 +1,7 @@
 package app.dokt.generator.building
 
-import app.dokt.common.*
+import app.dokt.common.capitalized
+import app.dokt.common.firstValueByKey
 
 /** Architecture layer */
 enum class Layer(
@@ -39,7 +40,7 @@ enum class Layer(
      */
     INTERFACE(false, "api", "if", "int", "itf", "ktor", "swing", "swt", "ui");
 
-    val en = "${name.capitalize} architecture layer"
+    val en = "${name.capitalized} architecture layer"
 
     val tags = tags.toSet()
 

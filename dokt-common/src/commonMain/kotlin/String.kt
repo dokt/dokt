@@ -43,7 +43,8 @@ fun MutableList<String>.addAfterContains(search: String, lineToAdd: String) = in
 
 val String.camelCaseToWords get() = splitCamelCase.joinToString(" ")
 
-val String.capitalize get() = lowercase().upperFirst
+/** Uppercase's first character and lowercase's rest. May mix with deprecated [kotlin.text.String.capitalize()]. */
+val String.capitalized get() = lowercase().upperFirst
 
 val String.first get() = first()
 

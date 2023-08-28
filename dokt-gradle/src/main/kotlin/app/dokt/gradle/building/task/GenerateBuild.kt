@@ -1,6 +1,7 @@
 package app.dokt.gradle.building.task
 
-import app.dokt.generator.building.*
+import app.dokt.generator.building.GradleBuildWriter
+import app.dokt.generator.building.GradleProject
 import app.dokt.gradle.common.task.LoggableTask
 import org.gradle.api.tasks.TaskAction
 

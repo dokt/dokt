@@ -1,7 +1,10 @@
 package app.dokt.generator.domain
 
-import app.dokt.common.*
-import app.dokt.generator.code.*
+import app.dokt.common.lowerFirst
+import app.dokt.common.upperFirst
+import app.dokt.generator.code.AbstractSourcesCoder
+import app.dokt.generator.code.GeneratedSources
+import app.dokt.generator.code.names
 
 /**
  * Generates support and test classes for given aggregate root to application layer.

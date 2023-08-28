@@ -1,8 +1,9 @@
 package app.dokt.generator.application
 
 import app.dokt.common.upperFirst
-import app.dokt.generator.code.*
-import app.dokt.generator.domain.*
+import app.dokt.generator.code.AbstractSourcesCoder
+import app.dokt.generator.code.GeneratedSources
+import app.dokt.generator.domain.BoundedContextCoder
 
 abstract class ApplicationCoder<F, T>(func: () -> Unit, application: Application): AbstractSourcesCoder<F, Application>(
     func,

@@ -1,10 +1,15 @@
+@file:Suppress("MagicNumber")
+
 package app.dokt.generator.documentation.md
 
-import app.dokt.generator.documentation.*
+import app.dokt.generator.documentation.Align
+import app.dokt.generator.documentation.Documentation
+import app.dokt.generator.documentation.Table
 
 /**
  * https://www.markdownguide.org/basic-syntax/
  * https://www.markdownguide.org/extended-syntax/
+ * // TODO Use existing library e.g.: https://github.com/kokorins/markdown-generator
  */
 class MarkDownDocumentation(private val out: Appendable) : Documentation {
     var level = 1

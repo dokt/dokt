@@ -1,10 +1,12 @@
 package app.dokt.gradle.core
 
-import org.gradle.api.*
+import org.gradle.api.NamedDomainObjectContainer
+import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.plugin.*
+import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import java.nio.file.Path
-import kotlin.io.path.*
+import kotlin.io.path.exists
 import kotlin.reflect.KClass
 
 abstract class DoktMultiPlugin(type: KClass<out DoktMultiPlugin>) :

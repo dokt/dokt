@@ -1,8 +1,9 @@
 package app.dokt.generator.building
 
-import app.dokt.generator.*
-import app.dokt.generator.code.*
-import com.squareup.kotlinpoet.*
+import app.dokt.generator.code.controlFlow
+import app.dokt.generator.vDokt
+import app.dokt.generator.vRefreshVersions
+import com.squareup.kotlinpoet.FileSpec
 
 /**
  * Gradle Kotlin settings script writer

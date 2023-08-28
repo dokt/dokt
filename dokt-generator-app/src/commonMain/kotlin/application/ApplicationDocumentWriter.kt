@@ -2,7 +2,11 @@ package app.dokt.generator.application
 
 import app.dokt.common.pluralize
 import app.dokt.generator.documentation.Documentation
-import app.dokt.generator.domain.*
+import app.dokt.generator.domain.AggregateEvent
+import app.dokt.generator.domain.BoundedContext
+import app.dokt.generator.domain.DomainException
+import app.dokt.generator.domain.DomainServiceInterface
+import app.dokt.generator.domain.ValueObject
 
 class ApplicationDocumentWriter(documentation: Documentation) : Documentation by documentation {
     fun documentApplication(application: Application) = with(application) {

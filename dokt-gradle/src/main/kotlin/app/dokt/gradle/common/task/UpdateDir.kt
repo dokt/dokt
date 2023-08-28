@@ -1,8 +1,13 @@
 package app.dokt.gradle.common.task
 
 import org.gradle.api.file.RegularFileProperty
-import org.gradle.api.tasks.*
-import org.gradle.work.*
+import org.gradle.api.tasks.CacheableTask
+import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
+import org.gradle.api.tasks.TaskAction
+import org.gradle.work.Incremental
+import org.gradle.work.InputChanges
 import java.io.File
 import kotlin.reflect.KClass
 

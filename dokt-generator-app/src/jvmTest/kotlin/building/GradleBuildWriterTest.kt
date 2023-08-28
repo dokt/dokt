@@ -1,6 +1,8 @@
 package app.dokt.generator.building
 
-import app.dokt.generator.code.*
+import app.dokt.generator.code.KotlinFile
+import app.dokt.generator.code.print
+import app.dokt.generator.code.println
 import app.dokt.generator.kotlinpoet.shouldCode
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.maps.shouldHaveSize

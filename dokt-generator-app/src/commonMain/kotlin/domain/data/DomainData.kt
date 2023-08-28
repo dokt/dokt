@@ -3,11 +3,19 @@
  */
 package app.dokt.generator.domain.data
 
-import app.dokt.common.*
-import app.dokt.generator.*
-import app.dokt.generator.code.*
+import app.dokt.common.lowerFirst
+import app.dokt.common.upperFirst
+import app.dokt.generator.code.Method
+import app.dokt.generator.code.TypeRef
+import app.dokt.generator.code.Variable
 import app.dokt.generator.code.data.MethodData
-import app.dokt.generator.domain.*
+import app.dokt.generator.domain.AggregateCommand
+import app.dokt.generator.domain.AggregateEvent
+import app.dokt.generator.domain.AggregateRoot
+import app.dokt.generator.domain.BoundedContext
+import app.dokt.generator.domain.DomainException
+import app.dokt.generator.domain.DomainServiceInterface
+import app.dokt.generator.domain.ValueObject
 import kotlinx.serialization.Serializable
 
 @Serializable

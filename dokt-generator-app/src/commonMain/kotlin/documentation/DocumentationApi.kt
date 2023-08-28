@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package app.dokt.generator.documentation
 
 enum class Align {

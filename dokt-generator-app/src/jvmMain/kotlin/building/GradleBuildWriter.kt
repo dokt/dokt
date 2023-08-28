@@ -1,7 +1,9 @@
 package app.dokt.generator.building
 
-import app.dokt.generator.code.*
-import com.squareup.kotlinpoet.*
+import app.dokt.generator.code.codeBlock
+import app.dokt.generator.code.controlFlow
+import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.FileSpec
 
 /**
  * Gradle Kotlin build script updater */
@@ -101,7 +103,7 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptGenerator(proje
                     Layer.APPLICATION -> implementation(Dokt.APPLICATION)
                     Layer.INFRASTRUCTURE -> implementation(Dokt.COMMON)
                     Layer.INTERFACE -> implementation(Dokt.INTERFACE) // TODO multiplatform interface?
-                    else -> throw IllegalStateException()
+                    else -> error("Invalid layer!")
                 }
             }
 
@@ -198,7 +200,8 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptGenerator(proje
         private val commonLibraries = mapOf(
             "com.benasher44.uuid" to "com.benasher44:uuid",
             "kotlin.time" to "KotlinX.datetime", // TODO Move from core to app
-            "kotlinx.serialization" to "KotlinX.serialization.core" // TODO api(KotlinX.serialization.core) in dokt-domain doesn't work.
+            // TODO api(KotlinX.serialization.core) in dokt-domain doesn't work.
+            "kotlinx.serialization" to "KotlinX.serialization.core"
         )
         private val commonTestLibraries = mapOf(
             "io.mockk" to "Testing.mockK"

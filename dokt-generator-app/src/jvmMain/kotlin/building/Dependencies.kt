@@ -24,4 +24,3 @@ enum class Target {
     JS,
     JVM
 }
-

@@ -2,7 +2,7 @@ package app.dokt.generator.code.psi
 
 import app.dokt.infra.Logger
 
-abstract class FileEditor(context: Context, func: () -> Unit) : Logger(func) {
+open class FileEditor(context: Context, func: () -> Unit) : Logger(func) {
     private val environment = context.environment
 
     val content by lazy {

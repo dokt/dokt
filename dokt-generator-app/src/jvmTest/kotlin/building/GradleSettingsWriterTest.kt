@@ -23,13 +23,13 @@ class GradleSettingsWriterTest : FunSpec({
               }
             }
             rootProject.name = "examples"
-            
+
             // Domain architecture layer projects
             include("erp-dom", "file-dom", "hash-dom", "hello-dom", "window-dom")
-            
+
             // Application architecture layer projects
             include("window-simulator-app")
-            
+
             // Interface architecture layer projects
             include("window-simulator-swing")
             """

@@ -1,24 +1,33 @@
 /** [Program Structure Interface (PSI)](https://plugins.jetbrains.com/docs/intellij/psi.html) */
 package app.dokt.generator.code
 
+import app.dokt.generator.code.psi.Psi
 import io.github.oshai.kotlinlogging.KotlinLogging
-import org.jetbrains.kotlin.cli.jvm.compiler.*
-import org.jetbrains.kotlin.com.intellij.openapi.util.Disposer
-import org.jetbrains.kotlin.com.intellij.psi.*
-import org.jetbrains.kotlin.com.intellij.psi.util.PsiTreeUtil
-import org.jetbrains.kotlin.com.intellij.testFramework.LightVirtualFile
-import org.jetbrains.kotlin.config.CompilerConfiguration
-import org.jetbrains.kotlin.idea.KotlinFileType
-import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.com.intellij.psi.PsiElement
+import org.jetbrains.kotlin.com.intellij.psi.PsiNamedElement
+import org.jetbrains.kotlin.psi.KtClass
+import org.jetbrains.kotlin.psi.KtClassOrObject
+import org.jetbrains.kotlin.psi.KtFile
+import org.jetbrains.kotlin.psi.KtNamedDeclaration
+import org.jetbrains.kotlin.psi.KtNamedFunction
+import org.jetbrains.kotlin.psi.KtNullableType
+import org.jetbrains.kotlin.psi.KtParameter
+import org.jetbrains.kotlin.psi.KtProperty
+import org.jetbrains.kotlin.psi.KtTypeElement
+import org.jetbrains.kotlin.psi.KtTypeReference
+import org.jetbrains.kotlin.psi.KtUserType
 import org.jetbrains.kotlin.psi.psiUtil.getChildrenOfType
-import java.io.*
+import java.io.File
+import java.io.PrintStream
 import java.nio.file.Path
 
 class KotlinClass(private val file: KotlinFile, element: KtClassOrObject)
     : PackagedElement<KtClassOrObject>(element), TypeDef {
 
     override val implements by lazy {
-        element.superTypeListEntries.map { KotlinType(file, it.typeReference!!) }
+        element.superTypeListEntries.map {
+            KotlinType(file, requireNotNull(it.typeReference) { "Super type must have type reference!" })
+        }
     }
 
     override val isData get() = element is KtClass && element.isData()
@@ -29,7 +38,7 @@ class KotlinClass(private val file: KotlinFile, element: KtClassOrObject)
 
     override val isValue get() = element is KtClass && element.isValue()
 
-    override val methods by lazy { element.body?.functions?.map { KotlinFunction(it, file) } ?: emptyList() }
+    override val methods by lazy { element.body?.functions?.map { KotlinFunction(it, file) }.orEmpty() }
 
     override val packageName get() = file.packageName
 
@@ -40,6 +49,8 @@ class KotlinClass(private val file: KotlinFile, element: KtClassOrObject)
         else TODO()
     }
 }
+
+private const val PACKAGE_PREFIX = "package "
 
 /**
  * [Parsing Kotlin code using Kotlin](https://jitinsharma.in/posts/parsing-kotlin-using-code-kotlin/)
@@ -67,15 +78,16 @@ class KotlinFile(val file: File, element: KtFile) : PackagedElement<KtFile>(elem
     override val path: String get() = file.path
 
     override val packageName by lazy {
-        (element.packageDirective?.qualifiedName ?: "").ifEmpty {
+        (element.packageDirective?.qualifiedName.orEmpty()).ifEmpty {
+            // TODO fix PSI unable to parse package!
             log.warn { "PSI unable to parse package! Reading file '$file' manually!" }
-            file.readLines().firstOrNull { it.startsWith("package ") }?.substring(8) ?: ""
+            file.readLines().firstOrNull { it.startsWith(PACKAGE_PREFIX) }?.substring(PACKAGE_PREFIX.length).orEmpty()
         }
     }
 
     override val types by lazy { element.getChildrenOfType<KtClassOrObject>().map { KotlinClass(this, it) } }
 
-    constructor(file: File) : this(file, read(file))
+    constructor(file: File) : this(file, Psi.read(file))
 
     constructor(path: Path) : this(path.toFile())
 
@@ -87,17 +99,6 @@ class KotlinFile(val file: File, element: KtFile) : PackagedElement<KtFile>(elem
     fun getPackageNameFor(name: String) = imports[name] ?: imports["*"] ?: "kotlin.$name"
 
     fun imports(packagePrefix: String) = imports.values.any { it.startsWith(packagePrefix) }
-
-    companion object {
-        private val manager = PsiManager.getInstance(KotlinCoreEnvironment.createForProduction(
-            Disposer.newDisposable(),
-            CompilerConfiguration(),
-            EnvironmentConfigFiles.METADATA_CONFIG_FILES
-        ).project)
-
-        private fun read(file: File) =
-            manager.findFile(LightVirtualFile(file.name, KotlinFileType.INSTANCE, file.readText())) as KtFile
-    }
 }
 
 class KotlinFunction(element: KtNamedFunction, private val file: KotlinFile)
@@ -122,8 +123,8 @@ class KotlinType(private val file: KotlinFile, private val type: KtTypeElement) 
      * If KtTypeReference is fully qualified and not imported it doesn't work.
      */
     override val name get() = when (type) {
-        is KtUserType -> type.referencedName!!
-        is KtNullableType -> type.text!!.removeSuffix("?")
+        is KtUserType -> requireNotNull(type.referencedName) { "User type should have referenced name!" }
+        is KtNullableType -> requireNotNull(type.text).removeSuffix("?")
         else -> TODO()
     }
 
@@ -141,9 +142,11 @@ class KotlinType(private val file: KotlinFile, private val type: KtTypeElement) 
 class KotlinVariable(private val file: KotlinFile, element: KtNamedDeclaration, typeReference: KtTypeReference)
     : PackagedElement<KtNamedDeclaration>(element), Variable {
 
-    constructor(file: KotlinFile, parameter: KtParameter) : this(file, parameter, parameter.typeReference!!)
+    constructor(file: KotlinFile, parameter: KtParameter) :
+        this(file, parameter, requireNotNull(parameter.typeReference) { "Parameter must have type reference!" })
 
-    constructor(file: KotlinFile, property: KtProperty) : this(file, property, property.typeReference!!)
+    constructor(file: KotlinFile, property: KtProperty) :
+        this(file, property, requireNotNull(property.typeReference) { "Property must have type reference!" })
 
     override val packageName get() = file.packageName
 
@@ -152,8 +155,8 @@ class KotlinVariable(private val file: KotlinFile, element: KtNamedDeclaration, 
     override fun toString() = "$name: $type"
 }
 
-abstract class PackagedElement<E : PsiNamedElement>(val element: E) : Packaged {
-    override val name get() = element.name ?: ""
+open class PackagedElement<E : PsiNamedElement>(val element: E) : Packaged {
+    override val name get() = element.name.orEmpty()
 
     override fun toString() = qualifiedName
 }

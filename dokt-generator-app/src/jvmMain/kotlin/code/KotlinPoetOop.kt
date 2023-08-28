@@ -4,8 +4,19 @@
 package app.dokt.generator.code
 
 import app.dokt.common.lowerFirst
-import com.squareup.kotlinpoet.*
-import java.io.*
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.LambdaTypeName
+import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeName
+import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.UNIT
+import java.io.Closeable
+import java.io.Writer
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.createDirectories
@@ -117,6 +128,8 @@ class KotlinPoetFile(val spec: FileSpec) : CodeFile {
     override val packageName = spec.packageName
 }
 
+private const val IMPORT_KOTLIN = "import kotlin."
+
 /**
  * Removes following from KotlinPoet output:
  * - Unnecessary Kotlin core imports
@@ -138,7 +151,7 @@ class KotlinPoetSanitizer(private val out: Writer) : Appendable, Closeable {
         if (c == '\n') {
             var line = builder.toString()
             // Ignore kotlin.* but allow e.g. kotlin.jvm.Inline
-            if (!(line.startsWith("import kotlin.") && line[14].isUpperCase())) {
+            if (!(line.startsWith(IMPORT_KOTLIN) && line[IMPORT_KOTLIN.length].isUpperCase())) {
                 line = line
                     .replace("public ", "")
                     .replace(": Unit", "")

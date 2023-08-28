@@ -1,9 +1,12 @@
+@file:Suppress("SpellCheckingInspection")
+
 plugins {
     `java-gradle-plugin`
     //`kotlin-dsl`
     `maven-publish`
     kotlin("jvm")
     id("com.gradle.plugin-publish")
+    id("io.gitlab.arturbosch.detekt")
 }
 
 description = "Domain-driven design using Kotlin"

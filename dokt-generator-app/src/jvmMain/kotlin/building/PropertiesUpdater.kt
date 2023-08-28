@@ -1,6 +1,9 @@
 package app.dokt.generator.building
 
-import app.dokt.common.*
+import app.dokt.common.PropertyReader
+import app.dokt.common.Props
+import app.dokt.common.lines
+import app.dokt.common.writeLines
 import java.io.File
 
 abstract class PropertiesUpdater(dir: File, func: () -> Unit) :

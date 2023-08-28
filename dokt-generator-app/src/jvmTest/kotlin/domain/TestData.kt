@@ -1,7 +1,12 @@
 package app.dokt.generator.domain
 
-import app.dokt.generator.code.*
-import app.dokt.generator.domain.data.*
+import app.dokt.generator.code.Var
+import app.dokt.generator.code.kotlinRef
+import app.dokt.generator.code.ref
+import app.dokt.generator.code.stringRef
+import app.dokt.generator.domain.data.AggregateCommandData
+import app.dokt.generator.domain.data.AggregateEventData
+import app.dokt.generator.domain.data.AggregateRootData
 import com.squareup.kotlinpoet.ClassName
 
 const val PLANE = "com.airline.plane"

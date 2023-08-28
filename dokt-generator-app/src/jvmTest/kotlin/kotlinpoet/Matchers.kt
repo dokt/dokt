@@ -1,7 +1,9 @@
 package app.dokt.generator.kotlinpoet
 
 import app.dokt.generator.code.KotlinPoetSanitizer
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldStartWith
 import java.io.StringWriter

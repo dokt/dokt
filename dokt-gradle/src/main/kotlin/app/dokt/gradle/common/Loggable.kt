@@ -47,8 +47,8 @@ interface Loggable : Log {
     override fun info(message: () -> Any?)
 
     /**
-     * Log debug (the lowest level) message to output stream if `-d` or `--debug` is switched. Don't
-     * [expose security sensitive information to the console](https://docs.gradle.org/current/userguide/logging.html#sec:debug_security)!
+     * Log debug (the lowest level) message to output stream if `-d` or `--debug` is switched. Don't [expose security
+     * sensitive information to the console](https://docs.gradle.org/current/userguide/logging.html#sec:debug_security)!
      */
     override fun debug(message: () -> Any?)
 

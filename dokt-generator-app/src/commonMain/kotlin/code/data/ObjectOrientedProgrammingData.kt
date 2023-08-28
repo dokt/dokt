@@ -3,7 +3,11 @@
  */
 package app.dokt.generator.code.data
 
-import app.dokt.generator.code.*
+import app.dokt.generator.code.CodeFile
+import app.dokt.generator.code.Method
+import app.dokt.generator.code.TypeDef
+import app.dokt.generator.code.TypeRef
+import app.dokt.generator.code.Variable
 import kotlinx.serialization.Serializable
 
 @Serializable

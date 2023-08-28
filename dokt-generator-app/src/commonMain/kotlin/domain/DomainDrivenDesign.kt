@@ -5,8 +5,11 @@ package app.dokt.generator.domain
 
 import app.dokt.common.camelCaseToWords
 import app.dokt.common.lowerFirst
-import app.dokt.generator.*
-import app.dokt.generator.code.*
+import app.dokt.generator.code.Method
+import app.dokt.generator.code.Ref
+import app.dokt.generator.code.TypeRef
+import app.dokt.generator.code.Var
+import app.dokt.generator.code.Variable
 
 val uuidRef = Ref("com.benasher44.uuid.Uuid")
 val defaultIdVar = Var("id", uuidRef)

@@ -1,8 +1,9 @@
 package app.dokt.generator.domain
 
 import app.dokt.common.pluralize
-import app.dokt.domain.*
-import app.dokt.generator.code.*
+import app.dokt.domain.Root
+import app.dokt.generator.code.Sources
+import app.dokt.generator.code.TypeDef
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlin.jvm.JvmStatic
 

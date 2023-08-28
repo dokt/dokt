@@ -1,8 +1,8 @@
 package app.dokt.gradle.core
 
-
 import org.jetbrains.kotlin.gradle.dsl.KotlinSingleTargetExtension
-import org.jetbrains.kotlin.gradle.plugin.*
+import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import kotlin.io.path.exists
 import kotlin.reflect.KClass
 

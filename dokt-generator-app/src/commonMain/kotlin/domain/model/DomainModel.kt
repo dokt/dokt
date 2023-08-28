@@ -3,10 +3,20 @@
  */
 package app.dokt.generator.domain.model
 
-import app.dokt.common.*
-import app.dokt.generator.*
-import app.dokt.generator.code.*
-import app.dokt.generator.domain.*
+import app.dokt.common.camelCaseToWords
+import app.dokt.common.upperFirst
+import app.dokt.generator.code.Method
+import app.dokt.generator.code.Packaged
+import app.dokt.generator.code.TypeDef
+import app.dokt.generator.domain.AggregateCommand
+import app.dokt.generator.domain.AggregateEvent
+import app.dokt.generator.domain.AggregateRoot
+import app.dokt.generator.domain.BoundedContext
+import app.dokt.generator.domain.BuildingBlock
+import app.dokt.generator.domain.DomainException
+import app.dokt.generator.domain.DomainObject
+import app.dokt.generator.domain.DomainServiceInterface
+import app.dokt.generator.domain.ValueObject
 
 class AggregateCommandModel(method: Method) : BuildingBlockModel<Method>(method), AggregateCommand {
     override val name by lazy { method.name.upperFirst }

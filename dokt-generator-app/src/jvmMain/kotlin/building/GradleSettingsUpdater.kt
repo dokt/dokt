@@ -1,7 +1,9 @@
 package app.dokt.generator.building
 
-import app.dokt.common.*
-import app.dokt.generator.*
+import app.dokt.common.addAfterContains
+import app.dokt.common.anyContains
+import app.dokt.generator.REFRESH_VERSIONS_PLUGIN_ID
+import app.dokt.generator.vRefreshVersions
 import java.io.File
 
 /**

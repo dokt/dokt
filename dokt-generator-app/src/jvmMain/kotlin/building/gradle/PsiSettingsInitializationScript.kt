@@ -1,7 +1,12 @@
 package app.dokt.generator.building.gradle
 
 import app.dokt.common.Version
-import app.dokt.generator.code.psi.*
+import app.dokt.generator.code.psi.Context
+import app.dokt.generator.code.psi.ScriptEditor
+import app.dokt.generator.code.psi.findCall
+import app.dokt.generator.code.psi.getBlock
+import app.dokt.generator.code.psi.findBinaries
+import app.dokt.generator.code.psi.hasCallValue
 
 class PsiSettingsInitializationScript(context: Context) : ScriptEditor(context, {}), SettingsInitialization {
     private val pluginsBlock by lazy {

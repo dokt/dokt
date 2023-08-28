@@ -3,7 +3,10 @@ package app.dokt.gradle.common.task
 import app.dokt.generator.building.FileUpdater
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.*
+import org.gradle.api.tasks.CacheableTask
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.TaskAction
 import kotlin.reflect.KClass
 
 @CacheableTask

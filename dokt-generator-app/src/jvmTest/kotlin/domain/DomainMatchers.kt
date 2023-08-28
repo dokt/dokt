@@ -1,7 +1,9 @@
 package app.dokt.generator.domain
 
-import app.dokt.generator.kotlinpoet.*
-import com.squareup.kotlinpoet.*
+import app.dokt.generator.kotlinpoet.shouldCode
+import app.dokt.generator.kotlinpoet.shouldCodeSerializable
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeSpec
 
 infix fun TypeSpec.shouldBeSerializableInPlane(code: String) = shouldCodeSerializable(code, PLANE)
 

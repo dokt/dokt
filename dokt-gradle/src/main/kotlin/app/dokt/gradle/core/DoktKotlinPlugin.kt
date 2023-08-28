@@ -1,7 +1,8 @@
 package app.dokt.gradle.core
 
 import app.dokt.gradle.common.ProjectPlugin
-import org.gradle.api.*
+import org.gradle.api.NamedDomainObjectContainer
+import org.gradle.api.Project
 import org.gradle.api.plugins.PluginContainer
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet

@@ -2,7 +2,10 @@ package app.dokt.generator.domain.model
 
 import app.dokt.common.pluralize
 import app.dokt.generator.code.TypeDef
-import app.dokt.generator.domain.*
+import app.dokt.generator.domain.BoundedContext
+import app.dokt.generator.domain.BoundedContextReader
+import app.dokt.generator.domain.DomainException
+import app.dokt.generator.domain.ValueObject
 
 object BoundedContextModelReader : BoundedContextReader() {
     private fun List<*>.detected(name: String) {

@@ -46,8 +46,8 @@ abstract class Bundle<B : Bundle<B>>(
 
     val root: B by lazy { parent?.root ?: this as B }
 
-    operator fun get(path: String) = children.find { it.name == path } ?: root.all.find { it.path == path }
-    ?: throw Exception("Project not found by path '$path'!")
+    operator fun get(path: String) = requireNotNull(children.find { it.name == path }
+        ?: root.all.find { it.path == path }) { "Project not found by path '$path'!" }
 
     fun printHierarchy(indent: Int = 0) {
         repeat(indent) { print('\t') }

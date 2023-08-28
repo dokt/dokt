@@ -1,7 +1,9 @@
 package app.dokt.gradle.domain
 
 import app.dokt.gradle.core.DoktMultiPlugin
-import app.dokt.gradle.domain.task.*
+import app.dokt.gradle.domain.task.GenerateCommonMain
+import app.dokt.gradle.domain.task.GenerateCommonTest
+import app.dokt.gradle.domain.task.GenerateDocumentation
 import org.gradle.api.tasks.TaskContainer
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 

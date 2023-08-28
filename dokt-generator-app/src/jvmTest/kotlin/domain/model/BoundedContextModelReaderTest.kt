@@ -1,6 +1,7 @@
 package app.dokt.generator.domain.model
 
-import app.dokt.generator.code.*
+import app.dokt.generator.code.KotlinSourcesTest
+import app.dokt.generator.code.Sources
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldHaveSize
 

@@ -1,6 +1,7 @@
 package app.dokt.gradle.building
 
 import app.dokt.generator.building.GradleProjectScanner
+import app.dokt.generator.building.ProjectType
 import app.dokt.gradle.common.LoggableBuildService
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.services.BuildServiceParameters
