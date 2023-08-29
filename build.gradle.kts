@@ -61,21 +61,6 @@ subprojects {
     }*/
 
     publishing {
-        repositories {
-            maven("https://pkgs.dev.azure.com/papinkivi/_packaging/common/maven/v1") {
-                name = "papinkivi"
-                authentication {
-                    create<BasicAuthentication>("basic")
-                }
-                credentials {
-                    username = "papinkivi"
-                    // read from user.home\.gradle\gradle.properties
-                    val papinkiviPersonalAccessToken: String? by project
-                    password = papinkiviPersonalAccessToken
-                }
-            }
-        }
-
         publications.withType<MavenPublication> {
             //artifact(javadocJar.get()) TODO
             pom {

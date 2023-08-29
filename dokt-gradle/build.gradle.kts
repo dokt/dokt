@@ -21,7 +21,7 @@ dependencies {
     implementation(kotlin("gradle-plugin", "_"))
 
     // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.plugin.serialization
-    implementation(kotlin("serialization", "_"))
+    implementation(kotlin("serialization", "_")) // TODO Is really needed
 
     implementation(project(":dokt-generator-app"))
 }
