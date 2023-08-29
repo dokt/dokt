@@ -15,6 +15,10 @@ class PsiSettingsInitializationScript(context: Context) : ScriptEditor(context, 
 
     private val pluginBinaries by lazy { pluginsBlock.findBinaries() }
 
+    override fun configureDependencyResolutions(useMavenLocal: Boolean) {
+        TODO("Not yet implemented")
+    }
+
     override fun applyPlugin(id: String, version: Version) {
         val binary = pluginBinaries.find { it.hasCallValue(id) }
         if (binary != null) {

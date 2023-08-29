@@ -15,6 +15,7 @@ import app.dokt.gradle.iface.DoktSwtPlugin
 import app.dokt.gradle.infra.DoktJsInfrastructurePlugin
 import app.dokt.gradle.infra.DoktJvmInfrastructurePlugin
 import app.dokt.gradle.infra.DoktMultiInfrastructurePlugin
+import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.tasks.TaskContainer
@@ -25,6 +26,7 @@ import java.io.File
 val Project.buildDirAsFile get(): File = layout.buildDirectory.asFile.get()
 val Project.commonMainDir get() = buildDirAsFile.resolve(KotlinSourceSet.COMMON_MAIN_SOURCE_SET_NAME)
 val Project.commonTestDir get() = buildDirAsFile.resolve(KotlinSourceSet.COMMON_TEST_SOURCE_SET_NAME)
+inline fun <reified T : Plugin<Project>> Project.applyPlugin() = pluginManager.apply(T::class.java)
 
 inline fun <reified T : Task> TaskContainer.register(): TaskProvider<T> = T::class.run {
     register(simpleName!!.lowerFirst, java)

@@ -70,4 +70,7 @@ val String.upperFirst get() = replaceFirstChar { it.uppercaseChar() }
 @OptIn(ExperimentalStdlibApi::class)
 val String.unicode get() = Char(hexToInt())
 
+/** Returns itself if the expression is `true` or empty string otherwise. */
+fun String.addIf(expression: Boolean) = if (expression) this else ""
+
 fun <R> String.tokenized(apply: List<String>.() -> R) = apply(tokens)

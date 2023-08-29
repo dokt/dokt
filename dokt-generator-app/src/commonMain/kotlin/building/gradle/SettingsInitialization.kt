@@ -6,4 +6,6 @@ import app.dokt.common.Version
 @Repository
 interface SettingsInitialization {
     fun applyPlugin(id: String, version: Version)
+
+    fun configureDependencyResolutions(useMavenLocal: Boolean = false)
 }

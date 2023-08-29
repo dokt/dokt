@@ -7,6 +7,8 @@ import kotlin.reflect.KClass
 abstract class SettingsPlugin(private val type: KClass<out SettingsPlugin>) : LoggablePlugin<Settings>(type) {
     protected abstract val minimum: GradleVersion
 
+    protected val settings get() = pluginTarget
+
     final override fun Settings.validate() {
         val current = GradleVersion.current()
         require(current >= minimum) {
