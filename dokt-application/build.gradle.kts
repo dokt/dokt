@@ -7,21 +7,19 @@ plugins {
     signing
 }
 
-group = "app.dokt"
-version = "0.2.11-SNAPSHOT"
-description = "A Dokt application library to be used in application layer and its infrastructure implementations."
-
-repositories {
-    mavenCentral()
-}
+setDoktDefaults("0.2.11-SNAPSHOT",
+    "Dokt application library to be used in application layer and its infrastructure implementations.")
 
 kotlin {
-    jvmUsingJUnitPlatform()
+    configureJvmWithTests()
 
     sourceSets {
         commonMainDependencies {
             api(project(":dokt-domain"))
             api(project(":dokt-infrastructure"))
+            // TODO On Events.kt: "Cannot access class 'kotlin.coroutines.CoroutineContext'.
+            // TODO Check your module classpath for missing or conflicting dependencies"
+            // TODO api(KotlinX.coroutines.core)
         }
 
         commonTestDependencies {
@@ -30,6 +28,10 @@ kotlin {
             runtimeOnly("ch.qos.logback:logback-classic:_")
         }
     }
+}
+
+detekt {
+    configureDetekt(config)
 }
 
 publishing(createDoktPublication("Dokt application layer API"))

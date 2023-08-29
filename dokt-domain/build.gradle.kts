@@ -1,27 +1,30 @@
 @file:Suppress("SpellCheckingInspection")
 
 plugins {
-    `maven-publish`
-    signing
     kotlin("multiplatform")
     kotlin("plugin.serialization")
     id("io.gitlab.arturbosch.detekt")
+    `maven-publish`
+    signing
 }
 
-description = "Dokt Domain API for defining domain layer and its infrastructure."
-
-repositories {
-    mavenCentral()
-}
+setDoktDefaults("0.2.11-SNAPSHOT",
+    "Dokt domain logic API to be used in domain layer and its infrastructure implementations.")
 
 kotlin {
-    jvm()
+    configureJvm()
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(project(":dokt-common"))
-            }
+        commonMainDependencies {
+            api(project(":dokt-common"))
         }
     }
 }
+
+detekt {
+    configureDetekt(config)
+}
+
+publishing(createDoktPublication("Dokt domain API"))
+
+signing(configureDoktSigning(publishing))

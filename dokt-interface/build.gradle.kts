@@ -1,47 +1,33 @@
 @file:Suppress("SpellCheckingInspection")
 
 plugins {
-    `maven-publish`
-    signing
     kotlin("multiplatform")
     id("io.gitlab.arturbosch.detekt")
+    `maven-publish`
+    signing
 }
 
-description = "Dokt User Interface API for defining presentation layer infrastructure."
-
-repositories {
-    mavenCentral()
-}
+setDoktDefaults("0.2.11-SNAPSHOT", "Dokt interface API to be used in presentation layer.")
 
 kotlin {
-    jvm {
-        testRuns["test"].executionTask.configure {
-            useJUnitPlatform()
-        }
-    }
+    configureJvmWithTests()
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(project(":dokt-application"))
-            }
+        commonMainDependencies {
+            api(project(":dokt-application"))
         }
 
-        val jvmMain by getting {
-            dependencies {
-                // Exclude these if not creating Swing app.
-                api("com.github.jiconfont:jiconfont-google_material_design_icons:_")
-                api("com.github.jiconfont:jiconfont-font_awesome:_")
-                //api(KotlinX.coroutines.swing) TODO ?
-                implementation("com.github.jiconfont:jiconfont-swing:_")
-            }
-        }
-
-        val jvmTest by getting {
-            dependencies {
-                implementation(Testing.kotest.runner.junit5)
-                runtimeOnly("ch.qos.logback:logback-classic:_")
-            }
+        jvmTestDependencies {
+            implementation(Testing.kotest.runner.junit5)
+            runtimeOnly("ch.qos.logback:logback-classic:_")
         }
     }
 }
+
+detekt {
+    configureDetekt(config)
+}
+
+publishing(createDoktPublication("Dokt interface API"))
+
+signing(configureDoktSigning(publishing))

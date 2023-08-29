@@ -6,12 +6,11 @@ import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.plugins.signing.SigningExtension
 
-fun Project.createDoktPublication(artifactName: String) = Action<PublishingExtension> {
-    //publications.withType<MavenPublication> {
-    publications.create<MavenPublication>("maven") {
+fun Project.createDoktPublication(displayName: String) = Action<PublishingExtension> {
+    publications.withType<MavenPublication> {
         //artifact(javadocJar.get()) TODO This is needed?
         pom {
-            name.set(artifactName)
+            name.set(displayName)
             description.set(project.description)
             url.set("https://dokt.app/")
             licenses {

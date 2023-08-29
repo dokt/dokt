@@ -1,33 +1,31 @@
 @file:Suppress("SpellCheckingInspection")
 
 plugins {
-    `maven-publish`
-    signing
     kotlin("multiplatform")
     id("io.gitlab.arturbosch.detekt")
+    `maven-publish`
+    signing
 }
 
-description = "Common (logging free) test utilities"
-
-repositories {
-    mavenCentral()
-}
+setDoktDefaults("0.2.11-SNAPSHOT", "Common logging free test utilities.")
 
 kotlin {
-    jvm {
-        testRuns["test"].executionTask.configure {
-            useJUnitPlatform()
-        }
-    }
+    configureJvm()
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(KotlinX.serialization.json)
-                api(Testing.kotest.assertions.core)
-                api(Testing.kotest.framework.api)
-                api(Testing.mockK)
-            }
+        commonMainDependencies {
+            api(KotlinX.serialization.json)
+            api(Testing.kotest.assertions.core)
+            api(Testing.kotest.framework.api)
+            api(Testing.mockK)
         }
     }
 }
+
+detekt {
+    configureDetekt(config)
+}
+
+publishing(createDoktPublication("Common test utils"))
+
+signing(configureDoktSigning(publishing))

@@ -17,4 +17,5 @@ include(
     "dokt-generator-app",
     "dokt-gradle",
     "dokt-ktor-server",
+    "dokt-swing"
 )

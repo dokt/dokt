@@ -2,35 +2,45 @@
 
 plugins {
     `java-gradle-plugin`
-    //`kotlin-dsl`
-    `maven-publish`
     kotlin("jvm")
-    id("com.gradle.plugin-publish")
+    //`kotlin-dsl` TODO Remove if not used
     id("io.gitlab.arturbosch.detekt")
+    `maven-publish`
+    id("com.gradle.plugin-publish")
 }
 
-description = "Domain-driven design using Kotlin"
+setDoktDefaults("0.2.11-SNAPSHOT", "Domain-driven design using Kotlin")
 
 repositories {
     gradlePluginPortal()
-    mavenCentral()
 }
 
 dependencies {
     // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.multiplatform
-    implementation(kotlin("gradle-plugin", "_"))
+    implementation(kotlin("gradle-plugin"))
 
     // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.plugin.serialization
-    implementation(kotlin("serialization", "_")) // TODO Is really needed
+    //implementation(kotlin("serialization")) // TODO Is really needed
 
     implementation(project(":dokt-generator-app"))
 }
 
 java {
     withSourcesJar()
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = javaCompatibility
+    targetCompatibility = javaCompatibility
 }
+
+kotlin {
+    configureKotlin()
+}
+
+detekt {
+    configureDetekt(config)
+}
+
+val pluginName = "Dokt plugin"
+publishing(createDoktPublication(pluginName))
 
 gradlePlugin {
     website = "https://dokt.app/"
@@ -39,7 +49,7 @@ gradlePlugin {
     plugins {
         create("dokt") {
             id = "app.dokt"
-            displayName = "Dokt plugin"
+            displayName = pluginName
             description = project.description
             implementationClass = "app.dokt.gradle.building.DoktSettingsPlugin"
         }

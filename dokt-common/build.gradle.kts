@@ -1,44 +1,40 @@
 @file:Suppress("SpellCheckingInspection")
 
 plugins {
-    `maven-publish`
-    signing
     kotlin("multiplatform")
     kotlin("plugin.serialization")
     id("io.gitlab.arturbosch.detekt")
+    `maven-publish`
+    signing
 }
 
-description = "Common (logging free) language utilities"
-
-repositories {
-    mavenCentral()
-}
+setDoktDefaults("0.2.11-SNAPSHOT", "Dokt common logging free language utilities.")
 
 kotlin {
-    jvm {
-        testRuns["test"].executionTask.configure {
-            useJUnitPlatform()
-        }
-    }
+    configureJvmWithTests()
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api("com.benasher44:uuid:_")
-                api(KotlinX.datetime)
-                api(KotlinX.serialization.core)
-            }
+        commonMainDependencies {
+            api("com.benasher44:uuid:_")
+            api(KotlinX.datetime)
+            api(KotlinX.serialization.core)
         }
-        val commonTest by getting {
-            dependencies {
-                implementation(project(":dokt-test"))
-                implementation(Testing.kotest.runner.junit5)
-            }
+
+        commonTestDependencies {
+            implementation(project(":dokt-test"))
+            implementation(Testing.kotest.runner.junit5)
         }
-        val jvmMain by getting {
-            dependencies {
-                api("org.apache.commons:commons-lang3:_")
-            }
+
+        jvmMainDependencies {
+            api("org.apache.commons:commons-lang3:_")
         }
     }
 }
+
+detekt {
+    configureDetekt(config)
+}
+
+publishing(createDoktPublication("Dokt common utils"))
+
+signing(configureDoktSigning(publishing))

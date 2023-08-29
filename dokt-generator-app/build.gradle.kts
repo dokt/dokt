@@ -1,50 +1,44 @@
 @file:Suppress("SpellCheckingInspection")
 
 plugins {
-    `maven-publish`
-    signing
     kotlin("multiplatform")
     id("io.gitlab.arturbosch.detekt")
+    `maven-publish`
+    signing
 }
 
-description = "Dokt code and documentation generator."
-
-repositories {
-    mavenCentral()
-}
+setDoktDefaults("0.2.11-SNAPSHOT", "Dokt code and documentation generator application.")
 
 kotlin {
-    jvm {
-        testRuns["test"].executionTask.configure {
-            useJUnitPlatform()
-        }
-    }
+    configureJvmWithTests()
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(project(":dokt-application"))
-                implementation(project(":dokt-domain-test"))
-                implementation("io.github.oshai:kotlin-logging:_")
-            }
+        commonMainDependencies {
+            api(project(":dokt-application"))
+            implementation(project(":dokt-domain-test"))
+            implementation("io.github.oshai:kotlin-logging:_")
         }
 
-        val commonTest by getting {
-            dependencies {
-                api(Testing.kotest.runner.junit5)
-                implementation("ch.qos.logback:logback-classic:_")
-            }
+        commonTestDependencies {
+            api(Testing.kotest.runner.junit5)
+            implementation("ch.qos.logback:logback-classic:_")
         }
 
-        val jvmMain by getting {
-            dependencies {
-                implementation(Square.kotlinPoet)
-                // Using `compiler-embeddable` because the base `compiler` is missing
-                // `org.jetbrains.kotlin.com.intellij` packages.
-                // See: https://discuss.kotlinlang.org/t/kotlin-compiler-embeddable-vs-kotlin-compiler/3196
-                // There is also `kotlin-scripting-compiler-embeddable` in dependencies
-                implementation(kotlin("compiler-embeddable"))
-            }
+        jvmMainDependencies {
+            implementation(Square.kotlinPoet)
+            // Using `compiler-embeddable` because the base `compiler` is missing
+            // `org.jetbrains.kotlin.com.intellij` packages.
+            // See: https://discuss.kotlinlang.org/t/kotlin-compiler-embeddable-vs-kotlin-compiler/3196
+            // There is also `kotlin-scripting-compiler-embeddable` in dependencies
+            implementation(kotlin("compiler-embeddable"))
         }
     }
 }
+
+detekt {
+    configureDetekt(config)
+}
+
+publishing(createDoktPublication("Dokt generator"))
+
+signing(configureDoktSigning(publishing))

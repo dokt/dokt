@@ -1,24 +1,15 @@
 @file:Suppress("SpellCheckingInspection")
 
 import io.gitlab.arturbosch.detekt.Detekt
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    `maven-publish`
-    signing
     id("io.github.gradle-nexus.publish-plugin")
     id("io.gitlab.arturbosch.detekt")
     kotlin("multiplatform") apply false
     kotlin("plugin.serialization") apply false
 }
 
-repositories { // detekt requires repositories
-    mavenCentral()
-}
-
-detekt {
-    config.setFrom(file("config/detekt/detekt.yml"))
-}
+mavenCentral() // Detekt requires
 
 tasks.register("detektAll") {
     group = "verification"
@@ -28,28 +19,6 @@ tasks.register("detektAll") {
 }
 
 subprojects {
-    group = "app.dokt"
-    version = "0.2.10"
-
-    apply<MavenPublishPlugin>()
-    apply<SigningPlugin>()
-
-    tasks.withType<KotlinCompile> {
-        kotlinOptions {
-            allWarningsAsErrors = true
-            jvmTarget = "11"
-        }
-    }
-
-    /* Works only for multiplatform
-    targets.all {
-        compilations.all {
-            kotlinOptions {
-                allWarningsAsErrors = true
-            }
-        }
-    }*/
-
     //val dokkaHtml by tasks.getting(DokkaTask::class)
 
     /*if (name != "dokt-gradle") { TODO
@@ -59,45 +28,6 @@ subprojects {
             //from(dokkaHtml.outputDirectory)
         }
     }*/
-
-    publishing {
-        publications.withType<MavenPublication> {
-            //artifact(javadocJar.get()) TODO
-            pom {
-                // TODO Handle root name
-                name.set(project.name.split('-')
-                    .joinToString(" ") { it[0].uppercaseChar() + it.substring(1) })
-                description.set(project.description)
-                url.set("https://dokt.app/")
-                licenses {
-                    license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                    }
-                }
-                developers {
-                    developer {
-                        id.set("papinkivi")
-                        name.set("Jukka Papinkivi")
-                        email.set("jukka@papinkivi.fi")
-                    }
-                }
-                scm {
-                    connection.set("scm:git:git://github.com/dokt/dokt.git")
-                    developerConnection.set("scm:git:ssh://github.com:dokt/dokt.git")
-                    url.set("https://github.com/dokt/dokt")
-                }
-            }
-        }
-    }
-
-    signing {
-        // read from user.home\.gradle\gradle.properties
-        val signingKey: String? by project
-        val signingPassword: String? by project
-        useInMemoryPgpKeys(signingKey, signingPassword)
-        sign(publishing.publications)
-    }
 }
 
 // https://issues.sonatype.org/browse/OSSRH-78373
