@@ -22,10 +22,6 @@ kotlin {
     }
 }
 
-detekt {
-    configureDetekt(config)
-}
-
 publishing(createDoktPublication("Common test utils"))
 
 signing(configureDoktSigning(publishing))
