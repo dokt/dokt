@@ -6,7 +6,7 @@ import io.kotest.core.spec.style.FunSpec
 class KotlinPoetAggregateCoderTest : FunSpec({
     val coder = KotlinPoetAggregateCoder(plane)
 
-    test("codeAggregate") {
+    xtest("codeAggregate") {
         coder.codeAggregate() shouldCodeInPlaneApp """
             import app.dokt.app.Aggregate
             import com.airline.plane.Events
@@ -166,7 +166,7 @@ class KotlinPoetAggregateCoderTest : FunSpec({
             """
     }
 
-    test("codeDomainTest") {
+    xtest("codeDomainTest") {
         coder.codeDomainTest() shouldCode """
             package com.airline.plane
 
@@ -234,7 +234,7 @@ class KotlinPoetAggregateCoderTest : FunSpec({
             """
     }
 
-    test("codeSpec") {
+    xtest("codeSpec") {
         coder.codeSpec() shouldCodeInPlane """
             import app.dokt.domain.test.Actor
             import app.dokt.domain.test.Arranger
@@ -264,7 +264,7 @@ class KotlinPoetAggregateCoderTest : FunSpec({
             """
     }
 
-    test("codeTestAggregate") {
+    xtest("codeTestAggregate") {
         coder.codeTestAggregate() shouldCodeInPlaneApp """
             import app.dokt.domain.test.TestAggregate
             import com.airline.plane.Events

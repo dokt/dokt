@@ -25,22 +25,54 @@ class SettingsInitializerTest : io.kotest.core.spec.style.FunSpec({
         }
     }
 
-    test("initialize(true)") {
+    test("initialize(null, emptyList(), true)") {
         relaxed<SettingsInitialization> {
-            sut { initialize(true) }
+            sut { initialize(null, emptyList(), true) }
             verifyAll {
+                pluginsUseMavenLocal()
                 applyPlugins()
-                configureDependencyResolutions()
             }
         }
     }
 
-    test("initialize(useCrossProjectDependencies = true, useMavenLocal = true)") {
+    test("initialize(null, emptyList(), false, true)") {
         relaxed<SettingsInitialization> {
-            sut { initialize(useCrossProjectDependencies = true, useMavenLocal = true) }
+            sut { initialize(null, emptyList(), local = false, crossProject = true) }
             verifyAll {
                 applyPlugins()
-                configureDependencyResolutions(true)
+                manageDependencyResolutions()
+            }
+        }
+    }
+
+    test("initialize(null, emptyList(), true, true)") {
+        relaxed<SettingsInitialization> {
+            sut { initialize(null, emptyList(), local = true, crossProject = true) }
+            verifyAll {
+                pluginsUseMavenLocal()
+                applyPlugins()
+                manageDependencyResolutions(true)
+            }
+        }
+    }
+
+    test("initialize(foo)") {
+        relaxed<SettingsInitialization> {
+            sut { initialize("foo") }
+            verifyAll {
+                applyPlugins()
+                root = "foo"
+            }
+        }
+    }
+
+    test("initialize(null, list)") {
+        relaxed<SettingsInitialization> {
+            val list = listOf("foo", "bar")
+            sut { initialize(null, list) }
+            verifyAll {
+                applyPlugins()
+                projects = list
             }
         }
     }

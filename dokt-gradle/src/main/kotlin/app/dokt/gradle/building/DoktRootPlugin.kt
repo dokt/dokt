@@ -1,6 +1,6 @@
 package app.dokt.gradle.building
 
-import app.dokt.gradle.building.task.GenerateSettings
+import app.dokt.gradle.building.task.ReplaceSettings
 import app.dokt.gradle.building.task.UpdateProperties
 import app.dokt.gradle.building.task.UpdateSettings
 import app.dokt.gradle.common.ProjectPlugin
@@ -17,7 +17,7 @@ class DoktRootPlugin : ProjectPlugin(DoktRootPlugin::class) {
 
     override fun TaskContainer.registerTasks() {
         //register<GenerateBuild>()       // TODO remove deprecated task
-        register<GenerateSettings>()    // TODO remove deprecated task
+        register<ReplaceSettings>()
         register<UpdateProperties>()
         register<UpdateSettings>()
     }

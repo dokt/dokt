@@ -1,5 +1,6 @@
 package app.dokt.generator.code
 
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import io.kotest.matchers.shouldBe
@@ -25,6 +26,17 @@ class KotlinPoetTest : io.kotest.core.spec.style.FunSpec({
             .build().toString() shouldBe """
                 public fun main() {
                     print("Hello")
+                }
+
+            """.trimIndent()
+    }
+    test("control flow") {
+        CodeBlock.builder().beginControlFlow("foo")
+            .addStatement("val bar = %S", "baz")
+            .endControlFlow()
+            .build().toString() shouldBe """
+                foo {
+                  val bar = "baz"
                 }
 
             """.trimIndent()

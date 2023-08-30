@@ -73,4 +73,12 @@ val String.unicode get() = Char(hexToInt())
 /** Returns itself if the expression is `true` or empty string otherwise. */
 fun String.addIf(expression: Boolean) = if (expression) this else ""
 
+fun String.remove(value: String) = replace(value, "")
+
+fun String.remove(vararg values: String): String {
+    var result = this
+    for (value in values) result = result.remove(value)
+    return result
+}
+
 fun <R> String.tokenized(apply: List<String>.() -> R) = apply(tokens)

@@ -11,22 +11,39 @@ import app.dokt.infra.Logger
 @ApplicationService
 object SettingsInitializer : Logger({}) {
     fun SettingsInitialization.initialize(
-        useCrossProjectDependencies: Boolean = false,
-        useMavenLocal: Boolean = false
+        root: String? = null,
+        projects: List<String> = emptyList(),
+        local: Boolean = false,
+        crossProject: Boolean = false,
     ) {
+        if (local) {
+            debug { "Manage plugins to use Maven local repository." }
+            pluginsUseMavenLocal()
+        }
+
         debug { "Applying Dokt settings plugin." }
         applyPlugin(DOKT_SETTINGS_PLUGIN_ID, vDokt)
 
         debug { "Applying refreshVersions settings plugin." }
         applyPlugin(REFRESH_VERSIONS_PLUGIN_ID, vRefreshVersions)
 
-        if (useCrossProjectDependencies) {
+        if (crossProject) {
             debug {
-                "Configuring Maven Central${" and local Maven".addIf(useMavenLocal)}} to cross-project dependencies."
+                "Configuring Maven Central${" and local Maven".addIf(local)}} to cross-project dependencies."
             }
-            configureDependencyResolutions(useMavenLocal)
+            manageDependencyResolutions(local)
         } else {
             debug { "Repositories are configured by project." }
+        }
+
+        root?.let {
+            debug { "Settings root project name to '$root'." }
+            this.root = it
+        }
+
+        if (projects.any()) {
+            debug { "Including projects: ${projects.joinToString()}." }
+            this.projects = projects
         }
     }
 }

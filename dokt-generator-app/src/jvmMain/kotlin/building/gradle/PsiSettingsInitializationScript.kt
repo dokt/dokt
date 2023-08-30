@@ -15,7 +15,15 @@ class PsiSettingsInitializationScript(context: Context) : ScriptEditor(context, 
 
     private val pluginBinaries by lazy { pluginsBlock.findBinaries() }
 
-    override fun configureDependencyResolutions(useMavenLocal: Boolean) {
+    override var root: String?
+        get() = TODO("Not yet implemented")
+        set(_) {}
+
+    override var projects: List<String>
+        get() = TODO("Not yet implemented")
+        set(_) {}
+
+    override fun pluginsUseMavenLocal() {
         TODO("Not yet implemented")
     }
 
@@ -40,5 +48,9 @@ class PsiSettingsInitializationScript(context: Context) : ScriptEditor(context, 
         } else {
             //pluginsBlock.addArgument(newPluginEntry)
         }*/
+    }
+
+    override fun manageDependencyResolutions(useMavenLocal: Boolean) {
+        TODO("Not yet implemented")
     }
 }

@@ -16,12 +16,12 @@ class GradleBuildWriter(val project: GradleProject): KotlinScriptGenerator(proje
             when (project) {
                 is MultiProject -> {
                     addCode(project.plugins())
-                    if (!GradleSettingsWriter.CENTRALIZED_REPOSITORY_DECLARATION) addCode(repositories())
+                    // TODO if (!KotlinPoetSettingsInitializationScript.CENTRALIZED_REPOSITORY_DECLARATION) addCode(repositories())
                     addCode(project.kotlin())
                 }
                 is SingleProject -> {
                     addCode(project.plugins())
-                    if (!GradleSettingsWriter.CENTRALIZED_REPOSITORY_DECLARATION) addCode(repositories())
+                    // TODO if (!KotlinPoetSettingsInitializationScript.CENTRALIZED_REPOSITORY_DECLARATION) addCode(repositories())
                     addCode(project.kotlin())
                 }
             }

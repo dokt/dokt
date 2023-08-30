@@ -8,7 +8,6 @@ import app.dokt.generator.vGradleMin
 import app.dokt.gradle.applyPlugin
 import app.dokt.gradle.common.SettingsPlugin
 import app.dokt.gradle.plugin
-import isRoot
 import org.gradle.api.initialization.Settings
 import org.gradle.util.GradleVersion
 
@@ -18,6 +17,17 @@ private typealias Projects = Map<String, ProjectType>
 class DoktSettingsPlugin : SettingsPlugin(DoktSettingsPlugin::class), SettingsInitialization {
     override val minimum: GradleVersion = GradleVersion.version(vGradleMin.toString())
 
+    private lateinit var buildService: DoktBuildService
+
+    override var root: String? = null
+
+    override var projects: List<String>
+        get() = buildService.projectTypesByPath.keys.toList()
+        set(value) {
+            lifecycle { "Including project paths: ${value.joinToString()}." }
+            settings.include(value)
+        }
+
     /** Initialize settings. */
     override fun Settings.applyPlugin() {
         lifecycle { "Initializing https://dokt.app" }
@@ -25,9 +35,9 @@ class DoktSettingsPlugin : SettingsPlugin(DoktSettingsPlugin::class), SettingsIn
         initialize(extensions.create("dokt", DoktSettingsExtension::class.java))
     }
 
-    fun Settings.initialize(extension: DoktSettingsExtension) {
+    private fun Settings.initialize(extension: DoktSettingsExtension) {
         debug { "Register build service and get it." }
-        val buildService = gradle.sharedServices.registerIfAbsent(DoktBuildService.NAME, DoktBuildService::class.java) {
+        buildService = gradle.sharedServices.registerIfAbsent(DoktBuildService.NAME, DoktBuildService::class.java) {
             it.parameters.apply {
                 root.set(rootDir)
                 settings.set(extension)
@@ -44,34 +54,33 @@ class DoktSettingsPlugin : SettingsPlugin(DoktSettingsPlugin::class), SettingsIn
                 debug { "Using only the settings file to initialize the settings." }
             } else {
                 debug { "Adding own initializations in addition to the settings file." }
+
                 initialize(
-                    useCrossProjectDependencies.get(),
-                    useMavenLocal.get()
+                    root,
+                    projects,
+                    useMavenLocal.get(),
+                    useCrossProjectDependencies.get()
                 )
+
+                applyPluginsFor(buildService.projectTypesByPath)
             }
         }
+    }
 
-        val projects = includeProjects(buildService)
-
-        applyPluginsFor(projects)
+    override fun pluginsUseMavenLocal() {
+        debug { "Plugin can't manage plugins." }
     }
 
     override fun applyPlugin(id: String, version: Version) {
-        warn { "Applying $id settings plugin, but unable specify its version $version!" }
-        settings.pluginManager.apply(id)
+        debug { "Ignoring $id settings plugin apply, because unable set its version $version." }
     }
 
     @Suppress("UnstableApiUsage")
-    override fun configureDependencyResolutions(useMavenLocal: Boolean) {
+    override fun manageDependencyResolutions(useMavenLocal: Boolean) {
         settings.dependencyResolutionManagement {
             with(it.repositories) {
-                debug { "Adding Maven Central to cross-project repositories." }
                 mavenCentral()
-
-                if (useMavenLocal) {
-                    debug { "Adding local Maven to cross-project repositories." }
-                    mavenLocal()
-                }
+                if (useMavenLocal) mavenLocal()
             }
         }
     }
@@ -79,31 +88,10 @@ class DoktSettingsPlugin : SettingsPlugin(DoktSettingsPlugin::class), SettingsIn
     private fun Settings.applyPluginsFor(projects: Projects) {
         debug { "Add apply plugin action before project evaluation." }
         gradle.beforeProject {
-            if (!it.isRoot) projects.getValue(it.path).plugin.run {
+            projects.getValue(it.path).plugin.run {
                 info { "Applying $simpleName" }
                 it.pluginManager.apply(java)
             }
         }
-    }
-
-    private fun Settings.configureDependencyResolutions() {
-        debug { "Add Maven Central and local to every project repositories." }
-        dependencyResolutionManagement {
-            with(it.repositories) {
-                mavenCentral()
-                mavenLocal()
-            }
-        }
-    }
-
-    private fun Settings.includeProjects(buildService: DoktBuildService) : Projects {
-        val projects = buildService.projectTypesByPath
-        info {
-            "Including ${projects.size} projects:\n${projects.map { (path, type) ->
-                "$path ($type)"
-            }.joinToString("\n")}"
-        }
-        include(projects.keys)
-        return projects
     }
 }

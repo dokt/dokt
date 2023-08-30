@@ -4,6 +4,7 @@
 package app.dokt.generator.code
 
 import app.dokt.common.lowerFirst
+import app.dokt.generator.code.kotlinpoet.Sanitizer
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
@@ -15,12 +16,12 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.UNIT
-import java.io.Closeable
-import java.io.Writer
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.createDirectories
 import kotlin.io.path.writer
+
+fun beginControlFlow(controlFlow: String, vararg args: Any?) = CodeBlock.builder().beginControlFlow(controlFlow, *args)
 
 fun codeBlock(code: CodeBlock.Builder.() -> Unit) = CodeBlock.builder().apply { code() }.build()
 
@@ -68,7 +69,7 @@ fun FileSpec.write(dir: Path, commonRoot: String = "") {
         if (it.isNotBlank()) path = path.resolve(it)
     }
     path.createDirectories()
-    KotlinPoetSanitizer(path.resolve("$name.kt").writer()).use { writeTo(it) }
+    Sanitizer(path.resolve("$name.kt").writer()).use { writeTo(it) }
 }
 
 fun FileSpec.write(sources: Sources) = write(Path(sources.basePath), sources.commonRootPackage)
@@ -126,43 +127,6 @@ class KotlinPoetFile(val spec: FileSpec) : CodeFile {
     override var path = ""
     override val name = spec.name
     override val packageName = spec.packageName
-}
-
-private const val IMPORT_KOTLIN = "import kotlin."
-
-/**
- * Removes following from KotlinPoet output:
- * - Unnecessary Kotlin core imports
- * - Redundant public modifiers
- * - Redundant Unit return types
- */
-class KotlinPoetSanitizer(private val out: Writer) : Appendable, Closeable {
-    private val builder = StringBuilder()
-
-    override fun append(csq: CharSequence): Appendable {
-        csq.forEach { append(it) }
-        return this
-    }
-
-    override fun append(csq: CharSequence, start: Int, end: Int) = append(csq.subSequence(start, end))
-
-    override fun append(c: Char): Appendable {
-        builder.append(c)
-        if (c == '\n') {
-            var line = builder.toString()
-            // Ignore kotlin.* but allow e.g. kotlin.jvm.Inline
-            if (!(line.startsWith(IMPORT_KOTLIN) && line[IMPORT_KOTLIN.length].isUpperCase())) {
-                line = line
-                    .replace("public ", "")
-                    .replace(": Unit", "")
-                out.write(line)
-            }
-            builder.clear()
-        }
-        return this
-    }
-
-    override fun close() = out.close()
 }
 
 fun LambdaTypeName.Companion.get(

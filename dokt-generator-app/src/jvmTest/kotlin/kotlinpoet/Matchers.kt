@@ -1,6 +1,6 @@
 package app.dokt.generator.kotlinpoet
 
-import app.dokt.generator.code.KotlinPoetSanitizer
+import app.dokt.generator.code.kotlinpoet.Sanitizer
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
@@ -18,7 +18,7 @@ fun FileSpec.shouldCode(
     filter: (String) -> String = { it }
 ) {
     var generated = StringWriter().also { writer ->
-        KotlinPoetSanitizer(writer).use { writeTo(it) }
+        Sanitizer(writer).use { writeTo(it) }
     }.toString().trimEnd()
     if (filterPackage) {
         val packageDeclaration = "package $packageName\n\n"
