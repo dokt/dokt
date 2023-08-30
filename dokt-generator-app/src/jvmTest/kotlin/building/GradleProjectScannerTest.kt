@@ -18,6 +18,7 @@ class GradleProjectScannerTest : FunSpec({
                 :dokt-infrastructure = INFRASTRUCTURE
                 :dokt-interface = INTERFACE
                 :dokt-ktor-server = KTOR_SERVER
+                :dokt-swing = SWING
                 :dokt-test = INFRASTRUCTURE
             """.trimIndent()
         }

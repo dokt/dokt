@@ -16,8 +16,8 @@ enum class ProjectType(val platform: Platform? = null, val layer: Layer? = null)
     SWT(Platform.JVM, Layer.INTERFACE);
 
     companion object {
-        private val ignoredNames = setOf("build", "gradle", "src")
-        private val ignoredNamePrefixes = setOf("doc", "x")
+        private val ignoredNames = setOf("config", "gradle", "src")
+        private val ignoredNamePrefixes = setOf("build", "doc", "x")
 
         fun ignore(name: String) = ignoredNames.contains(name) || ignoredNamePrefixes.any { name.startsWith(it) }
 

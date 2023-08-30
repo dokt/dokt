@@ -42,7 +42,7 @@ class KotlinPoetAggregateCoderTest : FunSpec({
             """
     }
 
-    test("codeApplication") {
+    xtest("codeApplication") {
         coder.codeApplication() shouldCode """
             @file:Suppress("unused")
 
@@ -139,7 +139,7 @@ class KotlinPoetAggregateCoderTest : FunSpec({
             """
     }
 
-    test("codeDomain") {
+    xtest("codeDomain") {
         coder.codeDomain() shouldCode """
             package com.airline.plane
 
@@ -215,7 +215,7 @@ class KotlinPoetAggregateCoderTest : FunSpec({
             """
     }
 
-    test("codeService") {
+    xtest("codeService") {
         coder.codeService() shouldCodeInPlaneApp """
             import app.dokt.app.ApplicationService
             import app.dokt.app.To

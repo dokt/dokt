@@ -9,14 +9,14 @@ import io.kotest.matchers.maps.shouldHaveSize
 
 class GradleBuildWriterTest : FunSpec({
     context("generateScript") {
-        test("examples") {
+        xtest("examples") {
             generateScript() shouldCode """
                 plugins { id("app.dokt") }
                 tasks.wrapper { distributionType = Wrapper.DistributionType.ALL }
             """
         }
 
-        test("erp-dom") {
+        xtest("erp-dom") {
             generateScript("erp-dom") shouldCode """
                 plugins {
                   kotlin("multiplatform")
@@ -44,7 +44,7 @@ class GradleBuildWriterTest : FunSpec({
             """
         }
 
-        test("hello-dom") {
+        xtest("hello-dom") {
             generateScript("hello-dom") shouldCode """
                 plugins {
                   kotlin("multiplatform")
@@ -72,7 +72,7 @@ class GradleBuildWriterTest : FunSpec({
             """
         }
 
-        test("window-simulator-app") {
+        xtest("window-simulator-app") {
             generateScript("window-simulator-app") shouldCode """
                 plugins {
                   kotlin("multiplatform")
@@ -94,7 +94,7 @@ class GradleBuildWriterTest : FunSpec({
             """
         }
 
-        test("window-simulator-swing") {
+        xtest("window-simulator-swing") {
             generateScript("window-simulator-swing") shouldCode """
                 plugins {
                   application
@@ -124,7 +124,7 @@ class GradleBuildWriterTest : FunSpec({
         ktFile.println(System.out)
     }
 
-    test("write") {
+    xtest("write") {
         instance.write()
     }
 

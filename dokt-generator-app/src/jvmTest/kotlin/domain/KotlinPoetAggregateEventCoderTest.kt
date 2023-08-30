@@ -11,8 +11,8 @@ class KotlinPoetAggregateEventCoderTest : FunSpec({
                 ) : PlaneEvent
                 """
     }
-    test("object") {
-        takenOff.code() shouldBeSerializableInPlane "object TakenOff : PlaneEvent"
+    test("data object") {
+        takenOff.code() shouldBeSerializableInPlane "data object TakenOff : PlaneEvent"
     }
     test("value class") {
         turned.code() shouldCodeInPlane """

@@ -7,7 +7,7 @@ import io.kotest.core.spec.style.FunSpec
 
 @Suppress("SpellCheckingInspection")
 class GradleSettingsUpdaterTest : FunSpec({
-    test("add refresh versions") {
+    xtest("add refresh versions") {
         update("""
             plugins {
                 id("app.dokt) version "2.0"

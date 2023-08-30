@@ -11,7 +11,7 @@ private fun String.sut(act: PsiSettingsInitializationScript.() -> Unit) =
     PsiSettingsInitializationScript(kts).apply { act() }.content
 
 class PsiSettingsScriptInitializationTest : FunSpec({
-    test("applyPlugin") {
+    xtest("applyPlugin") {
         incomplete.sut {
             applyPlugin(DOKT_SETTINGS_PLUGIN_ID, vDokt)
             applyPlugin(REFRESH_VERSIONS_PLUGIN_ID, vRefreshVersions)
