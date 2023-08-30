@@ -34,10 +34,6 @@ kotlin {
     configureKotlin()
 }
 
-detekt {
-    configureDetekt(config)
-}
-
 val pluginName = "Dokt plugin"
 publishing(createDoktPublication(pluginName))
 

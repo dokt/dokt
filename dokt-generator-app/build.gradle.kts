@@ -3,6 +3,7 @@
 plugins {
     kotlin("multiplatform")
     id("io.gitlab.arturbosch.detekt")
+    id("org.jetbrains.kotlinx.kover")
     `maven-publish`
     signing
 }
@@ -33,10 +34,6 @@ kotlin {
             implementation(kotlin("compiler-embeddable"))
         }
     }
-}
-
-detekt {
-    configureDetekt(config)
 }
 
 publishing(createDoktPublication("Dokt generator"))

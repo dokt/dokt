@@ -4,6 +4,7 @@ plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
     id("io.gitlab.arturbosch.detekt")
+    id("org.jetbrains.kotlinx.kover")
     `maven-publish`
     signing
 }
@@ -24,10 +25,6 @@ kotlin {
             implementation(libs.kotest.runner.junit5)
         }
     }
-}
-
-detekt {
-    configureDetekt(config)
 }
 
 publishing(createDoktPublication("Dokt domain test API"))

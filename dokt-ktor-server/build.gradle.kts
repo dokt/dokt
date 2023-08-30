@@ -31,10 +31,6 @@ kotlin {
     }
 }
 
-detekt {
-    configureDetekt(config)
-}
-
 publishing(createDoktPublication(description!!))
 
 signing(configureDoktSigning(publishing))

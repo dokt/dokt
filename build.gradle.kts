@@ -11,6 +11,10 @@ plugins {
 
 mavenCentral() // Detekt requires
 
+detekt {
+    config.setFrom("$rootDir/config/detekt/detekt.yml")
+}
+
 tasks.register("detektAll") {
     group = "verification"
     allprojects {

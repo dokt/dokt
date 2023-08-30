@@ -4,6 +4,7 @@ plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
     id("io.gitlab.arturbosch.detekt")
+    id("org.jetbrains.kotlinx.kover")
     `maven-publish`
     signing
 }
@@ -29,10 +30,6 @@ kotlin {
             api(libs.commons.lang3)
         }
     }
-}
-
-detekt {
-    configureDetekt(config)
 }
 
 publishing(createDoktPublication("Dokt common utils"))

@@ -3,6 +3,7 @@
 plugins {
     kotlin("multiplatform")
     id("io.gitlab.arturbosch.detekt")
+    id("org.jetbrains.kotlinx.kover")
     `maven-publish`
     signing
 }
@@ -28,10 +29,6 @@ kotlin {
             runtimeOnly(libs.logback.classic)
         }
     }
-}
-
-detekt {
-    configureDetekt(config)
 }
 
 publishing(createDoktPublication("Dokt application layer API"))

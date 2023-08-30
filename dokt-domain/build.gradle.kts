@@ -21,10 +21,6 @@ kotlin {
     }
 }
 
-detekt {
-    configureDetekt(config)
-}
-
 publishing(createDoktPublication("Dokt domain API"))
 
 signing(configureDoktSigning(publishing))
