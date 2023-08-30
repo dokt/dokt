@@ -4,9 +4,9 @@ plugins {
     `java-gradle-plugin`
     kotlin("jvm")
     //`kotlin-dsl` TODO Remove if not used
-    id("io.gitlab.arturbosch.detekt") version "1.23.1"
+    id("io.gitlab.arturbosch.detekt")
     `maven-publish`
-    id("com.gradle.plugin-publish") version "1.2.1"
+    id("com.gradle.plugin-publish")
 }
 
 setDoktDefaults("0.2.11-SNAPSHOT", "Domain-driven design using Kotlin")

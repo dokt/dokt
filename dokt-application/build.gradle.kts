@@ -2,7 +2,7 @@
 
 plugins {
     kotlin("multiplatform")
-    id("io.gitlab.arturbosch.detekt") version "1.23.1"
+    id("io.gitlab.arturbosch.detekt")
     `maven-publish`
     signing
 }
@@ -24,8 +24,8 @@ kotlin {
 
         commonTestDependencies {
             implementation(project(":dokt-test"))
-            implementation("io.kotest:kotest-runner-junit5:5.6.2")
-            runtimeOnly("ch.qos.logback:logback-classic:1.4.11")
+            implementation(libs.kotest.runner.junit5)
+            runtimeOnly(libs.logback.classic)
         }
     }
 }

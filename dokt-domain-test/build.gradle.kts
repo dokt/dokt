@@ -2,8 +2,8 @@
 
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.9.10"
-    id("io.gitlab.arturbosch.detekt") version "1.23.1"
+    kotlin("plugin.serialization")
+    id("io.gitlab.arturbosch.detekt")
     `maven-publish`
     signing
 }
@@ -21,7 +21,7 @@ kotlin {
         }
 
         commonTestDependencies {
-            implementation("io.kotest:kotest-runner-junit5:5.6.2")
+            implementation(libs.kotest.runner.junit5)
         }
     }
 }
