@@ -2,8 +2,8 @@
 
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization")
-    id("io.gitlab.arturbosch.detekt")
+    kotlin("plugin.serialization") version "1.9.10"
+    id("io.gitlab.arturbosch.detekt") version "1.23.1"
     `maven-publish`
     signing
 }

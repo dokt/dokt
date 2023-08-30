@@ -3,10 +3,10 @@
 import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
-    id("io.github.gradle-nexus.publish-plugin")
-    id("io.gitlab.arturbosch.detekt")
+    id("io.github.gradle-nexus.publish-plugin") version "2.0.0-rc-1"
+    id("io.gitlab.arturbosch.detekt") version "1.23.1"
     kotlin("multiplatform") apply false
-    kotlin("plugin.serialization") apply false
+    kotlin("plugin.serialization") version "1.9.10" apply false
 }
 
 mavenCentral() // Detekt requires

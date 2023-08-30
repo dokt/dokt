@@ -2,7 +2,7 @@
 
 plugins {
     kotlin("multiplatform")
-    id("io.gitlab.arturbosch.detekt")
+    id("io.gitlab.arturbosch.detekt") version "1.23.1"
     `maven-publish`
     signing
 }
@@ -15,18 +15,18 @@ kotlin {
     sourceSets {
         commonMainDependencies {
             api(project(":dokt-interface"))
-            api(Ktor.server)
-            api(Ktor.server.cachingHeaders)
-            api(Ktor.server.callLogging)
-            api(Ktor.server.contentNegotiation)
-            api(Ktor.server.htmlBuilder)
-            api(Ktor.server.hostCommon) // for shutdown URL
-            api(Ktor.server.resources)
-            api(Ktor.plugins.serialization.kotlinx.json)
+            api("io.ktor:ktor-server:2.3.3")
+            api("io.ktor:ktor-server-caching-headers:2.3.3")
+            api("io.ktor:ktor-server-call-logging:2.3.3")
+            api("io.ktor:ktor-server-content-negotiation:2.3.3")
+            api("io.ktor:ktor-server-host-common:2.3.3") // for shutdown URL
+            api("io.ktor:ktor-server-html-builder:2.3.3")
+            api("io.ktor:ktor-server-resources:2.3.3")
+            api("io.ktor:ktor-serialization-kotlinx-json:2.3.3")
         }
 
         jvmMainDependencies {
-            api(Ktor.server.netty)
+            api("io.ktor:ktor-server-netty:2.3.3")
         }
     }
 }
