@@ -2,7 +2,6 @@ package app.dokt.generator.code.editor
 
 import app.dokt.common.intersects
 import app.dokt.common.requireNull
-import app.dokt.common.single
 import app.dokt.infra.Logger
 
 /** Text editor which modifies only original text. */
@@ -14,28 +13,51 @@ class TextEditor(text: String) : Logger({}) {
     /** Deltas by start index. */
     private val deltas = mutableMapOf<Int, Int>()
 
+    private val length = text.length
+
     init {
         trace { "Original text is: $text" }
     }
 
     /**
-     * Adds text.
+     * Adds text to a specific index.
      * @param index Index where start adding the text.
      * @param addition The text to add.
      */
     fun add(index: Int, addition: String) {
         debug { "Adding '$addition' to $index index." }
-        require(index > -1) { "Add index $index for '$addition' can't be negative!" }
         if (addition.isEmpty()) {
-            warn { "Ignoring empty addition to $index index!" }
+            info { "Ignoring empty addition to $index index!" }
             return
+        }
+        if (index <= 0) {
+            if (index < 0) warn { "Add index $index should not be negative!" }
+            return prepend(addition)
+        }
+        if (index >= length) {
+            if (index > length) warn { "Add index $index should not be greater than text length $length!" }
+            return append(addition)
         }
         requireNull(changes.find { index in it }) {
             "Can't add '$addition' to index $index because $it range already changed!" }
         val position = index + countDelta(index)
-        info { "Added '$addition' to position $position." }
         buffer.insert(position, addition)
+        info { "Added '$addition' to position $position." }
         saveDelta(index, addition.length)
+    }
+
+    /**
+     * Appends text to the end.
+     * @param text The text to append.
+     */
+    fun append(text: String) {
+        debug { "Appending '$text' to the end index $length." }
+        if (text.isEmpty()) {
+            info { "Ignoring empty append!" }
+            return
+        }
+        buffer.append(text)
+        info { "Appended '$text' to the end index $length." }
     }
 
     private fun countDelta(index: Int): Int {
@@ -65,7 +87,7 @@ class TextEditor(text: String) : Logger({}) {
     fun delete(range: IntRange): String {
         debug { "Deleting $range range." }
         if (range.isEmpty()) {
-            warn { "Nothing to delete on $range empty range!" }
+            info { "Nothing to delete on $range empty range!" }
             return ""
         }
         requireNull(changes.find { it.intersects(range) }) {
@@ -79,24 +101,39 @@ class TextEditor(text: String) : Logger({}) {
     }
 
     /**
+     * Prepends text before the start.
+     * @param text The text to prepend.
+     */
+    fun prepend(text: String) {
+        debug { "Prepending '$text' before the start." }
+        if (text.isEmpty()) {
+            info { "Ignoring empty prepend!" }
+            return
+        }
+        buffer.insert(0, text)
+        info { "Prepended '$text' before the start." }
+        saveDelta(0, text.length)
+    }
+
+    /**
      * Replaces some range with text.
      * @param range The index range what to replace.
      * @param text The replacement text.
      * @return The replaced text.
      */
-    fun edit(range: IntRange, text: String) : String {
+    fun replace(range: IntRange, text: String) : String {
         debug { "Replacing $range range with '$text'." }
         if (range.isEmpty()) {
-            warn { "Use addition for $range empty range!" }
+            info { "Use addition for $range empty range!" }
             add(range.first, text)
             return ""
         }
         if (text.isEmpty()) {
-            warn { "Use deletion for empty text!" }
+            info { "Use deletion for empty text!" }
             return delete(range)
         }
         requireNull(changes.find { it.intersects(range) }) {
-            "Can't edit $range range to value '$text' because $it range has been previously changed!" }
+            "Can't replace $range range to value '$text' because $it range has been previously changed!" }
         val (start, end) = countSelection(range)
         val replaced = buffer.substring(start, end)
         buffer.replace(start, end, text)
