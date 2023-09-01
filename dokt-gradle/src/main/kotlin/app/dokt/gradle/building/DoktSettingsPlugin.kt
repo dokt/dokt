@@ -1,32 +1,20 @@
 package app.dokt.gradle.building
 
-import app.dokt.common.Version
+import app.dokt.common.addIf
 import app.dokt.generator.building.ProjectType
-import app.dokt.generator.building.gradle.SettingsInitialization
-import app.dokt.generator.building.gradle.SettingsInitializer.initialize
 import app.dokt.generator.vGradleMin
 import app.dokt.gradle.applyPlugin
 import app.dokt.gradle.common.SettingsPlugin
 import app.dokt.gradle.plugin
 import org.gradle.api.initialization.Settings
+import org.gradle.kotlin.dsl.isRoot
 import org.gradle.util.GradleVersion
 
 private typealias Projects = Map<String, ProjectType>
 
 @Suppress("unused")
-class DoktSettingsPlugin : SettingsPlugin(DoktSettingsPlugin::class), SettingsInitialization {
+class DoktSettingsPlugin : SettingsPlugin(DoktSettingsPlugin::class) {
     override val minimum: GradleVersion = GradleVersion.version(vGradleMin.toString())
-
-    private lateinit var buildService: DoktBuildService
-
-    override var root: String? = null
-
-    override var projects: List<String>
-        get() = buildService.projectTypesByPath.keys.toList()
-        set(value) {
-            lifecycle { "Including project paths: ${value.joinToString()}." }
-            settings.include(value)
-        }
 
     /** Initialize settings. */
     override fun Settings.applyPlugin() {
@@ -37,7 +25,7 @@ class DoktSettingsPlugin : SettingsPlugin(DoktSettingsPlugin::class), SettingsIn
 
     private fun Settings.initialize(extension: DoktSettingsExtension) {
         debug { "Register build service and get it." }
-        buildService = gradle.sharedServices.registerIfAbsent(DoktBuildService.NAME, DoktBuildService::class.java) {
+        val service = gradle.sharedServices.registerIfAbsent(DoktBuildService.NAME, DoktBuildService::class.java) {
             it.parameters.apply {
                 root.set(rootDir)
                 settings.set(extension)
@@ -50,45 +38,38 @@ class DoktSettingsPlugin : SettingsPlugin(DoktSettingsPlugin::class), SettingsIn
         }
 
         with (extension) {
-            if (useOnlyBuildFile.get()) {
-                debug { "Using only the settings file to initialize the settings." }
+            if (inMemoryInitialization.get()) {
+                lifecycle { "Performing full initialization in-memory." }
+
+                if (useCrossProjectDependencies.get()) manageDependencyResolutions(useMavenLocal.get())
+                else debug { "Repositories are configured by project." }
+
+                val projectPaths = service.projectPaths
+                debug { "Including project paths: ${projectPaths.joinToString()}." }
+                include(projectPaths)
+
+                applyPluginsFor(service.projectTypes)
             } else {
-                debug { "Adding own initializations in addition to the settings file." }
-
-                initialize(
-                    root,
-                    projects,
-                    useMavenLocal.get(),
-                    useCrossProjectDependencies.get()
-                )
-
-                applyPluginsFor(buildService.projectTypesByPath)
+                debug { "Minimal initialization done." }
             }
         }
     }
 
-    override fun pluginsUseMavenLocal() {
-        debug { "Plugin can't manage plugins." }
-    }
-
-    override fun applyPlugin(id: String, version: Version) {
-        debug { "Ignoring $id settings plugin apply, because unable set its version $version." }
-    }
-
     @Suppress("UnstableApiUsage")
-    override fun manageDependencyResolutions(useMavenLocal: Boolean) {
-        settings.dependencyResolutionManagement {
+    private fun Settings.manageDependencyResolutions(local: Boolean) {
+        debug { "Configuring Maven Central${" and local Maven".addIf(local)}} to cross-project dependencies." }
+        dependencyResolutionManagement {
             with(it.repositories) {
                 mavenCentral()
-                if (useMavenLocal) mavenLocal()
+                if (local) mavenLocal()
             }
         }
     }
 
     private fun Settings.applyPluginsFor(projects: Projects) {
-        debug { "Add apply plugin action before project evaluation." }
+        debug { "Add apply plugin action before subproject evaluation." }
         gradle.beforeProject {
-            projects.getValue(it.path).plugin.run {
+            if (!it.isRoot) projects.getValue(it.path).plugin.run {
                 info { "Applying $simpleName" }
                 it.pluginManager.apply(java)
             }

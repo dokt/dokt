@@ -1,21 +1,16 @@
 package app.dokt.generator.building.gradle
 
-import app.dokt.app.Repository
-import app.dokt.common.Version
 
-@Repository
-interface SettingsInitialization {
-    var root: String?
+data class SettingsInitialization(
+    /** Use cross-project dependencies. */
+    val cross: Boolean = false,
 
-    var projects: List<String>
+    /** Projects use local Maven repository. */
+    var local: Boolean = false,
 
-    fun pluginsUseMavenLocal()
+    /** Root project name. */
+    var root: String? = null,
 
-    fun applyPlugin(id: String, version: Version)
-
-    fun manageDependencyResolutions(useMavenLocal: Boolean = false)
-
-    companion object {
-        const val FILE_NAME = "settings.gradle"
-    }
-}
+    /** Subprojects to include */
+    val include: List<String> = emptyList()
+)

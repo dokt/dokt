@@ -10,7 +10,7 @@ import org.gradle.api.tasks.TaskAction
 import kotlin.reflect.KClass
 
 @CacheableTask
-abstract class UpdateFile(type: KClass<out UpdateFile>) : LoggableTask(type) {
+abstract class UpdateFile(type: KClass<out UpdateFile>, group: Group) : LoggableTask(type, group) {
     @get:OutputFile // Output is required at minimum
     abstract val file: RegularFileProperty
 

@@ -19,3 +19,11 @@ val Float.kotlin get(): String {
     if (char == '.') index--
     return "${string.substring(0..index)}f"
 }
+
+val <T : Comparable<T>> ClosedRange<T>.single get() = start == endInclusive
+
+// https://stackoverflow.com/questions/67449343/kotlin-get-values-of-a-range-in-another-range
+// TODO add also intersection function which returns range or null.
+fun <T : Comparable<T>> OpenEndRange<T>.intersects(other: OpenEndRange<T>) =
+    start < other.endExclusive && other.start < endExclusive
+

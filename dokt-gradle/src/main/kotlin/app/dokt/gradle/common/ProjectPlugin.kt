@@ -32,8 +32,8 @@ abstract class ProjectPlugin(type: KClass<out ProjectPlugin>) : LoggablePlugin<P
         configureExtensions()
 
         debug { "Registering tasks." }
+        registerTasks()
         tasks.registerTasks()
-        tasks.register<GenerateBuild>() // TODO remove. Added temporarily.
 
         debug { "Last configurations." }
         configureLast()
@@ -52,6 +52,14 @@ abstract class ProjectPlugin(type: KClass<out ProjectPlugin>) : LoggablePlugin<P
         debug { "Extensions not configured." }
     }
 
+    protected open fun Project.registerTasks() {
+        debug { "No tasks defined." }
+    }
+
+    protected open fun Project.tasks(registerTasks: TaskContainer.() -> Unit) {
+        tasks.apply(registerTasks)
+    }
+
     protected open fun TaskContainer.registerTasks() {
         debug { "No tasks defined." }
     }
@@ -60,6 +68,14 @@ abstract class ProjectPlugin(type: KClass<out ProjectPlugin>) : LoggablePlugin<P
         debug { "Registering ${T::class.simpleName} task" }
         return T::class.run {
             register(simpleName!!.lowerFirst, java)
+        }
+    }
+
+    protected inline fun <reified T : Task> TaskContainer.register(crossinline configureAction: T.() -> Unit):
+        TaskProvider<T> {
+        debug { "Registering ${T::class.simpleName} task with configure action." }
+        return T::class.run {
+            register(simpleName!!.lowerFirst, java) { it.configureAction() }
         }
     }
 

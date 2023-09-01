@@ -2,9 +2,11 @@ package app.dokt.gradle.building
 
 import app.dokt.generator.building.GradleProjectScanner
 import app.dokt.gradle.common.LoggableBuildService
+import app.dokt.gradle.common.path
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.services.BuildServiceParameters
+import java.nio.file.Path
 import kotlin.system.measureTimeMillis
 
 /**
@@ -18,13 +20,20 @@ abstract class DoktBuildService : LoggableBuildService<DoktBuildService.Params>(
         val settings: Property<DoktSettingsExtension>
     }
 
-    val projectTypesByPath by lazy { GradleProjectScanner(parameters.root.get().asFile.toPath()).run {
+    /** Project types by path */
+    val projectTypes by lazy { GradleProjectScanner(rootDir).run {
         val ms = measureTimeMillis {
             scan()
         }
         lifecycle { "Detected ${projects.size} subprojects in $ms ms." }
         projects.toMap()
     } }
+
+    val projectPaths by lazy { projectTypes.keys.toList() }
+
+    val rootDir: Path by lazy { parameters.root.path }
+
+    val settingsExtension: DoktSettingsExtension by lazy { parameters.settings.get() }
 
     companion object {
         const val NAME = "dokt"

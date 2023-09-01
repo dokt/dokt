@@ -30,7 +30,7 @@ kotlinpoet = "1.14.2"
 
 kotlinx-coroutines = "1.7.3"
 
-ktor = "2.3.3"
+ktor = "2.3.4"
 
 mockk = "1.13.7"
 
@@ -96,22 +96,6 @@ kotest-framework-api = { group = "io.kotest", name = "kotest-framework-api", ver
 
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
-intellij-coverage-agent = "org.jetbrains.intellij.deps:intellij-coverage-agent:1.0.724"
-##                                                                         ⬆ :1.0.725"
-##                                                                         ⬆ :1.0.727"
-##                                                                         ⬆ :1.0.728"
-##                                                                         ⬆ :1.0.729"
-##                                                                         ⬆ :1.0.731"
-##                                                                         ⬆ :1.0.733"
-##                                                                         ⬆ :1.0.734"
-##                                                                         ⬆ :1.0.735"
+intellij-coverage-agent = "org.jetbrains.intellij.deps:intellij-coverage-agent:1.0.735"
 
-intellij-coverage-reporter = "org.jetbrains.intellij.deps:intellij-coverage-reporter:1.0.724"
-##                                                                               ⬆ :1.0.725"
-##                                                                               ⬆ :1.0.727"
-##                                                                               ⬆ :1.0.728"
-##                                                                               ⬆ :1.0.729"
-##                                                                               ⬆ :1.0.731"
-##                                                                               ⬆ :1.0.733"
-##                                                                               ⬆ :1.0.734"
-##                                                                               ⬆ :1.0.735"
+intellij-coverage-reporter = "org.jetbrains.intellij.deps:intellij-coverage-reporter:1.0.735"

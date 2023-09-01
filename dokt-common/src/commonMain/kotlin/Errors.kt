@@ -12,6 +12,10 @@ inline fun error(message: String, cause: Throwable): Nothing =
 inline fun require(message: String, cause: Throwable): Nothing =
     throw IllegalArgumentException(message, cause)
 
+/** Throws illegal argument exception with message and throwable in line. */
+inline fun <T> requireNull(value: T?, lazyMessage: (T) -> String = { "Required null value was '$it'!" }) =
+    require(value == null) { lazyMessage(value!!) }
+
 /** Throws unsupported operation exception with message in line. */
 inline fun unsupported(message: String, cause: Throwable? = null): Nothing =
     throw UnsupportedOperationException(message, cause)

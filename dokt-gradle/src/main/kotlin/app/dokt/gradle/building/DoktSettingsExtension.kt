@@ -6,10 +6,11 @@ import org.gradle.api.provider.Property
 /** Extension to configure Dokt settings plugin. */
 abstract class DoktSettingsExtension : DoktExtension() {
     /**
-     * When set to `true`, Gradle uses *only* the settings file to initialize the settings. Default is `false`, in which
-     * case Dokt adds its own initializations in addition to the settings file.
+     * Default is `false` and then minimal initialization is done (a build service is registered and a plugin is applied
+     * on the root project). When set to `true`, then full initialization is done (also manages cross-project
+     * dependencies, searches subprojects, includes them in the build and applies a plugin for each subproject).
      */
-    abstract val useOnlySettingsFile: Property<Boolean>
+    abstract val inMemoryInitialization: Property<Boolean>
 
     /**
      * Configures the cross-project dependency resolution aspects `true` or configure them per project `false`

@@ -2,6 +2,7 @@
 
 plugins {
     kotlin("multiplatform")
+    kotlin("plugin.serialization")
     id("io.gitlab.arturbosch.detekt")
     id("org.jetbrains.kotlinx.kover")
     `maven-publish`

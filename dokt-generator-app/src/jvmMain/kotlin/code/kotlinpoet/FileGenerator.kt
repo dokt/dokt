@@ -4,13 +4,16 @@ import app.dokt.infra.Logger
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import java.io.StringWriter
+import java.nio.file.Path
+import kotlin.io.path.createDirectories
+import kotlin.io.path.writer
 import kotlin.system.measureTimeMillis
 
 /** Use [four spaces](https://kotlinlang.org/docs/coding-conventions.html#indentation) for indentation. */
 private const val OFFICIAL_INDENT = "    "
 
 open class FileGenerator(protected val file: FileSpec.Builder, func: () -> Unit) : Logger(func) {
-    private val fileSpec by lazy {
+    protected val fileSpec by lazy {
         val fileSpec: FileSpec
         val ms = measureTimeMillis {
             build()
@@ -45,5 +48,20 @@ open class FileGenerator(protected val file: FileSpec.Builder, func: () -> Unit)
             }
             .build()
         )
+    }
+
+    open fun writeTo(dir: Path, commonRoot: String = "") {
+        var path = dir
+        // Resolve rest package component directories.
+        fileSpec.packageName.removePrefix(commonRoot).split('.').forEach {
+            if (it.isNotBlank()) path = path.resolve(it)
+        }
+        trace { "Creating directories to $path." }
+        path.createDirectories()
+        path = path.resolve("${fileSpec.name}.kt")
+        val ms = measureTimeMillis {
+            Sanitizer(path.writer()).use { fileSpec.writeTo(it) }
+        }
+        debug { "'$path' was written and sanitized in $ms ms." }
     }
 }

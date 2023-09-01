@@ -97,3 +97,18 @@ suspend fun <T : Any> FunSpecContainerScope.tests(
         }
     }
 }
+
+suspend fun <T : Any, R> FunSpecContainerScope.testsWithMatcher(
+    name: String,
+    matcher: R.() -> Unit,
+    vararg cases: T,
+    test: suspend TestContext.(T) -> R
+) {
+    context(name) {
+        cases.forEach {
+            test(it.testName) {
+                test(it).matcher()
+            }
+        }
+    }
+}

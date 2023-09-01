@@ -53,7 +53,10 @@ If the project:
 
 # TODO
 
-- Update JDK to latest supported in stable Debian and Ubuntu LTS.
+- Use [KSP](https://kotlinlang.org/docs/ksp-overview.html) to generate domain classes
+- Is toolchain needed: https://docs.gradle.org/8.3/userguide/toolchains.html
+- Replace `java.io.File` usage with `java.nio.file.Path` where possible.
+- Put tasks to correct groups: https://blog.mrhaki.com/2012/06/gradle-goodness-adding-tasks-to.html
 - Parse Kotlin script files.
 - Parse package and imports from files.
 - Create Dependency generator

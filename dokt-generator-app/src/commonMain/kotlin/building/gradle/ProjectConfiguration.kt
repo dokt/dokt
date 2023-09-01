@@ -1,6 +1,9 @@
 package app.dokt.generator.building.gradle
 
-import app.dokt.app.Repository
+data class ProjectConfiguration(
+    /** Use cross-project dependencies. */
+    val cross: Boolean = false,
 
-@Repository
-interface ProjectConfiguration
+    /** Use local Maven repository. */
+    var local: Boolean = false
+)

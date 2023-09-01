@@ -1,12 +1,17 @@
-@file:Suppress("unused")
+package org.gradle.kotlin.dsl
 
+import app.dokt.gradle.building.DoktExtension
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.initialization.Settings
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsSetupTask
 import java.nio.file.Path
+
+/** Configure Dokt settings. This is needed because Gradle doesn't generate accessors for settings extensions. */
+fun Settings.dokt(action: DoktExtension.() -> Unit) = extensions.getByType(DoktExtension::class.java).action()
 
 private fun KotlinMultiplatformExtension.dependencies(
     sourceSet: String, configure: KotlinDependencyHandler.() -> Unit) = sourceSets.getByName(sourceSet) {
@@ -25,6 +30,8 @@ fun KotlinMultiplatformExtension.jvmMainDependencies(configure: KotlinDependency
 fun KotlinMultiplatformExtension.jvmTestDependencies(configure: KotlinDependencyHandler.() -> Unit) =
     dependencies("jvmTest", configure)
 
+val Project.projectDirectory: Path get() = projectDir.toPath()
+
 val Project.isRoot get() = path == ":"
 
 // https://stackoverflow.com/questions/68830854/how-to-execute-a-node-command-in-a-kotlin-js-project
@@ -41,3 +48,4 @@ fun Project.task(name: String, description: String, action: (Task) -> Unit): Tas
     it.description = description
     it.actions.add(action)
 }
+

@@ -6,7 +6,7 @@ import org.gradle.api.tasks.CacheableTask
 
 // TODO dependsOn(":refreshVersions")?
 @CacheableTask
-abstract class UpdateSettings : UpdateFile(UpdateSettings::class) {
+abstract class UpdateSettings : UpdateFile(UpdateSettings::class, Group.BuildSetup) {
     init {
         init(GradleSettingsUpdater(project.projectDir))
     }
