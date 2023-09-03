@@ -5,7 +5,7 @@ import app.dokt.gradle.common.task.UpdateFile
 import org.gradle.api.tasks.CacheableTask
 
 @CacheableTask
-abstract class UpdateProperties : UpdateFile(UpdateProperties::class) {
+abstract class UpdateProperties : UpdateFile(UpdateProperties::class, Group.BuildSetup) {
     init {
         init(GradlePropertiesUpdater(project.projectDir))
     }

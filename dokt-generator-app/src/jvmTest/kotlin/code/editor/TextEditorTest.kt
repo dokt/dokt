@@ -4,12 +4,12 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 
-val sample = """
+private val sample = """
 The quick brown fox jumps over the lazy dog.
 """.trim()
-val length = sample.length
+private val length = sample.length
 
-fun sut(act: TextEditor.() -> Unit) = TextEditor(sample).apply(act).toString()
+private fun sut(act: TextEditor.() -> Unit) = TextEditor(sample).apply(act).toString()
 
 @Suppress("EmptyRange", "SpellCheckingInspection")
 class TextEditorTest : FunSpec({
@@ -109,7 +109,8 @@ class TextEditorTest : FunSpec({
         } }
 
         test("simple") { sut {
-            replace(4..<9, "slow") shouldBe "quick" } shouldBe "The slow brown fox jumps over the lazy dog." }
+            replace(4..<9, "slow") shouldBe "quick"
+        } shouldBe "The slow brown fox jumps over the lazy dog." }
 
         test("character") { sut {
             replace(4..4, "b") shouldBe "q" } shouldBe "The buick brown fox jumps over the lazy dog." }

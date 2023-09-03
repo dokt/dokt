@@ -21,11 +21,11 @@ import org.gradle.api.Task
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
-import java.io.File
+import java.nio.file.Path
 
-val Project.buildDirAsFile get(): File = layout.buildDirectory.asFile.get()
-val Project.commonMainDir get() = buildDirAsFile.resolve(KotlinSourceSet.COMMON_MAIN_SOURCE_SET_NAME)
-val Project.commonTestDir get() = buildDirAsFile.resolve(KotlinSourceSet.COMMON_TEST_SOURCE_SET_NAME)
+val Project.buildDirectory: Path get() = layout.buildDirectory.asFile.get().toPath()
+val Project.commonMainDir: Path get() = buildDirectory.resolve(KotlinSourceSet.COMMON_MAIN_SOURCE_SET_NAME)
+val Project.commonTestDir: Path get() = buildDirectory.resolve(KotlinSourceSet.COMMON_TEST_SOURCE_SET_NAME)
 inline fun <reified T : Plugin<Project>> Project.applyPlugin() = pluginManager.apply(T::class.java)
 
 inline fun <reified T : Task> TaskContainer.register(): TaskProvider<T> = T::class.run {

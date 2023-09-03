@@ -13,7 +13,8 @@ import kotlin.reflect.KClass
 
 // https://docs.gradle.org/current/userguide/incremental_build.html#sec:task_inputs_outputs
 @CacheableTask
-abstract class UpdateDir(type: KClass<out UpdateDir>, description: String? = null) : LoggableTask(type, description) {
+abstract class UpdateDir(type: KClass<out UpdateDir>, description: String) :
+    LoggableTask(type, Group.Build, description) {
     @get:Incremental
     @get:OutputFile // Output is required at minimum
     @get:PathSensitive(PathSensitivity.RELATIVE)

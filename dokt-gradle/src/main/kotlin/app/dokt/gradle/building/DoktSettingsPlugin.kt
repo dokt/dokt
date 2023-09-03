@@ -2,7 +2,7 @@ package app.dokt.gradle.building
 
 import app.dokt.common.addIf
 import app.dokt.generator.building.ProjectType
-import app.dokt.generator.vGradleMin
+import app.dokt.generator.GRADLE_VER
 import app.dokt.gradle.applyPlugin
 import app.dokt.gradle.common.SettingsPlugin
 import app.dokt.gradle.plugin
@@ -14,7 +14,7 @@ private typealias Projects = Map<String, ProjectType>
 
 @Suppress("unused")
 class DoktSettingsPlugin : SettingsPlugin(DoktSettingsPlugin::class) {
-    override val minimum: GradleVersion = GradleVersion.version(vGradleMin.toString())
+    override val minimum: GradleVersion = GradleVersion.version(GRADLE_VER.toString())
 
     /** Initialize settings. */
     override fun Settings.applyPlugin() {

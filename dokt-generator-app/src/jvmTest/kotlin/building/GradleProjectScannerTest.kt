@@ -1,12 +1,13 @@
 package app.dokt.generator.building
 
+import app.dokt.generator.building.gradle.ProjectScanner
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import java.nio.file.Path
 
 class GradleProjectScannerTest : FunSpec({
     test("dokt") {
-        GradleProjectScanner(Path.of("..")).apply {
+        ProjectScanner(Path.of("..")).apply {
             scan()
             report() shouldBe """
                 :dokt-application = APPLICATION
@@ -24,7 +25,7 @@ class GradleProjectScannerTest : FunSpec({
         }
     }
     test("examples") {
-        GradleProjectScanner(Path.of("..", "examples")).apply {
+        ProjectScanner(Path.of("..", "examples")).apply {
             scan()
             report() shouldBe """
                 :erp-dom = DOMAIN

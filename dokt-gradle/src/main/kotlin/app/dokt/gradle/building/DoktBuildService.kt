@@ -1,6 +1,6 @@
 package app.dokt.gradle.building
 
-import app.dokt.generator.building.GradleProjectScanner
+import app.dokt.generator.building.gradle.ProjectScanner
 import app.dokt.gradle.common.LoggableBuildService
 import app.dokt.gradle.common.path
 import org.gradle.api.file.DirectoryProperty
@@ -21,7 +21,7 @@ abstract class DoktBuildService : LoggableBuildService<DoktBuildService.Params>(
     }
 
     /** Project types by path */
-    val projectTypes by lazy { GradleProjectScanner(rootDir).run {
+    val projectTypes by lazy { ProjectScanner(rootDir).run {
         val ms = measureTimeMillis {
             scan()
         }

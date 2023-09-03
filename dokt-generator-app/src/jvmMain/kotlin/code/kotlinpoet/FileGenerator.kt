@@ -1,7 +1,6 @@
 package app.dokt.generator.code.kotlinpoet
 
 import app.dokt.infra.Logger
-import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import java.io.StringWriter
 import java.nio.file.Path
@@ -23,7 +22,7 @@ open class FileGenerator(protected val file: FileSpec.Builder, func: () -> Unit)
         fileSpec
     }
 
-    protected val suppress = mutableSetOf<SuppressName>()
+    protected val suppress = mutableSetOf<Warning>()
 
     val content by lazy {
         StringWriter().also {
@@ -41,13 +40,7 @@ open class FileGenerator(protected val file: FileSpec.Builder, func: () -> Unit)
     constructor(packageName: String, fileName: String) : this(FileSpec.builder(packageName, "$fileName.kt"), {})
 
     open fun build() {
-        if (suppress.any()) file.addAnnotation(AnnotationSpec
-            .builder(Suppress::class)
-            .apply {
-                suppress.map { it.warning }.sorted().forEach { addMember("%S", it) }
-            }
-            .build()
-        )
+        if (suppress.any()) file.addAnnotation(suppress(suppress))
     }
 
     open fun writeTo(dir: Path, commonRoot: String = "") {

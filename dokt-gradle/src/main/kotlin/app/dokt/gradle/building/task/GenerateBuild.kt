@@ -5,7 +5,8 @@ import app.dokt.generator.building.GradleProject
 import app.dokt.gradle.common.task.LoggableTask
 import org.gradle.api.tasks.TaskAction
 
-abstract class GenerateBuild : LoggableTask(GenerateBuild::class, "Generate build.gradle.kts files!") {
+abstract class GenerateBuild :
+    LoggableTask(GenerateBuild::class, Group.BuildSetup, "Generate build.gradle.kts files!") {
     @TaskAction
     fun generate() {
         GradleProject.parse(project.projectDir.toPath(), name = project.name).let { project ->

@@ -11,7 +11,8 @@ import org.gradle.api.tasks.TaskAction
 import kotlin.reflect.KClass
 
 @CacheableTask
-abstract class Generate(type: KClass<out Generate>, description: String? = null) : LoggableTask(type, description) {
+abstract class Generate(type: KClass<out Generate>, description: String) :
+    LoggableTask(type, Group.Build, description) {
     @get:OutputDirectory
     abstract val generated: DirectoryProperty
 

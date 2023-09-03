@@ -1,6 +1,5 @@
 package app.dokt.generator.building.gradle
 
-
 data class SettingsInitialization(
     /** Use cross-project dependencies. */
     val cross: Boolean = false,

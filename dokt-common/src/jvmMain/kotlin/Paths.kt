@@ -1,16 +1,18 @@
 @file:Suppress("unused")
-
 package app.dokt.common
 
 import java.io.File
 import java.nio.charset.Charset
 import java.nio.file.OpenOption
 import java.nio.file.Path
+import kotlin.io.path.getLastModifiedTime
 import kotlin.io.path.isDirectory
 import kotlin.io.path.isHidden
 import kotlin.io.path.listDirectoryEntries
 import kotlin.io.path.name
 import kotlin.io.path.writeLines
+
+// TODO Use [Path] where possible. See https://www.baeldung.com/java-path-vs-file
 
 val File.empty get() = length() == 0L
 
@@ -20,6 +22,8 @@ fun File.writeLines(lines: Iterable<CharSequence>, charset: Charset = Charsets.U
     toPath().writeLines(lines, charset, *options)
 
 val Path.directories get() = filterEntries { it.isDirectory() }
+
+val Path.lastModifiedMillis get() = getLastModifiedTime().toMillis()
 
 val Path.visibleDirectories get() = filterEntries("[!.]*") { it.isDirectory() && !it.isHidden() }
 

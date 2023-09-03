@@ -1,4 +1,4 @@
-package app.dokt.generator.building.gradle
+package app.dokt.generator.code.psi
 
 import app.dokt.generator.code.psi.Psi
 

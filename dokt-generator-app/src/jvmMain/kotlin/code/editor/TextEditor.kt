@@ -76,7 +76,17 @@ class TextEditor(text: String) : Logger({}) {
     }
 
     private fun countSelection(range: IntRange) = countDelta(range.last).let {
-        (range.first + it) to (range.last + it + 1) // First is inclusive, last is exclusive.
+        var start = range.first + it // Inclusive
+        if (start < 0) {
+            warn { "Selection start $start shouldn't be negative!" }
+            start = 0
+        }
+        var end = range.last + it + 1 // Exclusive.
+        if (end > length) {
+            warn { "Selection end $end shouldn't be greater than length $length!" }
+            end = length
+        }
+        start to end
     }
 
     /**

@@ -1,13 +1,14 @@
-package app.dokt.generator.building
+package app.dokt.generator.building.gradle
 
 import app.dokt.common.visibleDirectories
 import app.dokt.common.visibleDirectoryNames
+import app.dokt.generator.building.ProjectType
 import app.dokt.infra.Logger
 import java.nio.file.Path
 import kotlin.io.path.exists
 import kotlin.io.path.name
 
-class GradleProjectScanner(private val root: Path) : Logger({}) {
+class ProjectScanner(private val root: Path) : Logger({}) {
     val projects = mutableMapOf<String, ProjectType>()
 
     private fun add(path: String, type: ProjectType) {
@@ -24,7 +25,7 @@ class GradleProjectScanner(private val root: Path) : Logger({}) {
             ProjectType.INFRASTRUCTURE,
             ProjectType.INFRASTRUCTURE_JS,
             ProjectType.INFRASTRUCTURE_JVM -> {
-                if (dir.resolve(GradleSettingsUpdater.FILENAME).exists()) warn { "Ignored another root at $dir!" }
+                if (dir.resolve(SETTINGS_SCRIPT).exists()) warn { "Ignored another root at $dir!" }
                 else {
                     add(path, type)
                     debug { "Infrastructure may have subprojects" }

@@ -6,30 +6,38 @@ import org.jetbrains.kotlin.com.intellij.psi.PsiRecursiveElementWalkingVisitor
 import org.jetbrains.kotlin.psi.KtBinaryExpression
 import org.jetbrains.kotlin.psi.KtBlockExpression
 import org.jetbrains.kotlin.psi.KtCallExpression
+import org.jetbrains.kotlin.psi.KtDotQualifiedExpression
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.KtLiteralStringTemplateEntry
 import kotlin.reflect.KClass
 
-open class ElementException(val element: KtElement, message: String, cause: Throwable? = null) :
+open class ElementException(element: KtElement, message: String, cause: Throwable? = null) :
     Exception("$message In ${element::class.simpleName} '${element.text}'.", cause)
 
 class ElementNotFoundByType(element: KtElement, val type: KClass<out KtElement>) :
     ElementException(element, "Element of type ${type.simpleName} not found!")
 
-fun KtElement.findBinaries() = findElements<KtBinaryExpression>()
 
-fun KtElement.findCall(to: String) = findElement<KtCallExpression> { calleeName == to }
+fun KtElement?.findBinaries() = this?.findElements<KtBinaryExpression>() ?: emptyList()
+
+fun KtElement?.findBlock() = this?.findElement<KtBlockExpression>()
+
+fun KtElement?.findCall(to: String) = this?.findElement<KtCallExpression> { calleeName == to }
 
 fun KtElement.findCalls() = findElements<KtCallExpression>()
 
 fun KtElement.findCalls(to: String) = findElements<KtCallExpression> { calleeName == to }
+
+fun KtElement.findDotExpression(instance: String, property: String) = findElement<KtDotQualifiedExpression> {
+    text == "$instance.$property"
+}
 
 inline fun <reified E : KtElement> KtElement.findElement() = walkRecursive { it as? E }
 
 inline fun <reified E : KtElement> KtElement.findElement(crossinline predicate: E.() -> Boolean) =
     walkRecursive { if ((it as? E)?.predicate() == true) it else null }
 
-inline fun <reified E : KtElement> KtElement.findElements(): List<E> {
+inline fun <reified E : KtElement> KtElement.findElements(): MutableList<E> {
     val list = mutableListOf<E>()
     accept(object : PsiRecursiveElementVisitor() {
         override fun visitElement(element: PsiElement) {
@@ -61,8 +69,16 @@ inline fun <reified E : KtElement> KtElement.hasElement(crossinline predicate: E
     if (it is E && it.predicate()) true else null
 } ?: false
 
+val KtElement.callStringValue get() = getElement<KtCallExpression>().getElement<KtLiteralStringTemplateEntry>().text!!
+
+fun KtElement?.hasCall(to: String) = this?.hasElement<KtCallExpression> { calleeName == to } == true
+
 fun KtElement.hasCallValue(value: String) = hasElement<KtCallExpression> {
     hasElement<KtLiteralStringTemplateEntry> { text == value }
+}
+
+fun KtElement.hasDotExpression(instance: String, property: String) = hasElement<KtDotQualifiedExpression> {
+    text == "$instance.$property"
 }
 
 inline fun <reified E : KtElement> KtElement.notFound(): E { throw ElementNotFoundByType(this, E::class) }

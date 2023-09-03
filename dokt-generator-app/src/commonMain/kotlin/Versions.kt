@@ -5,10 +5,10 @@ package app.dokt.generator
 import app.dokt.common.Version
 
 /** Current Dokt version. */
-val vDokt = Version(0, 2, 10)
+val DOKT_VER = Version(0, 2, 10)
 
 /** Minimum Gradle version that Dokt plugins support. */
-val vGradleMin = Version(8, 2)
+val GRADLE_VER = Version(8, 3)
 
 /** Latest known version of https://splitties.github.io/refreshVersions */
-val vRefreshVersions = Version(0, 60, 1)
+val REFRESH_VER = Version(0, 60, 2)

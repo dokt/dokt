@@ -2,7 +2,7 @@ package app.dokt.generator.code.psi
 
 import app.dokt.infra.Logger
 
-open class FileEditor(context: Context, func: () -> Unit) : Logger(func) {
+open class FileReader(context: Context, func: () -> Unit) : Logger(func) {
     private val environment = context.environment
 
     val content by lazy {
@@ -10,9 +10,9 @@ open class FileEditor(context: Context, func: () -> Unit) : Logger(func) {
         file.text!!
     }
 
-    private val documentManager by lazy { environment.documentManager }
+    protected val documentManager by lazy { environment.documentManager }
 
-    private val factory by lazy { environment.factory }
+    protected val factory by lazy { environment.factory }
 
     protected val file = context.file
 
