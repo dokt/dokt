@@ -6,7 +6,6 @@ import app.dokt.gradle.building.task.UpdateSettings
 import app.dokt.gradle.building.task.UpdateProperties
 import app.dokt.gradle.common.ProjectPlugin
 import org.gradle.api.Project
-import org.gradle.api.tasks.TaskContainer
 import org.gradle.kotlin.dsl.isRoot
 import org.gradle.kotlin.dsl.projectDirectory
 
@@ -19,6 +18,7 @@ class DoktRootPlugin : ProjectPlugin(DoktRootPlugin::class) {
 
     override fun Project.registerTasks() {
         tasks {
+            register<UpdateProperties>()
             register<UpdateSettings> {
                 projectDirectory.resolve(SETTINGS_SCRIPT).apply {
                     modified.set(lastModifiedMillis)
@@ -26,10 +26,5 @@ class DoktRootPlugin : ProjectPlugin(DoktRootPlugin::class) {
                 }
             }
         }
-    }
-
-    override fun TaskContainer.registerTasks() {
-        register<UpdateProperties>()
-        register<UpdateSettings>()
     }
 }

@@ -6,9 +6,11 @@ import org.jetbrains.kotlin.com.intellij.psi.PsiRecursiveElementWalkingVisitor
 import org.jetbrains.kotlin.psi.KtBinaryExpression
 import org.jetbrains.kotlin.psi.KtBlockExpression
 import org.jetbrains.kotlin.psi.KtCallExpression
+import org.jetbrains.kotlin.psi.KtConstantExpression
 import org.jetbrains.kotlin.psi.KtDotQualifiedExpression
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.KtLiteralStringTemplateEntry
+import org.jetbrains.kotlin.psi.KtNameReferenceExpression
 import kotlin.reflect.KClass
 
 open class ElementException(element: KtElement, message: String, cause: Throwable? = null) :
@@ -18,26 +20,29 @@ class ElementNotFoundByType(element: KtElement, val type: KClass<out KtElement>)
     ElementException(element, "Element of type ${type.simpleName} not found!")
 
 
-fun KtElement?.findBinaries() = this?.findElements<KtBinaryExpression>() ?: emptyList()
+val KtElement?.binaries get() = getElements<KtBinaryExpression>()
 
-fun KtElement?.findBlock() = this?.findElement<KtBlockExpression>()
+val KtElement?.booleanAssigns get() = binaries.associate { it.left!!.text!! to it.right!!.text.toBoolean() }
+
+fun KtElement?.findBlock() = findElement<KtBlockExpression>()
 
 fun KtElement?.findCall(to: String) = this?.findElement<KtCallExpression> { calleeName == to }
 
-fun KtElement.findCalls() = findElements<KtCallExpression>()
+fun KtElement.findCalls() = getElements<KtCallExpression>()
 
-fun KtElement.findCalls(to: String) = findElements<KtCallExpression> { calleeName == to }
+fun KtElement.findCalls(to: String) = getElements<KtCallExpression> { calleeName == to }
 
 fun KtElement.findDotExpression(instance: String, property: String) = findElement<KtDotQualifiedExpression> {
     text == "$instance.$property"
 }
 
-inline fun <reified E : KtElement> KtElement.findElement() = walkRecursive { it as? E }
+inline fun <reified E : KtElement> KtElement?.findElement() = this?.walkRecursive { it as? E }
 
 inline fun <reified E : KtElement> KtElement.findElement(crossinline predicate: E.() -> Boolean) =
     walkRecursive { if ((it as? E)?.predicate() == true) it else null }
 
-inline fun <reified E : KtElement> KtElement.findElements(): MutableList<E> {
+inline fun <reified E : KtElement> KtElement?.getElements(): List<E> {
+    if (this == null) return emptyList()
     val list = mutableListOf<E>()
     accept(object : PsiRecursiveElementVisitor() {
         override fun visitElement(element: PsiElement) {
@@ -48,7 +53,8 @@ inline fun <reified E : KtElement> KtElement.findElements(): MutableList<E> {
     return list
 }
 
-inline fun <reified E : KtElement> KtElement.findElements(crossinline predicate: E.() -> Boolean): List<E> {
+inline fun <reified E : KtElement> KtElement?.getElements(crossinline predicate: E.() -> Boolean): List<E> {
+    if (this == null) return emptyList()
     val list = mutableListOf<E>()
     accept(object : PsiRecursiveElementVisitor() {
         override fun visitElement(element: PsiElement) {

@@ -3,25 +3,13 @@
 plugins {
     `java-gradle-plugin`
     kotlin("jvm")
-    //`kotlin-dsl` TODO Remove if not used
     id("io.gitlab.arturbosch.detekt")
     `maven-publish`
     id("com.gradle.plugin-publish")
 }
 
-setDoktDefaults("0.2.11-SNAPSHOT", "Domain-driven design using Kotlin")
-
-repositories {
-    gradlePluginPortal()
-}
-
 dependencies {
-    // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.multiplatform
     implementation(kotlin("gradle-plugin"))
-
-    // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.plugin.serialization
-    //implementation(kotlin("serialization")) // TODO Is really needed
-
     implementation(project(":dokt-generator-app"))
 }
 

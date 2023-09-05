@@ -7,7 +7,7 @@ plugins {
     signing
 }
 
-setDoktDefaults("0.2.11-SNAPSHOT", "Dokt Swing API.")
+description = "Dokt Swing API."
 
 dependencies {
     api(project(":dokt-interface"))

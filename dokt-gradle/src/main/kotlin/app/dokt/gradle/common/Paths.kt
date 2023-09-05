@@ -4,6 +4,7 @@ import org.gradle.api.file.Directory
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFile
 import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.provider.Property
 import java.nio.file.Path
 
 val Directory.path : Path get() = asFile.toPath()

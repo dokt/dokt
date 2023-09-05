@@ -9,7 +9,7 @@ plugins {
     signing
 }
 
-setDoktDefaults("0.2.11-SNAPSHOT", "Common utilities for infrastructure services.")
+description = "Common utilities for infrastructure services."
 
 kotlin {
     configureJvmWithTests()

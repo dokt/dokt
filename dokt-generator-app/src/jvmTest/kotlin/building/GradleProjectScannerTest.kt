@@ -10,17 +10,17 @@ class GradleProjectScannerTest : FunSpec({
         ProjectScanner(Path.of("..")).apply {
             scan()
             report() shouldBe """
-                :dokt-application = APPLICATION
-                :dokt-common = INFRASTRUCTURE
-                :dokt-domain = DOMAIN
-                :dokt-domain-test = INFRASTRUCTURE
-                :dokt-generator-app = APPLICATION
-                :dokt-gradle = INFRASTRUCTURE
-                :dokt-infrastructure = INFRASTRUCTURE
-                :dokt-interface = INTERFACE
-                :dokt-ktor-server = KTOR_SERVER
-                :dokt-swing = SWING
-                :dokt-test = INFRASTRUCTURE
+                dokt-application = (APPLICATION, true)
+                dokt-common = (INFRASTRUCTURE, true)
+                dokt-domain = (DOMAIN, true)
+                dokt-domain-test = (INFRASTRUCTURE, true)
+                dokt-generator-app = (APPLICATION, true)
+                dokt-gradle = (INFRASTRUCTURE, true)
+                dokt-infrastructure = (INFRASTRUCTURE, true)
+                dokt-interface = (INTERFACE, true)
+                dokt-ktor-server = (KTOR_SERVER, true)
+                dokt-swing = (SWING, true)
+                dokt-test = (INFRASTRUCTURE, true)
             """.trimIndent()
         }
     }
@@ -28,13 +28,13 @@ class GradleProjectScannerTest : FunSpec({
         ProjectScanner(Path.of("..", "examples")).apply {
             scan()
             report() shouldBe """
-                :erp-dom = DOMAIN
-                :file-dom = DOMAIN
-                :hash-dom = DOMAIN
-                :hello-dom = DOMAIN
-                :window-dom = DOMAIN
-                :window-simulator-app = APPLICATION
-                :window-simulator-swing = SWING
+                erp-dom = (DOMAIN, true)
+                file-dom = (DOMAIN, true)
+                hash-dom = (DOMAIN, true)
+                hello-dom = (DOMAIN, true)
+                window-dom = (DOMAIN, true)
+                window-simulator-app = (APPLICATION, true)
+                window-simulator-swing = (SWING, true)
             """.trimIndent()
         }
     }

@@ -8,8 +8,7 @@ plugins {
     signing
 }
 
-setDoktDefaults("0.2.11-SNAPSHOT",
-    "Dokt application library to be used in application layer and its infrastructure implementations.")
+description = "Dokt application library to be used in application layer and its infrastructure implementations."
 
 kotlin {
     configureJvmWithTests()

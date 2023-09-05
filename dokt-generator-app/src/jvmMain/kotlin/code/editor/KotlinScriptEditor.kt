@@ -4,8 +4,8 @@ import app.dokt.generator.code.controlFlow
 import app.dokt.generator.code.kotlinpoet.addControlFlow
 import app.dokt.generator.code.kotlinpoet.script
 import app.dokt.generator.code.kotlinpoet.snippet
+import app.dokt.generator.code.psi.binaries
 import app.dokt.generator.code.psi.callStringValue
-import app.dokt.generator.code.psi.findBinaries
 import app.dokt.generator.code.psi.findBlock
 import app.dokt.generator.code.psi.findCall
 import com.squareup.kotlinpoet.CodeBlock
@@ -18,7 +18,7 @@ open class KotlinScriptEditor(text: String, fileName: String, func: () -> Unit =
 
     protected fun applyPlugins(vararg plugins: Pair<String, String>) = prependCall("plugins") { block ->
         plugins.toMap().let { required ->
-            block.findBinaries().associate { it.callStringValue to it.text }.toMutableMap().apply {
+            block.binaries.associate { it.callStringValue to it.text }.toMutableMap().apply {
                 if (required.map { putIfAbsent(it.key, it.value) }.all { it != null } ) return@let false
             }.values.forEach { addStatement(it) }
             true

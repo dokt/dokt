@@ -9,8 +9,6 @@ plugins {
     kotlin("plugin.serialization") apply false
 }
 
-mavenCentral() // Detekt requires
-
 detekt {
     config.setFrom("$rootDir/config/detekt/detekt.yml")
 }

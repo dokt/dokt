@@ -9,8 +9,7 @@ plugins {
     signing
 }
 
-setDoktDefaults("0.2.11-SNAPSHOT",
-    "Dokt domain logic test API to be used in unit testing of aggregate roots.")
+description = "Dokt domain logic test API to be used in unit testing of aggregate roots."
 
 kotlin {
     configureJvmWithTests()

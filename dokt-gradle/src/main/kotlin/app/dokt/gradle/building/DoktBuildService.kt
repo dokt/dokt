@@ -20,16 +20,19 @@ abstract class DoktBuildService : LoggableBuildService<DoktBuildService.Params>(
         val settings: Property<DoktSettingsExtension>
     }
 
-    /** Project types by path */
-    val projectTypes by lazy { ProjectScanner(rootDir).run {
-        val ms = measureTimeMillis {
-            scan()
-        }
-        lifecycle { "Detected ${projects.size} subprojects in $ms ms." }
-        projects.toMap()
+    /** Subproject type-leaf pair by include path */
+    private val subprojectTypeLeafPairByIncludePath by lazy { ProjectScanner(rootDir).run {
+        val ms = measureTimeMillis { scan() }
+        lifecycle { "Detected ${subprojects.size} subprojects in $ms ms." }
+        subprojects.toMap()
     } }
 
-    val projectPaths by lazy { projectTypes.keys.toList() }
+    /** Project types by path */
+    val subprojectTypesByPath by lazy { subprojectTypeLeafPairByIncludePath.map { (includePath, typeLeafPair) ->
+        ":$includePath" to typeLeafPair.first }.toMap()
+    }
+
+    val subprojectsToInclude by lazy { subprojectTypeLeafPairByIncludePath.filterValues { it.second }.keys }
 
     val rootDir: Path by lazy { parameters.root.path }
 

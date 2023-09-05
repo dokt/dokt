@@ -1,7 +1,13 @@
-@file:Suppress("SpellCheckingInspection")
+@file:Suppress("SpellCheckingInspection", "UnstableApiUsage")
 
 plugins {
     id("de.fayard.refreshVersions") version "0.60.2"
+}
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
 }
 
 rootProject.name = "dokt"

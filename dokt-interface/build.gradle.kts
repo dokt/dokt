@@ -8,7 +8,7 @@ plugins {
     signing
 }
 
-setDoktDefaults("0.2.11-SNAPSHOT", "Dokt interface API to be used in presentation layer.")
+description = "Dokt interface API to be used in presentation layer."
 
 kotlin {
     configureJvmWithTests()

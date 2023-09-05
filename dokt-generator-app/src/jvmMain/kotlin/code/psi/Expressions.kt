@@ -6,4 +6,4 @@ import org.jetbrains.kotlin.psi.KtNameReferenceExpression
 
 val KtCallExpression.calleeName get() = (calleeExpression as? KtNameReferenceExpression)?.getReferencedName()
 
-val KtCallExpression.stringValues get() = findElements<KtLiteralStringTemplateEntry>().map { it.text!! }
+val KtCallExpression.stringValues get() = getElements<KtLiteralStringTemplateEntry>().map { it.text!! }

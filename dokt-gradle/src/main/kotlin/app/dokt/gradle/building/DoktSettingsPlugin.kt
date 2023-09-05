@@ -1,20 +1,17 @@
 package app.dokt.gradle.building
 
 import app.dokt.common.addIf
-import app.dokt.generator.building.ProjectType
 import app.dokt.generator.GRADLE_VER
+import app.dokt.generator.building.ProjectType
 import app.dokt.gradle.applyPlugin
 import app.dokt.gradle.common.SettingsPlugin
 import app.dokt.gradle.plugin
 import org.gradle.api.initialization.Settings
 import org.gradle.kotlin.dsl.isRoot
-import org.gradle.util.GradleVersion
-
-private typealias Projects = Map<String, ProjectType>
 
 @Suppress("unused")
 class DoktSettingsPlugin : SettingsPlugin(DoktSettingsPlugin::class) {
-    override val minimum: GradleVersion = GradleVersion.version(GRADLE_VER.toString())
+    override val minimum = GRADLE_VER
 
     /** Initialize settings. */
     override fun Settings.applyPlugin() {
@@ -38,17 +35,18 @@ class DoktSettingsPlugin : SettingsPlugin(DoktSettingsPlugin::class) {
         }
 
         with (extension) {
-            if (inMemoryInitialization.get()) {
+            if (inMemoryInitialization.getOrElse(false)) {
                 lifecycle { "Performing full initialization in-memory." }
 
-                if (useCrossProjectDependencies.get()) manageDependencyResolutions(useMavenLocal.get())
+                if (useCrossProjectDependencies.getOrElse(false))
+                    manageDependencyResolutions(useMavenLocal.getOrElse(false))
                 else debug { "Repositories are configured by project." }
 
-                val projectPaths = service.projectPaths
-                debug { "Including project paths: ${projectPaths.joinToString()}." }
-                include(projectPaths)
+                val subprojectsToInclude = service.subprojectsToInclude
+                debug { "Including projects: ${subprojectsToInclude.joinToString()}." }
+                include(subprojectsToInclude)
 
-                applyPluginsFor(service.projectTypes)
+                applyPluginsFor(service.subprojectTypesByPath)
             } else {
                 debug { "Minimal initialization done." }
             }
@@ -66,10 +64,10 @@ class DoktSettingsPlugin : SettingsPlugin(DoktSettingsPlugin::class) {
         }
     }
 
-    private fun Settings.applyPluginsFor(projects: Projects) {
+    private fun Settings.applyPluginsFor(subprojectTypesByPath: Map<String, ProjectType>) {
         debug { "Add apply plugin action before subproject evaluation." }
         gradle.beforeProject {
-            if (!it.isRoot) projects.getValue(it.path).plugin.run {
+            if (!it.isRoot) subprojectTypesByPath.getValue(it.path).plugin.run {
                 info { "Applying $simpleName" }
                 it.pluginManager.apply(java)
             }

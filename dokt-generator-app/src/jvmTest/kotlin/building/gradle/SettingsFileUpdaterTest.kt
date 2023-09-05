@@ -8,16 +8,16 @@ import io.kotest.matchers.shouldBe
 private fun sut(text: String, act: SettingsFileUpdater.() -> Unit) = SettingsFileUpdater(text).apply(act).content
 
 class SettingsFileUpdaterTest : FunSpec({
-    context("plugins") {
-        val minimal = """
+    val minimalPlugins = """
             plugins {
                 $APPLY_DOKT
                 $APPLY_REFRESH
             }
 
         """.trimIndent()
-        test("empty") { sut("") { applyPlugins().shouldBeTrue() } shouldBe minimal }
-        test("minimal") { sut(minimal) { applyPlugins().shouldBeFalse() } shouldBe minimal }
+    context("plugins") {
+        test("empty") { sut("") { applyPlugins().shouldBeTrue() } shouldBe minimalPlugins }
+        test("minimal") { sut(minimalPlugins) { applyPlugins().shouldBeFalse() } shouldBe minimalPlugins }
         val barPlugin = """id("bar.plugin") version "1.0.0""""
         val custom = """
             plugins {
@@ -90,22 +90,29 @@ class SettingsFileUpdaterTest : FunSpec({
     }
 
     context("update") {
-        test("empty") { sut("") {
-            SettingsInitialization(cross = true, local = true, "foo", listOf(":bar")).update().shouldBeTrue()
-        } shouldBe """
-            plugins {
-                id("app.dokt") version "0.2.10"
-                id("de.fayard.refreshVersions") version "0.60.2"
+        test("empty") { sut("") { update().shouldBeTrue() } shouldBe minimalPlugins }
+        val useCrossProjectDependencies = """
+            dokt {
+                useCrossProjectDependencies = true
+                useMavenLocal = true
             }
+
+        """.trimIndent()
+        val dependencyResolutionManagement = """
             dependencyResolutionManagement {
                 repositories {
                     mavenCentral()
                     mavenLocal()
                 }
             }
-            rootProject.name = "foo"
-            include(":bar")
-
-        """.trimIndent() }
+        """.trimIndent()
+        test("extension") { sut(useCrossProjectDependencies) { update().shouldBeTrue() } shouldBe
+            "$minimalPlugins$useCrossProjectDependencies$dependencyResolutionManagement\n" }
+        test("full") { sut(useCrossProjectDependencies) {
+            update("foo", listOf(":bar")).shouldBeTrue()
+        } shouldBe """$minimalPlugins$useCrossProjectDependencies$dependencyResolutionManagement
+rootProject.name = "foo"
+include(":bar")
+""" }
     }
 })

@@ -1,4 +1,4 @@
-@file:Suppress("SpellCheckingInspection")
+@file:Suppress("SpellCheckingInspection", "UnstableApiUsage")
 pluginManagement {
   repositories {
     gradlePluginPortal()
@@ -6,11 +6,11 @@ pluginManagement {
   }
 }
 plugins {
-  id("app.dokt") version "0.2.10"
+  id("app.dokt") version "0.2.11-SNAPSHOT"
   id("de.fayard.refreshVersions") version "0.60.1"
 }
 dokt {
-    useBuildFile = true
+    useOnlyBuildFile = true
 }
 dependencyResolutionManagement {
   repositories {

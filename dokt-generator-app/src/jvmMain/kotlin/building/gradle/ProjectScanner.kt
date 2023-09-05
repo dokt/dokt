@@ -9,17 +9,22 @@ import kotlin.io.path.exists
 import kotlin.io.path.name
 
 class ProjectScanner(private val root: Path) : Logger({}) {
-    val projects = mutableMapOf<String, ProjectType>()
+    val subprojects = mutableMapOf<String, Pair<ProjectType, Boolean>>()
 
-    private fun add(path: String, type: ProjectType) {
+    private fun add(path: String, type: ProjectType, leaf: Boolean) {
         debug { "$path project is $type." }
-        projects[path] = type
+        subprojects[path] = type to leaf
     }
 
-    fun report() = projects.map { (path, type) -> "$path = $type" }.joinToString("\n")
+    fun report() = subprojects.map { (path, type) -> "$path = $type" }.joinToString("\n")
 
-    fun scan(dir: Path = root, path: String = ":", name: String = dir.name) {
+    /**
+     * Scan subprojects to include in settings. No need to include root and other parents.
+     * @return This project has subproject.
+     */
+    fun scan(dir: Path = root, path: String = "", name: String = dir.name): Boolean {
         debug { "Detecting $dir" }
+        var leaf = true
         when (val type = ProjectType.parse(path, name)) {
             null -> debug { "Ignored $dir" }
             ProjectType.INFRASTRUCTURE,
@@ -27,32 +32,33 @@ class ProjectScanner(private val root: Path) : Logger({}) {
             ProjectType.INFRASTRUCTURE_JVM -> {
                 if (dir.resolve(SETTINGS_SCRIPT).exists()) warn { "Ignored another root at $dir!" }
                 else {
-                    add(path, type)
                     debug { "Infrastructure may have subprojects" }
                     dir.visibleDirectories.forEach {
                         val childName = it.name
-                        scan(it, "$path:$childName", childName)
+                        if (scan(it, "$path:$childName", childName)) leaf = false
                     }
+                    add(path, type, leaf)
                 }
             }
             ProjectType.DOMAINS -> {
-                add(path, type)
                 debug { "Expecting all subprojects to be domains." }
                 dir.visibleDirectoryNames.filter { !ProjectType.ignore(it) }.forEach {
-                    add("$path:$it", ProjectType.DOMAIN)
+                    leaf = false
+                    add("$path:$it", ProjectType.DOMAIN, true)
                 }
             }
             ProjectType.ROOT -> {
                 debug { "Excluding root and scanning subdirectories." }
                 dir.visibleDirectories.forEach {
                     val childName = it.name
-                    scan(it, path + childName, childName)
+                    if (scan(it, childName, childName)) leaf = false
                 }
             }
             else -> {
-                add(path, type)
+                add(path, type, true)
                 debug { "No need to scan deeper." }
             }
         }
+        return !leaf
     }
 }

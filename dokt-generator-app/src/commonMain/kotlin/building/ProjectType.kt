@@ -25,7 +25,7 @@ enum class ProjectType(val platform: Platform? = null, val layer: Layer? = null)
         fun parse(path: String) = parse(path, path.substringAfterLast(':'))
 
         fun parse(path: String, name: String) = when {
-            path == ":" -> ROOT
+            path.isEmpty() -> ROOT
             ignore(name) -> null
             path.contains("test") -> parseInfrastructure(path)
             name.startsWith("dom") -> DOMAINS // Do not parse subprojects. They are domains.

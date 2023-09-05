@@ -8,8 +8,7 @@ plugins {
     signing
 }
 
-setDoktDefaults("0.2.11-SNAPSHOT",
-    "Dokt domain logic API to be used in domain layer and its infrastructure implementations.")
+description = "Dokt domain logic API to be used in domain layer and its infrastructure implementations."
 
 kotlin {
     configureJvm()

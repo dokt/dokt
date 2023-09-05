@@ -9,7 +9,7 @@ plugins {
     signing
 }
 
-setDoktDefaults("0.2.11-SNAPSHOT", "Dokt common logging free language utilities.")
+description = "Dokt common logging free language utilities."
 
 kotlin {
     configureJvmWithTests()

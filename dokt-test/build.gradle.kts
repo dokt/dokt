@@ -7,7 +7,7 @@ plugins {
     signing
 }
 
-setDoktDefaults("0.2.11-SNAPSHOT", "Common logging free test utilities.")
+description = "Common logging free test utilities."
 
 kotlin {
     configureJvm()

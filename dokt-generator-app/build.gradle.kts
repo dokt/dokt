@@ -9,7 +9,7 @@ plugins {
     signing
 }
 
-setDoktDefaults("0.2.11-SNAPSHOT", "Dokt code and documentation generator application.")
+description = "Dokt code and documentation generator application."
 
 kotlin {
     configureJvmWithTests()

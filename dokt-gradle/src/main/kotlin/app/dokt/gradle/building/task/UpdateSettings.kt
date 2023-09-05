@@ -1,7 +1,6 @@
 package app.dokt.gradle.building.task
 
 import app.dokt.generator.building.gradle.SettingsFileUpdater
-import app.dokt.generator.building.gradle.SettingsInitialization
 import app.dokt.gradle.common.path
 import app.dokt.gradle.core.task.DoktServiceTask
 import org.gradle.api.file.RegularFileProperty
@@ -30,14 +29,7 @@ abstract class UpdateSettings :
     fun update() {
         val path = file.path
         SettingsFileUpdater(path.readText()).apply {
-            settingsExtension.apply {
-                didWork = SettingsInitialization(
-                    useCrossProjectDependencies.get(),
-                    useMavenLocal.get(),
-                    project.name,
-                    doktService.projectPaths
-                ).update()
-            }
+            didWork = update(project.name, doktService.subprojectsToInclude)
             if (didWork) path.writeText(content)
         }
     }

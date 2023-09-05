@@ -7,7 +7,7 @@ plugins {
     signing
 }
 
-setDoktDefaults("0.2.11-SNAPSHOT", "Dokt Ktor server API")
+description = "Dokt Ktor server API"
 
 kotlin {
     configureJvm()
